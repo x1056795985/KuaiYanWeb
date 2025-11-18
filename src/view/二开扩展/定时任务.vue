@@ -82,7 +82,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="Cron" label="Cron表达式" width="200" show-overflow-tooltip=""/>
-        <el-table-column prop="Type" label="类型" width="100" show-overflow-tooltip=""/>
+        <el-table-column prop="type" label="类型" width="100">
+          <template #default="scope">
+            <el-tag :type='["","primary", "warning", "danger"][scope.row.Type]'>
+              {{ ["","HTTP", "公共函数", "SQL"][scope.row.Type]??("未知"+scope.row.Type) }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="Note" label="备注" width="200" show-overflow-tooltip=""/>
         <el-table-column :fixed="is移动端()?false:'right'" label="操作" :width="3*85">
           <template #default="scope">

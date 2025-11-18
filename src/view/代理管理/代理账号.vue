@@ -150,6 +150,7 @@
             {{ scope.row.AgentDiscount }}%
           </template>
         </el-table-column>
+        <el-table-column prop="Note" label="备注" width="160"  show-overflow-tooltip/>
         <el-table-column prop="LoginTime" label="最后登录时间" width="160" :formatter="on格式化_登录时间"/>
         <!--        <el-table-column prop="LoginIp" label="登录ip" width="140"/>-->
         <el-table-column :fixed="is移动端()?false:'right'" label="操作" width="210">
