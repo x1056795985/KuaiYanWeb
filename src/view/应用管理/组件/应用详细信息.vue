@@ -655,6 +655,24 @@
                     <el-input v-model="dataWebUser.urlDownload" :precision="0" :step="1" :value-on-clear="0" :min="0"/>
                   </el-tooltip>
                 </el-form-item>
+                <el-divider content-position="center">其他设置</el-divider>
+                <el-form-item label="限代理用户充值"  >
+                  <el-switch
+                      :active-value="1"
+                      :inactive-value="2"
+                      v-model="dataWebUser.agentOnlyOrder"
+                      class="ml-2"
+                      inline-prompt
+                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                      active-text="开启"
+                      inactive-text="关闭"
+                  />
+                  <el-tooltip  v-if="!is移动端()"   content="有归属代理才可以购卡,防止用户中心,注册就充值,未在客户端置代理标识,导致代理无分成的问题">
+                    <el-icon size="24" color="#73C0E7FF"  >
+                      <QuestionFilled/>
+                    </el-icon>
+                  </el-tooltip>
+                </el-form-item>
               </el-form>
             </el-tab-pane>
           </el-tabs>
@@ -753,6 +771,7 @@ const dataWebUser = ref({
   captchaReg: 2,
   captchaSendSms: 1,
   webUserDomain: "",
+  agentOnlyOrder: 2,
 })
 
 

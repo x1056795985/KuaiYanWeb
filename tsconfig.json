@@ -20,7 +20,6 @@
       "@/*":["./src/*"],
       "com/*":["./src/components/*"]
     }
-
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }],

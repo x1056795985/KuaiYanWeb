@@ -8,8 +8,8 @@ import * as ElIcon from "@element-plus/icons-vue";
 import 'element-plus/theme-chalk/el-message.css'    //ele 消息需要先引入css 不然 不显示
 import 'element-plus/theme-chalk/el-message-box.css'    //ele 消息需要先引入css 不然 不显示
 import axios from 'axios' // 引入axios
-import Nprogress from 'nprogress' //@description 导入顶部加载进度条，防止首屏加载时间过长，用户等待
 import 'nprogress/nprogress.css'
+import Nprogress from 'nprogress' //@description 导入顶部加载进度条，防止首屏加载时间过长，用户等待
 
 
 Nprogress.configure({showSpinner: false, ease: 'ease', speed: 500})

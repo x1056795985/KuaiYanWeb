@@ -1,6 +1,3 @@
-
-
-
 <template>
   <!--  <layout></layout>-->
   <router-view/>
