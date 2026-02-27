@@ -9,9 +9,8 @@
     <!--这里是放置按钮让其显示在最前面-->
     <div style="padding-left: 120px; z-index:999;float:left;position:absolute">
       <el-radio-group v-model="图表时间单位" size="small" @change="on读取图表数据">
-        <el-radio-button :value="3">单位(时)</el-radio-button>
-        <el-radio-button :value="1">(日)</el-radio-button>
-        <el-radio-button :value="2">(月)</el-radio-button>
+        <el-radio-button :value="1">(日活)</el-radio-button>
+        <el-radio-button :value="2">(月活)</el-radio-button>
       </el-radio-group>
     </div>
   </div>
@@ -21,21 +20,20 @@ import * as echarts from 'echarts'
 import {nextTick, onMounted, onUnmounted, ref, shallowRef} from 'vue'
 import {is移动端, 获取前几个个月的月份, 获取前几个小时的小时} from "@/utils/utils";
 import {get图表在线用户登录活动时间} from "@/api/分析页Api.js";
-
+const Props = defineProps({
+  AppId: {
+    type: Number,
+    default: 0
+  }
+})
 const is加载中 = ref(false)
-const 图表时间单位 = ref(3)
+const 图表时间单位 = ref(1)
 const chart = shallowRef(null)
 const echart = ref(null)
 const initChart = () => {
   chart.value = echarts.init(echart.value /* 'macarons' */)
   setOptions(1,[
-    {
-      name: '登录统计',
-      type: 'line',
-      data: [9920, 332, 341, 354, 390, 220, 9450]
-
-
-    }, {
+ {
       name: '活动统计',
       type: 'line',
       data: [120, 132, 101, 134, 90, 130, 210]
@@ -57,7 +55,7 @@ const setOptions = (单位,data) => {
       },
     },
     legend: {
-      data: ['登录统计', '活动统计']
+      data: ['活动统计']
     },
     grid: {
       left: '3%',
@@ -85,18 +83,20 @@ const setOptions = (单位,data) => {
   let nowDate = new Date();
 
 //添加天数
-  if (单位=== 3) {
-    图数据.xAxis.data=获取前几个小时的小时(24)
-  } else  if (单位=== 2) {
-    图数据.xAxis.data=获取前几个个月的月份(7)
+
+
+   if (单位=== 2) {
+    图数据.xAxis.data=获取前几个个月的月份(12)
     图数据.xAxis.data[6] += "(本月)"
   } else {
-    for (let i = 0; i < 7; i++) {
-      图数据.xAxis.data[6 - i] = nowDate.getDate().toString() + "日"
-      nowDate.setDate(nowDate.getDate() - 1);
-    }
-    图数据.xAxis.data[6] += "(今天)"
-    图数据.xAxis.data[5] += "(昨天)"
+     图数据.xAxis.data = new Array(30);
+     let nowDate = new Date(); // 当前日期
+
+     for (let i = 0; i < 30; i++) {
+       // 从后往前赋值，确保第一个元素是最早的日期
+       图数据.xAxis.data[29 - i] = nowDate.getDate().toString() + "日";
+       nowDate.setDate(nowDate.getDate() - 1);
+     }
   }
 
   console.log(图数据.xAxis.data)
@@ -105,7 +105,7 @@ const setOptions = (单位,data) => {
 const on读取图表数据 = async () => {
   is加载中.value=true
   let 返回;
-  返回 = await get图表在线用户登录活动时间({Type:图表时间单位.value})
+  返回 = await get图表在线用户登录活动时间({Type:图表时间单位.value ,AppId:Props.AppId})
   is加载中.value=false
   console.log(返回)
   if (返回.code === 10000) {

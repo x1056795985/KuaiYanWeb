@@ -9,9 +9,9 @@
     <!--这里是放置按钮让其显示在最前面-->
     <div style="padding-left: 120px; z-index:999;float:left;position:absolute">
       <el-radio-group v-model="图表时间单位" size="small" @change="on读取图表数据">
-        <el-radio-button :value="1">单位(时)</el-radio-button>
-        <el-radio-button :value="2">(日)</el-radio-button>
-        <el-radio-button :value="3">(月)</el-radio-button>
+        <el-radio-button :value="1">今日</el-radio-button>
+        <el-radio-button :value="2">昨日</el-radio-button>
+        <el-radio-button :value="3">前日</el-radio-button>
       </el-radio-group>
     </div>
   </div>
