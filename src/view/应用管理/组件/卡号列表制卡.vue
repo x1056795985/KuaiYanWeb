@@ -144,11 +144,18 @@ const 生成卡号Data = ref<KaItem[]>([])
 const is对话框可见2 = ref(true)
 const 待导入卡号 = ref("")
 
-const data = ref({
+type req = {
+  Id : number
+ Number : number
+  AdminNote: string
+  KaName: string[]
+}
+
+const data = ref<req>({
   "Id": Number(Object.keys(Props.KaClass)[0]),
   "Number": 1,
   "AdminNote": "",
-  "KaName": ["1"]
+  "KaName": []
 })
 const ruleFormRef = ref<FormInstance>()
 const is重新读取 = ref(false)
@@ -266,7 +273,7 @@ const 格式化卡号内容 = async (保存配置 = false) => {
     临时文本 = 临时文本.replace('{AppName}', Props.AppName)
     临时文本 = 临时文本.replace('{RMb}', 生成卡号Data.value[i].RMb.toString())
     临时文本 = 临时文本.replace('{VipNumber}', 生成卡号Data.value[i].VipNumber.toString())
-    临时文本 = 临时文本.replace('{UserClassName}', 生成卡号Data.value[i].UserClassName)
+    临时文本 = 临时文本.replace('{UserClassName}', 生成卡号Data.value[i].UserClassName??"")
     临时文本 = 临时文本.replace('{Num}', 生成卡号Data.value[i].Num.toString())
     临时文本 = 临时文本.replace('{MaxOnline}', 生成卡号Data.value[i].MaxOnline.toString())
     临时文本 = 临时文本.replace('{RegisterTime}', 时间_时间戳到时间(生成卡号Data.value[i].RegisterTime))
