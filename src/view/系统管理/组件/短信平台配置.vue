@@ -8,8 +8,9 @@
           <el-select v-model="Data.当前选择" class="m-2" placeholder="Select" size="">
             <el-option label="腾讯云短信(SMS)" :value="1"/>
             <el-option label="短信宝" :value="2"/>
-            <el-option label="七牛云" :value="3"/>
+<!--            <el-option label="七牛云" :value="3"/>-->
             <el-option label="系统自带Api" :value="4"/>
+            <el-option label="阿里云短信" :value="5"/>
           </el-select>
           <el-button @click="on发送测试验证码被点击">发送测试验证码</el-button>
         </el-form-item>
@@ -86,6 +87,24 @@
             <el-text>快验系统Api,系统自带开放使用,必须登录系统,且余额充足,目前为腾讯云接口价格1w/470元短息包,约0.04元/条(因为系统计费只能计费到分),如果以后用的人多,会购买量更大更合适的短信包</el-text>
           </el-form-item>
         </div>
+        <div class="内容div" v-if="Data.当前选择===5">
+          <el-divider content-position="left">阿里云短信
+            <el-link href="https://www.aliyun.com/product/sms" target="_blank">www.aliyun.com</el-link>
+          </el-divider>
+          <el-form-item label="AccessKeyId" disabled="disabled">
+            <el-input v-model.trim="Data.Sms阿里云.AccessKeyId">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="AccessKeySecret" disabled="disabled">
+            <el-input v-model.trim="Data.Sms阿里云.AccessKeySecret"/>
+          </el-form-item>
+          <el-form-item label="短信签名" disabled="disabled">
+            <el-input v-model.trim="Data.Sms阿里云.短信签名"/>
+          </el-form-item>
+          <el-form-item label="正文模板Code" disabled="disabled">
+            <el-input v-model.trim="Data.Sms阿里云.正文模板Code"/>
+          </el-form-item>
+        </div>
         <div style="text-align:center">
           <el-button style="width: 15vh; " type="primary" @click="on确定按钮被点击(ruleFormRef)">保存</el-button>
         </div>
@@ -123,6 +142,12 @@ const Data = ref({
     "SecretKey": "",
     "SignatureID": "",
     "TemplateID": "",
+  },
+  "Sms阿里云": {
+    "AccessKeyId": "",
+    "AccessKeySecret": "",
+    "短信签名": "",
+    "正文模板Code": "",
   }
 })
 const ruleFormRef = ref<FormInstance>()

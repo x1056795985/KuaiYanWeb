@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="is对话框可见2"
              :title="Props.id===''?'添加新公共函数:':'修改公共函数'"
-             :width="is移动端()?'90%':'80%'"
+             :width="is移动端()?'95%':'90%'"
              top="3%"
              @close="on对话框被关闭">
     <div style="overflow:auto;padding:0 12px;">
@@ -39,7 +39,7 @@
         <el-form-item label="备注" prop="Value">
           <el-input v-model="data.Note" placeholder="请输入备注"/>
         </el-form-item>
-        <el-form-item  label="JS函数" prop="Value" style="height: 50Vh">
+        <el-form-item  label="JS函数" prop="Value" style="height: 60Vh">
           <div class="button-group">
             <div class="button-container">
               <el-button
@@ -67,12 +67,31 @@
               >
                 打开教程
               </el-button>
+              <el-button
+                  @click="isAi面板可见 = !isAi面板可见"
+                  :type="isAi面板可见 ? 'success' : 'primary'"
+                  plain
+                  class="action-button"
+              >
+                {{ isAi面板可见 ? '关闭AI助手' : 'AI助手' }}
+              </el-button>
             </div>
           </div>
 
-          <codemirror @keyup.ctrl="submit($event)" v-model="data.Value" placeholder="请输入js代码"
-                      style="height: 90%;width: 100%" :autofocus="true"
-                      :tabSize="2" :extensions="extensions"/>
+          <div :class="['code-area', isAi面板可见 ? 'code-area-with-ai' : '']">
+            <codemirror @keyup.ctrl="submit($event)" v-model="data.Value" placeholder="请输入js代码"
+                        style="height: 100%;min-width:0;flex:1" :autofocus="true"
+                        :tabSize="2" :extensions="extensions"/>
+            <Ai助手 v-if="isAi面板可见"
+                    :currentCode="data.Value"
+                    :functionName="data.Name"
+                    :formData="data"
+                    :appList="数组AppId_Name"
+                    @applyCode="onAi应用代码"
+                    @restoreCode="onAi回退代码"
+                    @editForm="onAi编辑表单"
+            />
+          </div>
         </el-form-item>
       </el-form>
 
@@ -92,6 +111,7 @@ import {ElMessage, FormInstance} from "element-plus";
 import {is移动端} from "@/utils/utils";
 import {GetInfo, New, SaveInfo,TestRunJs} from "@/api/公共函数api";
 import {GetAppIdNameList} from "@/api/应用列表api";
+import Ai助手 from "./Ai助手.vue";
 
 
 const Props = defineProps({
@@ -314,6 +334,36 @@ function on打开教程() {
   window.open('https://www.fnkuaiyan.cn/PublicJs/%E5%85%AC%E5%85%B1%E5%87%BD%E6%95%B0Api.html', '_blank');
 }
 
+// AI助手相关==============================
+const isAi面板可见 = ref(true)
+
+const onAi应用代码 = (code: string) => {
+  data.value.Value = code
+}
+
+const onAi回退代码 = (code: string) => {
+  data.value.Value = code
+}
+
+const onAi编辑表单 = (fields: Record<string, any>) => {
+  // AI通过MCP工具编辑表单字段
+  if (fields.Name !== undefined) {
+    data.value.Name = fields.Name
+  }
+  if (fields.AppId !== undefined) {
+    data.value.AppId = fields.AppId
+  }
+  if (fields.Note !== undefined) {
+    data.value.Note = fields.Note
+  }
+  if (fields.Value !== undefined) {
+    data.value.Value = fields.Value
+  }
+  if (fields.IsVip !== undefined) {
+    data.value.IsVip = fields.IsVip
+  }
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -329,5 +379,37 @@ function on打开教程() {
   word-break: normal;
 }
 
+.code-area {
+  height: 90%;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.code-area-with-ai {
+  overflow: hidden;
+  min-width: 0;
+
+  :deep(.v-codemirror) {
+    flex: 1;
+    min-width: 0;
+    width: 0;
+    overflow: hidden;
+    border-right: 1px solid #e4e7ed;
+
+    .cm-editor {
+      width: 100%;
+      .cm-scroller {
+        overflow-x: auto;
+      }
+    }
+  }
+
+  // AI助手面板固定宽度
+  :deep(.ai-assistant) {
+    width: 380px;
+    flex-shrink: 0;
+  }
+}
 
 </style>

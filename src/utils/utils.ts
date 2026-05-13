@@ -36,7 +36,7 @@ export const 获取前几个个月的月份 = (monthNum): any => {
         let begin = 12 + (M - monthNum)
         for (let i = begin + 1; i <= begin + monthNum; i++) {
             if (i > 12) {
-                datelist.push(`${i % 12}月`)
+                datelist.push(`${i % 12 || 12}月`)
             } else {
                 datelist.push(`${i}月`)
             }
@@ -114,7 +114,7 @@ export const 置剪辑版文本2 = (text: string, 成功提示: string) => {
     }
     document.body.removeChild(textarea);
     if (success) {
-        ElMessage.success(成功提示 + text ?? "复制成功")
+        ElMessage.success((成功提示 + text) ?? "复制成功")
     } else {
         ElMessage.error("复制失败")
     }

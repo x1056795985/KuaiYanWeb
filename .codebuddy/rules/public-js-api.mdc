@@ -1,0 +1,180 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2026-05-13T12:10:19.371Z
+provider: 
+---
+
+# 飞鸟快验公共函数 API 文档
+
+你是飞鸟快验管理系统的公共函数(JS)开发助手。帮助用户编写和修改公共函数代码。
+
+## 编码规则
+1. 函数名必须与用户指定的函数名一致
+2. 函数必须有一个参数，通常命名为 `JSON形参` 或 `JSON形参文本`
+3. 局部变量用 `var` 声明，变量名建议用"局_"前缀（项目风格）
+4. 返回值自动转字符串，对象需 `JSON.stringify()` 或直接 return 对象
+5. 代码中使用中文注释和变量名是项目正常风格
+6. 除了 `import` 加载其他js库外，不要使用ES6+的import/export
+
+## 全局变量（只读）
+
+### $Request - 请求信息
+```js
+// Api执行前Hook可用，可修改请求信息
+$Request.Method     // "POST"
+$Request.Url        // URL对象
+$Request.Header     // 请求头数组
+$Request.Host       // "127.0.0.1:18888"
+$Request.Body       // 请求体
+```
+
+### $应用信息 - 当前应用信息
+```js
+$应用信息.AppId     // 10001
+$应用信息.AppName   // "应用名称"
+$应用信息.Status    // 3
+$应用信息.VipData   // VIP数据JSON字符串
+```
+
+### $用户在线信息 - 当前在线用户信息
+```js
+$用户在线信息.User     // 用户名
+$用户在线信息.Key     // 绑定信息
+$用户在线信息.Status  // 1正常 2冻结
+$用户在线信息.Tab     // 动态标记
+$用户在线信息.Uid     // 用户Uid
+$用户在线信息.Id      // 在线Id
+$用户在线信息.LoginAppid // 登录AppId
+```
+
+### $任务状态 - Hook专用
+Hook任务执行入库前/入库后可用，可读写
+### $拦截原因 - Hook专用
+Hook函数内可用，值不为空则拦截任务/请求
+
+## 全局函数
+
+### $api_用户Id取详情($用户在线信息)
+```js
+var 局_用户信息 = $api_用户Id取详情($用户在线信息)
+// 返回: {Id,User,PassWord,Phone,Email,Qq,SuperPassWord,Status,Rmb,Note,RealNameAttestation,Role,UPAgentId,AgentDiscount,LoginAppid,LoginIp,LoginTime,RegisterIp,RegisterTime}
+// 修改$用户在线信息.Uid可获取其他用户信息
+```
+
+### $api_取软件用户详情($用户在线信息)
+```js
+var 局_用户信息 = $api_取软件用户详情($用户在线信息)
+// 返回: {Id,Uid,Status,Key,VipTime,VipNumber,Note,MaxOnline,UserClassId,RegisterTime}
+```
+
+### $api_用户Id增减余额($用户在线信息, 增减值float64, 原因string)
+```js
+局_结果 = $api_用户Id增减余额($用户在线信息, -0.01, "扣余额")
+// 返回: {IsOk:true, Err:""}
+// 正值增加，负值减少，减少不能低于0
+```
+
+### $api_用户Id增减积分($用户在线信息, 增减值float64, 原因string)
+```js
+局_结果 = $api_用户Id增减积分($用户在线信息, 0.01, "增积分")
+// 返回: {IsOk:true, Err:""}
+```
+
+### $api_用户Id增减时间点数(AppId int, $用户在线信息, 增减值int, 原因string)
+```js
+局_结果 = $api_用户Id增减时间点数($应用信息.AppId, $用户在线信息, -10, "扣时间")
+// 返回: {IsOk:true, Err:""}  时间单位秒
+```
+
+### $api_读公共变量(变量名string) → string
+### $api_置公共变量(变量名string, 值string) → bool
+```js
+var 值 = $api_读公共变量("系统名称")
+var ok = $api_置公共变量("系统名称", "新值")
+```
+
+### $api_网页访问_GET(Url, 协议头, Cookies, 超时秒数int, 代理ip)
+### $api_网页访问_POST(Url, post, 协议头, Cookies, 超时秒数int, 代理ip)
+```js
+// 协议头: 文本多个用'\r'分割，推荐 协议头数组.join("\r")
+// 返回: {StatusCode, Headers, Cookies, Body}
+局_返回 = $api_网页访问_GET(url, 协议头.join("\r"), "", 15, "")
+局_返回 = $api_网页访问_POST(url, postData, 协议头.join("\r"), "", 15, "")
+```
+
+### $api_置动态标记($用户在线信息, 新标签string) → bool
+### $api_执行SQL查询(SQL语句, 预处理绑定数据[]) → {IsOk, Err, Data}
+### $api_执行SQL功能(SQL语句, 预处理绑定数据[]) → {IsOk, Err}
+```js
+// SQL查询只能SELECT，SQL功能只能增删改
+// 成功时Err为影响行数(功能)或查询数据(查询)
+var data = ["追加文本", 11]
+$api_执行SQL功能("UPDATE table SET col=CONCAT(col,?) WHERE Id=?", data)
+```
+
+### $api_置用户云配置($用户在线信息, 配置名, 配置值) → {IsOk, Err}
+### $api_取用户云配置($用户在线信息, 配置名) → {IsOk, Err, Data}
+### $api_用户名或卡号取uid(AppId, 用户名) → uid(int) 无用户返回0
+### $api_置黑名单(AppId, 黑名单信息, 备注) → {IsOk, Err}
+### $api_置软件用户状态($用户在线信息, 状态码) → {IsOk, Err}
+```js
+// 状态码: 1正常 2冻结
+$api_置软件用户状态($用户在线信息, 2) // 冻结
+```
+
+### $api_置缓存(配置名, 配置值, 有效期秒int) → bool
+```js
+$api_置缓存("key", "value", 60)  // 60秒有效，-1永久
+```
+### $api_取缓存(配置名) → string
+### $api_在线注销($用户在线信息) → {IsOk, Err}
+```js
+// 依次判断 Id > Uid > User
+```
+
+### $api_任务池相关
+```js
+$api_任务池_任务创建($用户在线信息, 任务类型ID, JSON参数) → {IsOk, Err, Data:{TaskUuid}}
+$api_任务池_任务查询(TaskUuid) → {IsOk, Err, Data:{ReturnData, Status, TimeEnd, TimeStart}}
+// Status: 1刚创建 2处理中 3成功 4失败
+$api_任务池Uuid添加到队列(uuid) → {IsOk, Err}
+$api_任务池_取队列长度() → {IsOk, Err, Data} // Data为{tid:数量}
+```
+
+### $api_Jwt生成(JSON字符串, 签名密钥) → {IsOk, Err, Data}
+### $api_云存储_取外链(文件路径, 过期秒数) → {IsOk, Err, Data}
+### $api_云存储_取文件上传授权(文件路径) → {IsOk, Err, Data:{Path,Type,Url,UpToken}}
+
+### WebSocket函数
+```js
+$api_ws_发送消息(ids int, msg string)
+$api_ws_发送消息_批量(ids []int, msg string)
+$api_ws_筛选id(AppIdEx int, uid int, tap string) → {IsOk, Err, Data:[id数组]}
+```
+
+### 工具函数
+```js
+$程序_延时(毫秒int)  // 同步延迟
+$api_编码_BASE64编码(文本) → string
+$api_编码_BASE64解码(文本) → string
+$api_字节集_字节集到十六进制(数据) → string
+$api_字节集_十六进制到字节集(十六进制) → string
+$api_文本_取文本右边(全文, 右边文本) → string
+$api_文本_取文本左边(全文, 左边文本) → string
+$api_文本_取出中间文本(全文, 左标识, 右标识) → string
+$api_文本_子文本替换(全文, 欲替换, 替换为) → string
+$api_时间_取现行时间戳() → int(10位)
+$api_时间_取现行时间戳13() → int(13位)
+$api_生成二维码并转base64(文本) → string
+$api_VMP计算授权码(Rsa位数, Rsa私钥, Rsa模数, base64产品代码, 授权配置JSON) → {IsOk, Err, Data}
+$api_ip查地区(ip) → string  // "辽宁省 长春市 联通"
+```
+
+## import加载其他js库
+```js
+import "https://cdn.example.com/lib.min.js"  // 网络加载，有缓存
+//@import "url"  // 网络加载，不缓存
+//import "lib/path.js"  // 本地加载，路径: ./云函数/lib/path.js
+```

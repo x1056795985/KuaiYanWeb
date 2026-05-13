@@ -154,7 +154,9 @@ export const store = createStore<state全局状态>({
         },
         DeleteITab(state全局状态: state全局状态, Path: string) {
             const isSome = state全局状态.ITabList.findIndex((item) => item.path == Path)
-            state全局状态.ITabList.splice(isSome, 1)
+            if (isSome!=-1){
+                state全局状态.ITabList.splice(isSome, 1)
+            }
         },
         on更新菜单当前Path(state全局状态: state全局状态, Path: string) {
             state全局状态.Tabs菜单当前Path = Path
@@ -173,7 +175,7 @@ export const store = createStore<state全局状态>({
                     state全局状态.ITabList.splice(index + 1)
                     break;
                 case "关闭其他":
-                    state全局状态.ITabList.filter((item) => item.path == state全局状态.Tabs菜单当前Path)
+                    state全局状态.ITabList = state全局状态.ITabList.filter((item) => item.path == state全局状态.Tabs菜单当前Path)
                     break;
                 default:
                     console.info("菜单命令信息错误")

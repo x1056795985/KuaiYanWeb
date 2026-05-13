@@ -63,9 +63,13 @@
 
           <el-popover placement="right" trigger="hover">
             <template #reference>
-              <el-icon>
+              <el-icon v-if="is移动端()">
                 <More/>
               </el-icon>
+              <span v-else style="display:inline-flex;align-items:center;gap:4px;margin-left:10px;padding:5px 10px;border:1px solid rgb(235,238,245);border-radius:4px;cursor:pointer;font-size:14px;color:#606266;white-space:nowrap;">
+                <el-icon style="margin:0!important;border:none!important;padding:0!important;font-size:14px;"><More/></el-icon>
+                <span>更多功能</span>
+              </span>
             </template>
             <li class="工具_更多_li" @click="is对话框可见_创建令牌=1">新WebApi令牌</li>
             <li class="工具_更多_li" @click="on删除已注销">删除已注销</li>
