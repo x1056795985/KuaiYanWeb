@@ -17,31 +17,7 @@
         <el-form-item label="备案号" prop="备案号" disabled="disabled">
           <el-input clearable v-model.trim="Data.备案号" placeholder="登录页底部显示,可空"/>
         </el-form-item>
-        <el-form-item label="管理员后台Host" prop="管理员后台Host">
-          <el-row style="width: 100%">
-            <el-col :span="18">
-              <el-input clearable v-model.trim="Data.管理员后台Host"
-                        placeholder="127.0.0.1:18888  限制该域名可访问,空不限制,这样可以管理员后台和用户Api使用不同的域名访问,"/>
-            </el-col>
-            <el-col :span="2">
-              <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  content="设置host后打不开后台解决办法"
-                  placement="top"
-              >
-                <el-link
-                    href="https://www.fnkuaiyan.cn/%E6%8C%87%E5%8D%97/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98.html#清除管理员后台host限制"
-                    target="_blank">
-                  <el-icon size="24">
-                    <Link/>
-                  </el-icon>
-                </el-link>
-              </el-tooltip>
-            </el-col>
-          </el-row>
 
-        </el-form-item>
         <el-form-item label="WebApiHost" prop="WebApiHost">
           <el-input clearable v-model.trim="Data.WebApiHost"
                     placeholder="127.0.0.1:18888  限制该域名可访问,空不限制,这样可以WebApi和用户Api使用不同的域名访问,"/>
@@ -103,29 +79,6 @@
         </el-form-item>
         <el-form-item label="代理中心关闭提示" prop="代理中心关闭提示">
           <el-input v-model.trim="Data.代理中心关闭提示" placeholder="代理中心关闭提示"/>
-        </el-form-item>
-        <el-form-item label="代理后台Host" prop="代理后台Host">
-          <el-row style="width: 100%">
-            <el-col :span="18">
-              <el-input v-model.trim="Data.代理后台Host"
-                        placeholder="127.0.0.1:18888 代理后台限制该地址可访问,空不限制,这样可以管理后台和代理后台使用不同的域名访问,"/>
-            </el-col>
-            <el-col :span="2">
-              <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  content="打开代理后台"
-                  placement="top"
-              >
-                <el-link href="/Agent" target="_blank">
-                  <el-icon size="24">
-                    <Link/>
-                  </el-icon>
-                </el-link>
-              </el-tooltip>
-            </el-col>
-          </el-row>
-
         </el-form-item>
       </div>
       <div class="内容div">
