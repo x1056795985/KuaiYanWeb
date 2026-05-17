@@ -103,7 +103,7 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -153,7 +153,7 @@
                 placement="left"
                 effect="light"
             >
-              <el-text>{{scope.row.Processing}}</el-text>
+              <el-text>{{scope.row.processing}}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -328,7 +328,7 @@ const on订单备注被改变 = async (表项索引: number, PayOrder: string, N
         const res = await SetPayOrderNote({"PayOrder": [PayOrder], "Note": 新备注})
         console.log(res)
         if (res.code == 10000) {
-          Data.value.List[表项索引].Note = 新备注   //成功赋新值
+          Data.value.list[表项索引].Note = 新备注   //成功赋新值
           ElMessage.success(res.msg)
           return true
         } else {
@@ -363,7 +363,7 @@ const on选择框被选择 = (val: any) => {
 
 const Data = ref({
   "Count": 0,
-  "List": [
+  "list": [
     {
       "Id": 1,
       "User": "",

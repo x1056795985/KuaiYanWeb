@@ -1,7 +1,7 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/Panel/"
+const url=取url根入口路径() +"/panel/"
 
 // @Tags system
 // @Summary 获取服务器运行状态
@@ -25,7 +25,7 @@ export const 系统热重启 = (data) => {
 }
 export const 系统停止 = (data) => {
     return service({
-        url: url+'StopSystem',
+        url: url+'stopSystem',
         method: 'post',
         donNotShowLoading: true
     })

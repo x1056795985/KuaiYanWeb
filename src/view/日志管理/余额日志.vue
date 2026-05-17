@@ -223,7 +223,7 @@ const Data = ref({
       "Time": 0,
       "Ip": "",
       "Count": 0,
-      "Msg": ""
+      "Note": ""
     }]
 })
 const Store = useStore()
@@ -262,7 +262,17 @@ const onGetLogMoneyList = async () => {
   const res = await GetLogMoneyList(对象_搜索条件.value)
   is加载中.value = false
   console.log(res)
-  Data.value = res.data
+  if (res.data) {
+    Data.value = {
+      Count: res.data.Count,
+      List: res.data.List || []
+    }
+  } else {
+    Data.value = {
+      Count: 0,
+      List: []
+    }
+  }
   对象_搜索条件.value.Count = Data.value.Count
   Store.commit("set搜索_默认选择应用AppId", 对象_搜索条件.value.AppId)
 

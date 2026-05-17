@@ -4,8 +4,8 @@
       <el-form :inline="true">
         <el-form-item label="选择应用" prop="">
           <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable @change="on读取列表">
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -210,7 +210,7 @@
     </div>
   </div>
   <KaClassInfo :is对话框可见="is对话框可见" :id="is对话框id" :AppId="对象_搜索条件.AppId"
-               :AppName="MapAppId_Name[对象_搜索条件.AppId.toString()]" :AppType="Data.AppType"
+               :AppName="MapAppId_Name[对象_搜索条件.AppId?.toString() || '10000']" :AppType="Data.AppType"
                @on对话框详细信息关闭="on对话框详细信息关闭" :UserType="对象_用户类型"></KaClassInfo>
 </template>
 
@@ -337,9 +337,12 @@ const onGetKaClassList = async () => {
   const res = await GetKaClassList(对象_搜索条件.value)
   console.log(res)
   is加载中.value = false
-  Data.value = res.data
-  对象_用户类型.value = res.data.UserClass
-  对象_用户类型.value["0"] = "未分类"
+  Data.value = {
+    Count: res.data.count ?? 0,
+    AppType: res.data.appType ?? 1,
+    List: res.data.list ?? []
+  };
+  对象_用户类型.value = { ...(res.data.userClass ?? {}), "0": "未分类" };
   console.log("对象_用户类型")
   console.log(对象_用户类型.value)
   Store.commit("set搜索_默认选择应用AppId", 对象_搜索条件.value.AppId)
@@ -348,19 +351,21 @@ const onGetKaClassList = async () => {
 
 const MapAppId_Name = ref({})
 const 数组AppId_Name = ref([{
-  "Appid": 10004,
-  "AppName": ""
+  "appId": 10004,
+  "appName": ""
 }])
 const onGetAppIdNameList = async () => {
   const res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  MapAppId_Name.value = res.data.Map
-  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.Map[对象_搜索条件.value.AppId.toString()])
+  数组AppId_Name.value = res.data.array
+  MapAppId_Name.value = res.data.map
+  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + (res.data.map[(对象_搜索条件.value.AppId ?? 10000).toString()] ?? 'N/A'))
 
-  if (res.data.Map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
-    let 局_默认appid=Store.state.搜索_默认选择应用AppId
-    对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.Appid === 局_默认appid)?局_默认appid:数组AppId_Name.value[0].Appid
-  }
+if (res.data.map[(对象_搜索条件.value.AppId ?? 10000).toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
+  let 局_默认appid = Store.state.搜索_默认选择应用AppId;
+  对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.appId === 局_默认appid)
+    ? 局_默认appid
+    : 数组AppId_Name.value.length > 0 ? 数组AppId_Name.value[0].appId : 10000;
+}
 }
 const 对象_用户类型 = ref({"0": "未分类"})
 // table元素

@@ -46,7 +46,7 @@
           <el-input v-model.trim="data.RealNameAttestation" placeholder="请输入实名认证信息"/>
         </el-form-item>
         <el-form-item label="余额" prop="Rmb">
-          <el-input-number v-model="data.Rmb" :precision="2" :step="0.1" :value-on-clear="0"/>
+          <el-input-number v-model="data.Rmb" :precision="2" :step="0.1" :value-on-clear="0" :min="-1"/>
         </el-form-item>
         <el-form-item label="分成百分比" prop="AgentDiscount">
           <el-input-number v-model="data.AgentDiscount" :precision="0"  :step="1" :value-on-clear="0" :min="0" :max="100"/>
@@ -95,7 +95,7 @@
                 <i class="el-icon-s-custom"></i>
                 登录平台:
               </template>
-              {{ data.LoginAppName}}
+              {{ data.LoginAppName || '未登录' }}
             </el-descriptions-item>
             <el-descriptions-item>
               <template #label>
@@ -126,6 +126,20 @@
                 注册IP:
               </template>
               {{ data.RegisterIp }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template #label>
+                <i class="el-icon-s-custom"></i>
+                登录AppId:
+              </template>
+              {{ data.LoginAppid || '未登录' }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template #label>
+                <i class="el-icon-odometer"></i>
+                余额:
+              </template>
+              {{ data.Rmb === -1 ? '未设置' : data.Rmb + ' 元' }}
             </el-descriptions-item>
 
 
@@ -167,21 +181,54 @@ const on对话框被关闭 = () => {
 
 const is对话框可见2 = ref(true)
 const is加载中 = ref(false)
-const data = ref({
+interface UserInfo {
+  id: number;
+  status: number;
+  user: string;
+  phone: string;
+  passWord: string;
+  superPassWord: string;
+  email: string;
+  qq: string;
+  rmb: number;
+  role: number;
+  note: string;
+  realNameAttestation: string;
+  uPAgentId: number;
+  uPAgentUser: string;
+  agentDiscount: number;
+  loginTime: number;
+  loginIp: string;
+  loginAppName: string;
+  registerTime: number;
+  registerIp: string;
+  sort: number;
+  loginAppid: number;
+}
+
+const data = ref<UserInfo>({
   id: 0,
-  Status: 1,
-  "User": "",
-  "Phone": "",
-  "PassWord": "",
-  "SuperPassWord": "",
-  "Email": "",
-  "Qq": "",
-  "Rmb": 0.0,
-  "Role": 0,
-  "Note": "",
-  "UPAgentId": 0,
-  "UPAgentUser": 0,
-  "AgentDiscount": 0
+  status: 1,
+  user: "",
+  phone: "",
+  passWord: "",
+  superPassWord: "",
+  email: "",
+  qq: "",
+  rmb: 0.0,
+  role: 0,
+  note: "",
+  realNameAttestation: "",
+  uPAgentId: 0,
+  uPAgentUser: "",
+  agentDiscount: 0,
+  loginTime: 0,
+  loginIp: "",
+  loginAppName: "",
+  registerTime: 0,
+  registerIp: "",
+  sort: 0,
+  loginAppid: 0,
 })
 
 const ruleFormRef = ref<FormInstance>()
@@ -288,8 +335,15 @@ const on对话框被打开 = () => {
     "Role": 0,
     "Note": "",
     "UPAgentId": 0,
-    "UPAgentUser": 0,
-    "AgentDiscount": 0
+    "UPAgentUser": "",
+    "AgentDiscount": 0,
+    "LoginTime": 0,
+    "LoginIp": "",
+    "LoginAppName": "",
+    "RegisterTime": 0,
+    "RegisterIp": "",
+    "Sort": 0,
+    "LoginAppid": 0
   }
   on校验表单重置(ruleFormRef.value)
   读取详细信息(Props.id)
@@ -297,28 +351,23 @@ const on对话框被打开 = () => {
 }
 const 读取详细信息 = async (id: number) => {
   if (id > 0) {
-
-    let 返回 = await Get用户详细信息({"Id": id})
+    let 返回 = await Get用户详细信息({ "Id": id });
     if (返回.code == 10000) {
-      data.value = 返回.data
+      // ✅ 直接 shallow assign，字段名完全对齐 API（小驼峰）
+      Object.assign(data.value, 返回.data);
+      // 防御性默认值（可选）
+      data.value.rmb = data.value.rmb ?? 0.0;
+      data.value.status = data.value.status ?? 1;
+      data.value.role = data.value.role ?? 0;
     } else {
-      is重新读取.value = false
-      is对话框可见2.value = false
+      is重新读取.value = false;
+      is对话框可见2.value = false;
     }
   }
 }
 
 
-type UserInfo = {
-  user: string;
-  phone: string;
-  passWord: string;
-  SuperpassWord: string;
-  email: string;
-  qq: string;
-  rmb: number;
-  note: string;
-}
+
 
 </script>
 

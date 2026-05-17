@@ -5,8 +5,8 @@
         <el-form-item label="选择应用" prop="">
           <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable>
             <el-option :key="0" label="全部" :value="0"/>
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="status" style="width:250px">
@@ -383,12 +383,12 @@ const 数组_日志预选日期 = [{
 
 
 const 数组AppId_Name = ref([{
-  "Appid": 10004,
-  "AppName": ""
+  "appId": 10004,
+  "appName": ""
 }])
 const onGetAppIdNameList = async () => {
   const res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
+  数组AppId_Name.value = res.data.array
 }
 
 </script>

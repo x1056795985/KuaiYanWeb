@@ -6,8 +6,8 @@
           <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable>
             <el-option :key="0" label="全部" :value="0"/>
             <el-option :key="1" label="全局" :value="1"/>
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="Keywords">
@@ -120,8 +120,8 @@
           <el-form-item label="拉黑应用"  >
             <el-select v-model="新增黑名单data.AppId" >
               <el-option :key="1" label="全局" :value="1"/>
-              <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                         :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+              <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                         :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
             </el-select>
           </el-form-item>
           <el-form-item label="IP或绑定信息"  >
@@ -276,14 +276,14 @@ onMounted(async () => {
 })
 const onGetAppIdNameList = async () => {
   let res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  MapAppId_Name.value = res.data.Map
+  数组AppId_Name.value = res.data.array
+  MapAppId_Name.value = res.data.map
   MapAppId_Name.value["1"]="全局"
-  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.Map[对象_搜索条件.value.AppId.toString()])
+  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.map[对象_搜索条件.value.AppId.toString()])
 
-  if (res.data.Map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
+  if (res.data.map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
     // let 局_默认appid=Store.state.搜索_默认选择应用AppId
-    // 对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.Appid === 局_默认appid)?局_默认appid:数组AppId_Name.value[0].Appid
+    // 对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.appId === 局_默认appid)?局_默认appid:数组AppId_Name.value[0].appId
   }
 }
 onBeforeUnmount(() => {
@@ -295,8 +295,8 @@ const is新增对话框=ref(false)
 const 新增黑名单data=ref({ItemKey:"",AppId:1,Note:""})
 const MapAppId_Name = ref({})
 const 数组AppId_Name = ref([{
-  "Appid": 10000,
-  "AppName": ""
+  "appId": 10000,
+  "appName": ""
 }])
 
 const on添加黑名单 = async (Type: number) => {

@@ -13,7 +13,8 @@
               :options="Data代理"
               filterable
               style="width:100%"
-              :props='{ multiple:false, checkStrictly: true,label:"User", value:"Id" ,children:"Children" }'
+              :key="'agent-tree'"
+              :props='{ multiple:false, checkStrictly: true,label:"Label", value:"Value", children:"children" }'
           />
         </el-form-item>
         <el-form-item label="卡类选择" prop="" style="width:100%">
@@ -23,7 +24,8 @@
               :options="Data卡类"
               filterable
               style="width:100%"
-              :props='{  label:"label", value:"id" }'
+              :key="'ka-class-tree'"
+              :props='{  label:"label", value:"Value" }'
           />
         </el-form-item>
 
@@ -156,8 +158,21 @@ const 读取详细信息 = async (id: number) => {
     let 返回 = await Get代理树和应用卡类树({"Id": id})
     is重新读取.value = false
     if (返回.code == 10000) {
-      Data代理.value = 返回.data.AgentTree
-      Data卡类.value = 返回.data.KaClassTree
+      // Transform agentTree: map id→Value, user→Label, recurse children
+      const transformAgentNode = (node: any): any => ({
+        Value: node.id,
+        Label: node.user,
+        children: node.children?.map(transformAgentNode) || []
+      })
+      Data代理.value = 返回.data.agentTree.map(transformAgentNode)
+
+      // Transform kaClassTree: ensure root Value is unique (id=0 appears many times)
+      const transformKaClassNode = (node: any, index: number): any => ({
+        Value: node.id === 0 ? `root-${index}` : node.id,
+        label: node.label,
+        children: node.children?.map((child: any, i: number) => transformKaClassNode(child, i)) || []
+      })
+      Data卡类.value = 返回.data.kaClassTree.map((node: any, i: number) => transformKaClassNode(node, i))
     } else {
       is重新读取.value = false
       is对话框可见2.value = false
@@ -165,197 +180,8 @@ const 读取详细信息 = async (id: number) => {
   }
 }
 
-
-const Data代理 = ref([
-  {
-    Value: '1一级代理值',
-    Label: '1一级代理名',
-    children: [
-      {
-        Value: '1-1二级代理值',
-        Label: '1-1二级代理名',
-        children: [
-          {
-            Value: '1-1-1三级代理值',
-            Label: '1-1-1三级代理名',
-          },
-          {
-            Value: '1-1-2三级代理值',
-            Label: '1-1-2三级代理名',
-          },
-          {
-            Value: '1-1-3三级代理值',
-            Label: '1-1-3三级代理名',
-          },
-          {
-            Value: '1-1-4三级代理值',
-            Label: '1-1-4三级代理名',
-          },
-        ],
-      },
-      {
-        Value: '1-2二级代理值',
-        Label: '1-2二级代理名',
-        children: [
-          {
-            Value: '1-2-1三级代理值',
-            Label: '1-2-1三级代理名',
-          },
-          {
-            Value: '1-2-2三级代理值',
-            Label: '1-2-2三级代理名',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    Value: '2一级代理值',
-    Label: '2一级代理名',
-    children: [
-      {
-        Value: '2-1二级代理值',
-        Label: '2-1二级代理名',
-        children: [
-          {
-            Value: '2-1-1三级代理值',
-            Label: '2-1-1三级代理名',
-          },
-          {
-            Value: '2-1-2三级代理值',
-            Label: '2-1-2三级代理名',
-          },
-          {
-            Value: '2-1-3三级代理值',
-            Label: '2-1-3三级代理名',
-          },
-          {
-            Value: '2-1-3三级代理值',
-            Label: '2-1-3三级代理名',
-          },
-          {
-            Value: '2-1-3三级代理值',
-            Label: '2-1-3三级代理名',
-          },
-        ],
-      },
-      {
-        Value: '2-2二级代理值',
-        Label: '2-2二级代理名',
-        children: [
-          {
-            Value: '2-2-1三级代理值',
-            Label: '2-2-1三级代理名',
-          },
-          {
-            Value: '2-2-2三级代理值',
-            Label: '2-2-2三级代理名',
-          },
-          {
-            Value: '2-2-3三级代理值',
-            Label: '2-2-3三级代理名',
-          },
-          {
-            Value: '2-2-3三级代理值',
-            Label: '2-2-3三级代理名',
-          },
-          {
-            Value: '2-2-4三级代理值',
-            Label: '2-2-4三级代理名',
-          },
-          {
-            Value: '2-2-5三级代理值',
-            Label: '2-2-5三级代理名',
-          },
-          {
-            Value: '2-2-6三级代理值',
-            Label: '2-2-6三级代理名',
-          },
-          {
-            Value: '2-2-7三级代理值',
-            Label: '2-2-7三级代理名',
-          },
-          {
-            Value: '2-2-8三级代理值',
-            Label: '2-2-8三级代理名',
-          },
-          {
-            Value: '2-2-9三级代理值',
-            Label: '2-2-9三级代理名',
-          },
-          {
-            Value: '2-2-10三级代理值',
-            Label: '2-2-10三级代理名',
-          },
-          {
-            Value: '2-2-11三级代理值',
-            Label: '2-2-11三级代理名',
-          },
-          {
-            Value: '2-2-12三级代理值',
-            Label: '2-2-12三级代理名',
-          },
-          {
-            Value: '2-2-13三级代理值',
-            Label: '2-2-13三级代理名',
-          },
-        ],
-      },
-      {
-        Value: '2-3二级代理值',
-        Label: '2-3二级代理名',
-        children: [
-          {
-            Value: '2-3-1三级代理值',
-            Label: '2-3-1三级代理名',
-          },
-          {
-            Value: '2-3-2三级代理值',
-            Label: '2-3-2三级代理名',
-          },
-          {
-            Value: '2-3-3三级代理值',
-            Label: '2-3-3三级代理名',
-          }
-        ],
-      }
-    ],
-  },
-])
-const Data卡类 = ref([
-  {
-    Value: 0,
-    label: '测试应用1',
-    children: [
-      {
-        Value: 1,
-        label: '月卡',
-      },
-      {
-        Value: 2,
-        label: '季卡',
-      },
-    ],
-  },
-  {
-    Value: 2,
-    label: '测试应用3',
-    children: [
-      {
-        Value: 1,
-        label: '天卡',
-      },
-      {
-        Value: 3,
-        label: '周卡',
-      },
-      {
-        Value: 4,
-        label: '年卡',
-      }
-    ],
-  },
-])
+const Data代理 = ref([])
+const Data卡类 = ref([])
 
 </script>
 

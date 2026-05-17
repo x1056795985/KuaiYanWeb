@@ -143,7 +143,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.ount)"
               @current-change="on读取列表(0)"
           />
         </el-config-provider>

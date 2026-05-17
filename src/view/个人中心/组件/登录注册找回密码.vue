@@ -401,7 +401,7 @@ const 读取开启验证码接口列表 = async () => {
   let 返回 = await 取开启验证码接口列表({});
   if (返回.code == 10000) {
     console.log(返回.data)
-    let 临时开启验证码接口列表 = JSON.parse(返回.data.Map)
+    let 临时开启验证码接口列表 = JSON.parse(返回.data.map)
     开启验证码接口列表.value.UserLogin = 临时开启验证码接口列表.hasOwnProperty('UserLogin') ? 临时开启验证码接口列表.UserLogin : 0
     开启验证码接口列表.value.GetSMSCaptcha = 临时开启验证码接口列表.hasOwnProperty('GetSMSCaptcha') ? 临时开启验证码接口列表.GetSMSCaptcha : 0
   }

@@ -75,44 +75,44 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="List.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="List.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
                 @selection-change="on选择框被选择"
                 :header-cell-style="{background:'#FAFAFAFF',color:'#606266'}">
         <el-table-column type="selection" width="45"/>
-        <el-table-column prop="AppId" label="AppId" width="100"/>
-        <el-table-column prop="AppName" label="应用名称" width="250"/>
+        <el-table-column prop="appId" label="AppId" width="100"/>
+        <el-table-column prop="appName" label="应用名称" width="250"/>
 
         <el-table-column align="left" label="状态" prop="status" width="120">
           <template #default="scope">
             <div>
-              <el-tag :type="scope.row.Status===3?'primary':scope.row.Status===2?'success':'warning'">
-                {{ on格式化_状态(scope.row.Status) }}
+              <el-tag :type="scope.row.status===3?'primary':scope.row.status===2?'success':'warning'">
+                {{ on格式化_状态(scope.row.status) }}
               </el-tag>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="AppType" label="应用类型" width="100" :formatter="on格式化_类型"/>
+        <el-table-column prop="appType" label="应用类型" width="100" :formatter="on格式化_类型"/>
 
         <el-table-column :fixed="is移动端值?false:'right'" label="操作" :width="6*(is移动端值?36:85)">
           <template #default="scope">
-            <el-button link type="primary" size="default" @click="on单个编辑(scope.row.AppId)" style="color:#79bbff">
+            <el-button link type="primary" size="default" @click="on单个编辑(scope.row.appId)" style="color:#79bbff">
               <el-icon color="#79bbff" class="no-inherit">
                 <Edit/>
               </el-icon>
               {{ is移动端值 ? '' : '编辑' }}
             </el-button>
             <el-button link type="primary" size="default" style="color:#79bbff"
-                       @click="on跳转软件用户(scope.row.AppId)">
+                       @click="on跳转软件用户(scope.row.appId)">
               <el-icon color="#79bbff" class="no-inherit">
                 <UserFilled/>
               </el-icon>
               {{ is移动端值 ? '' : '软件用户' }}
             </el-button>
             <el-button link type="primary" size="default" style="color:#79bbff"
-                       @click="on跳转用户类型(scope.row.AppId)">
+                       @click="on跳转用户类型(scope.row.appId)">
               <el-icon color="#79bbff" class="no-inherit">
                 <Menu/>
               </el-icon>
@@ -120,14 +120,14 @@
             </el-button>
 
             <el-button link type="primary" size="default" style="color:#79bbff"
-                       @click="on跳转卡类列表(scope.row.AppId)">
+                       @click="on跳转卡类列表(scope.row.appId)">
               <el-icon color="#79bbff" class="no-inherit">
                 <Memo/>
               </el-icon>
               {{ is移动端值 ? '' : '卡类列表' }}
             </el-button>
             <el-button link type="primary" size="default" style="color:#79bbff"
-                       @click="on跳转卡号列表(scope.row.AppId)">
+                       @click="on跳转卡号列表(scope.row.appId)">
               <el-icon color="#79bbff" class="no-inherit">
                 <Tickets/>
               </el-icon>
@@ -141,7 +141,7 @@
             <!--            </el-button>-->
             <el-button link type="primary" size="default" style="color:#79bbff"
                        @click="on置顶(scope.row)">
-              <el-icon size="20" :color="scope.row.Sort>100?'#79bbff':'#556375'" class="no-inherit"  ><Star /></el-icon>
+              <el-icon size="20" :color="scope.row.sort>100?'#79bbff':'#556375'" class="no-inherit"  ><Star /></el-icon>
             </el-button>
 
           </template>
@@ -163,7 +163,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( List.Count)"
+              :total="parseInt( List.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -207,7 +207,7 @@ const on单个编辑 = async (id: number) => {
 }
 
 const on批量删除 = async () => {
-  const ids = 表格被选中列表.value.map((item => item.AppId))
+  const ids = 表格被选中列表.value.map((item => item.appId))
   console.log(ids)
   const res = await Del批量删除App({"ID": ids})
   console.log(res)
@@ -283,35 +283,35 @@ type DB_AppInfo struct {
 	Sort               int64  `json:"Sort" gorm:"column:Sort;default:0;comment:排序权重; "`
 }*/
 interface AppInfo {
-  AppId: number
-  AppWeb: string
-  AppName: string
-  Status: number
-  AppStatusMessage: string
-  AppVer: string
-  RegisterGiveKaClassId: number
-  VerifyKey: number
-  IsUserKeySame: number
-  UpKeyData: number
-  OutTime: number
-  PackTimeOut: number
-  UrlHome: string
-  UrlDownload: string
-  AppGongGao: string
-  VipData: string
-  CryptoType: number
-  CryptoKeyAes: string
-  CryptoKeyPrivate: string
-  CryptoKeyPublic: string
-  MaxOnline: number
-  ExceedMaxOnlineOut: number
-  AppType: number
-  RmbToVipNumber: number
-  Captcha: string
-  ApiHook: string
-  Sort: number
+  appId: number
+  appWeb: string
+  appName: string
+  status: number
+  appStatusMessage: string
+  appVer: string
+  registerGiveKaClassId: number
+  verifyKey: number
+  isUserKeySame: number
+  upKeyData: number
+  outTime: number
+  packTimeOut: number
+  urlHome: string
+  urlDownload: string
+  appGongGao: string
+  vipData: string
+  cryptoType: number
+  cryptoKeyAes: string
+  cryptoKeyPrivate: string
+  cryptoKeyPublic: string
+  maxOnline: number
+  exceedMaxOnlineOut: number
+  appType: number
+  rmbToVipNumber: number
+  captcha: string
+  apiHook: string
+  sort: number
 }
-const List = ref<{List:AppInfo[]}>({List:[]})
+const List = ref<{list: AppInfo[], count: number}>({list: [], count: 0})
 const Store = useStore()
 const 对象_搜索条件 = ref({Type: 2, Size: 10, Page: 1, Status: 0,Keywords:"",Order:1})
 
@@ -321,23 +321,23 @@ const on读取列表 = () => {
   onGetAppList()
 }
 const on置顶 = async (appInfo: AppInfo) => {
-  let 局_新sort = appInfo.Sort > 100 ? 0 : 时间_取现行时间戳();
-  let 返回 = await SetAppSort({ AppId: appInfo.AppId, Sort: 局_新sort });
+  let 局_新sort = appInfo.sort > 100 ? 0 : 时间_取现行时间戳();
+  let 返回 = await SetAppSort({ AppId: appInfo.appId, Sort: 局_新sort });
   if (返回.code === 10000) {
-    const currentIndex = List.value.List.findIndex(item => item.AppId === appInfo.AppId);
+    const currentIndex = List.value.list.findIndex(item => item.appId === appInfo.appId);
     if (currentIndex === -1) return;
     // 更新排序数值
-    List.value.List[currentIndex].Sort = 局_新sort;
+    List.value.list[currentIndex].sort = 局_新sort;
     // 分离非零排序项和零排序项
-    const nonZeroSort = List.value.List.filter(item => Number(item.Sort) >1000 );
-    const zeroSort = List.value.List.filter(item => Number(item.Sort) <1000);
+    const nonZeroSort = List.value.list.filter(item => Number(item.sort) >1000 );
+    const zeroSort = List.value.list.filter(item => Number(item.sort) <1000);
     const newList = [
-      ...nonZeroSort.sort((a, b) => Number(b.Sort) - Number(a.Sort)),
-      ...zeroSort.sort((a, b) => Number(a.AppId) - Number(b.AppId))
+      ...nonZeroSort.sort((a, b) => Number(b.sort) - Number(a.sort)),
+      ...zeroSort.sort((a, b) => Number(a.appId) - Number(b.appId))
     ];
 
 
-    List.value.List.splice(0, List.value.List.length, ...newList);
+    List.value.list.splice(0, List.value.list.length, ...newList);
   }
 };
 
@@ -360,16 +360,16 @@ const on格式化_状态 = (Status: number) => {
 const on格式化_类型 = (row: any, column: any) => {
 //1=账号限时,2=账号计点,3卡号限时,4=卡号计点
 
-  if (row.AppType === 1) {
+  if (row.appType === 1) {
     return '账号限时'
-  } else if (row.AppType === 2) {
+  } else if (row.appType === 2) {
     return '账号计点'
-  } else if (row.AppType === 3) {
+  } else if (row.appType === 3) {
     return '卡号限时'
-  } else if (row.AppType === 4) {
+  } else if (row.appType === 4) {
     return '卡号计点'
   }
-  return '未知类型:' + row.Status.toString()
+  return '未知类型:' + row.status.toString()
 }
 
 

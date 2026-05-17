@@ -2,7 +2,7 @@ import service from '@/api/request'
 
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/SetSystem/"
+const url=取url根入口路径() +"/setSystem/"
 
 //  GetUserClass详细信息
 //{}
@@ -21,7 +21,7 @@ const url=取url根入口路径() +"/SetSystem/"
 }*/
 export const GetInfo系统设置 = (data) => {
     return service({
-        url:  url+'GetInfoSystem',
+        url:  url+'getInfoSystem',
         method: 'post',
         data: data
     })
@@ -33,7 +33,7 @@ export const GetInfo系统设置 = (data) => {
 }*/
 export const S生成API加密源码SDK = (data) => {
     return service({
-        url:  url+'GenerateAPIEncryptedSDK',
+        url:  url+'generateAPIEncryptedSDK',
         method: 'post',
         data: data
     })
@@ -51,7 +51,7 @@ export const S生成API加密源码SDK = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const  SaveInfo系统设置 = (data) => {
     return service({
-        url:  url+'SaveInfoSystem',
+        url:  url+'saveInfoSystem',
         method: 'post',
         data: data
     })
@@ -79,7 +79,7 @@ export const  SaveInfo系统设置 = (data) => {
 }*/
 export const GetInfoPay = (data) => {
     return service({
-        url:  url+'GetInfoPay',
+        url:  url+'getInfoPay',
         method: 'post',
         data: data
     })
@@ -102,7 +102,7 @@ export const GetInfoPay = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const  SaveInfoPay = (data) => {
     return service({
-        url:  url+'SaveInfoPay',
+        url:  url+'saveInfoPay',
         method: 'post',
         data: data
     })
@@ -127,7 +127,7 @@ export const  SaveInfoPay = (data) => {
 }*/
 export const GetInfoSMS= (data) => {
     return service({
-        url:  url+'GetInfoSMS',
+        url:  url+'getInfoSMS',
         method: 'post',
         data: data
     })
@@ -146,14 +146,14 @@ export const GetInfoSMS= (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "保存成功"}"
 export const  SaveInfoSMS = (data) => {
     return service({
-        url:  url+'SaveInfoSMS',
+        url:  url+'saveInfoSMS',
         method: 'post',
         data: data
     })
 }
 export const  TestSendSms = (data) => {
     return service({
-        url:  url+'TestSendSMS',
+        url:  url+'testSendSMS',
         method: 'post',
         data: data
     })
@@ -161,7 +161,7 @@ export const  TestSendSms = (data) => {
 //行为验证码设置读取
 export const GetInfoCaptcha2= (data) => {
     return service({
-        url:  url+'GetInfoCaptcha2',
+        url:  url+'getInfoCaptcha2',
         method: 'post',
         data: data
     })
@@ -169,7 +169,7 @@ export const GetInfoCaptcha2= (data) => {
 //行为验证码设置保存
 export const  SaveInfoCaptcha2 = (data) => {
     return service({
-        url:  url+'SaveInfoCaptcha2',
+        url:  url+'saveInfoCaptcha2',
         method: 'post',
         data: data
     })
@@ -178,7 +178,7 @@ export const  SaveInfoCaptcha2 = (data) => {
 
 export const  SaveInfoCloudStorage = (data) => {
     return service({
-        url:  url+'SaveInfoCloudStorage',
+        url:  url+'saveInfoCloudStorage',
         method: 'post',
         data: data
     })
@@ -186,7 +186,7 @@ export const  SaveInfoCloudStorage = (data) => {
 
 export const  GetInfoCloudStorage = (data) => {
     return service({
-        url:  url+'GetInfoCloudStorage',
+        url:  url+'getInfoCloudStorage',
         method: 'post',
         data: data
     })
@@ -194,7 +194,7 @@ export const  GetInfoCloudStorage = (data) => {
 
 export const  SaveUserMsgConfig = (data) => {
     return service({
-        url:  url+'SaveUserMsgConfig',
+        url:  url+'saveUserMsgConfig',
         method: 'post',
         data: data
     })
@@ -202,7 +202,7 @@ export const  SaveUserMsgConfig = (data) => {
 
 export const  GetUserMsgConfig = (data) => {
     return service({
-        url:  url+'GetUserMsgConfig',
+        url:  url+'getUserMsgConfig',
         method: 'post',
         data: data
     })

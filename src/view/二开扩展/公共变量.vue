@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -119,7 +119,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -225,8 +225,8 @@ const on选择框被选择 = (val: any) => {
 }
 
 const Data = ref({
-  "Count": 0,
-  "List": [
+  "count": 0,
+  "list": [
     {
       "AppId": 1,
       "Name": "",
@@ -286,7 +286,7 @@ const on表格列宽初始化 = () => {
 
 onMounted(async () => {
 
-  Data.value.List = []
+  Data.value.list = []
   onReset()
   //如果 Store zize 不为0 且不为 null  才读取,不然就使用默认的
   if (Store.state.搜索_公共变量.Size != 0 && Store.state.搜索_公共变量.Size != null) {

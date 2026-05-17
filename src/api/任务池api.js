@@ -1,13 +1,13 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/TaskPool/"
+const url=取url根入口路径() +"/taskPool/"
 
 //{ "Page": 0,"Size": 10 }
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 export const GetTaskPoolList = (data) => {
   return service({
-    url: url+'GetList',
+    url: url+'getList',
     method: 'post',
     data: data
   })
@@ -18,7 +18,7 @@ export const GetTaskPoolList = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "注销成功"}"
 export const Del批量删除TaskPool = (data) => {
   return service({
-    url: url+'Delete',
+    url: url+'delete',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export const Del批量删除TaskPool = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const GetTaskPool详细信息 = (data) => {
   return service({
-    url:  url+'GetInfo',
+    url:  url+'getInfo',
     method: 'post',
     data: data
   })
@@ -40,7 +40,7 @@ export const GetTaskPool详细信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const  SaveTaskPool信息 = (data) => {
   return service({
-    url:  url+'SaveInfo',
+    url:  url+'saveInfo',
     method: 'post',
     data: data
   })
@@ -51,7 +51,7 @@ export const  SaveTaskPool信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "添加成功"}"
 export const  NewTaskPool信息 = (data) => {
   return service({
-    url: url+'New',
+    url: url+'new',
     method: 'post',
     data: data
   })
@@ -60,7 +60,7 @@ export const  NewTaskPool信息 = (data) => {
 
 export const  设置任务池任务类型状态 = (data) => {
   return service({
-    url: url+'SetStatus',
+    url: url+'setStatus',
     method: 'post',
     data: data
   })
@@ -68,7 +68,7 @@ export const  设置任务池任务类型状态 = (data) => {
 
 export const  清空队列Tid = (data) => {
   return service({
-    url: url+'DeleteTaskQueueTid',
+    url: url+'deleteTaskQueueTid',
     method: 'post',
     data: data
   })
@@ -77,14 +77,14 @@ export const  清空队列Tid = (data) => {
 
 export const  添加uuid到队列 = (data) => {
   return service({
-    url: url+'UuidAddQueue',
+    url: url+'uuidAddQueue',
     method: 'post',
     data: data
   })
 }
 export const  添加uuid到队列批量 = (data) => {
   return service({
-    url: url+'BatchUuidAddQueue',
+    url: url+'batchUuidAddQueue',
     method: 'post',
     data: data
   })
@@ -93,7 +93,7 @@ export const  添加uuid到队列批量 = (data) => {
 //设置 排序 权重
 export const  SetTaskPoolTypeSort = (data) => {
   return service({
-    url:  url+'SetSort',
+    url:  url+'setSort',
     method: 'post',
     data: data
   })

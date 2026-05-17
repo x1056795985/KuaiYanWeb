@@ -19,7 +19,7 @@
 <!--        </div>-->
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -27,49 +27,49 @@
                 fit="fit"
                 :header-cell-style="{background:'#FAFAFAFF',color:'#606266'}">
         <el-table-column type="selection" width="45"/>
-        <el-table-column prop="UUID" label="Uuid" width="120" show-overflow-tooltip="">
+        <el-table-column prop="UUID" label="uuid" width="120" show-overflow-tooltip="">
           <template #default="scope">
-            <el-icon class="复制按钮" @click="置剪辑版文本(scope.row.Uuid,'已复制到剪辑版')">
+            <el-icon class="复制按钮" @click="置剪辑版文本(scope.row.uuid,'已复制到剪辑版')">
               <DocumentCopy/>
             </el-icon>
-            {{ scope.row.Uuid }}
+            {{ scope.row.uuid }}
           </template>
         </el-table-column>
-        <el-table-column prop="TimeStart" label="创建时间" width="170" show-overflow-tooltip="">
+        <el-table-column prop="timeStart" label="创建时间" width="170" show-overflow-tooltip="">
           <template #default="scope">
-            {{ 时间_时间戳到时间(scope.row.TimeStart) }}
+            {{ 时间_时间戳到时间(scope.row.timeStart) }}
           </template>
         </el-table-column>
-        <el-table-column prop="FileName" label="Exe名称" width="210" show-overflow-tooltip=""/>
-        <el-table-column prop="AppName" label="归属应用" width="220" show-overflow-tooltip=""/>
-        <el-table-column prop="Ui" label="Ui" width="120" show-overflow-tooltip="">
+        <el-table-column prop="fileName" label="Exe名称" width="210" show-overflow-tooltip=""/>
+        <el-table-column prop="appName" label="归属应用" width="220" show-overflow-tooltip=""/>
+        <el-table-column prop="ui" label="ui" width="120" show-overflow-tooltip="">
           <template #default="scope">
-            {{ UiId取label(scope.row.Ui)}}
+            {{ UiId取label(scope.row.ui)}}
           </template>
         </el-table-column>
-        <el-table-column prop="Status" label="任务状态" width="90" show-overflow-tooltip="">
+        <el-table-column prop="status" label="任务状态" width="90" show-overflow-tooltip="">
           <template #default="scope">
             <el-tooltip
                 class="box-item"
                 effect="dark"
-                :content="scope.row.Err"
+                :content="scope.row.err"
                 placement="top"
-                v-if="scope.row.Err"
+                v-if="scope.row.err"
             >
-              <el-tag  effect="plain" :type="['primary', 'info', 'warning','success','danger'][scope.row.Status]">
-                {{ 状态列表[scope.row.Status] }}
+              <el-tag  effect="plain" :type="['primary', 'info', 'warning','success','danger'][scope.row.status]">
+                {{ 状态列表[scope.row.status] }}
               </el-tag>
             </el-tooltip>
-            <el-tag  v-else effect="plain" :type="['primary', 'info', 'warning','success','danger'][scope.row.Status]">
-              {{ 状态列表[scope.row.Status] }}
+            <el-tag  v-else effect="plain" :type="['primary', 'info', 'warning','success','danger'][scope.row.status]">
+              {{ 状态列表[scope.row.status] }}
             </el-tag>
           </template>
         </el-table-column>
 
         <el-table-column prop="TimeEnd" label="完成时间" width="170" show-overflow-tooltip="">
           <template #default="scope">
-            {{scope.row.TimeEnd>0?时间_时间戳到时间(scope.row.TimeEnd):"" }}
-             <el-progress     v-if="scope.row.TimeEnd==0" :percentage="scope.row.Status==1?0:计算进度条(scope.row.TimeStart)" :indeterminate="true"/>
+            {{scope.row.timeEnd>0?时间_时间戳到时间(scope.row.timeEnd):"" }}
+             <el-progress     v-if="scope.row.timeEnd==0" :percentage="scope.row.status==1?0:计算进度条(scope.row.timeStart)" :indeterminate="true"/>
           </template>
         </el-table-column>
         <el-table-column :fixed="is移动端()?false:'right'" label="操作" :width="2*85">
@@ -113,7 +113,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -224,20 +224,20 @@ const UiId取label = (id: number) => {
 
 
 const Data = ref({
-  "Count": 0,
-  "List": [
+  "count": 0,
+  "list": [
     {
-      AppId: 10007,
-      AppName: "",
-      FileName: "",
-      Path: "",
-      Status: 1,
-      TimeEnd: 0,
-      TimeStart: 1737357467,
-      Uuid: "",
-      Ui: 1,
-      DownloadUrl: "",
-      Err: "",
+      appId: 10007,
+      appName: "",
+      fileName: "",
+      path: "",
+      status: 1,
+      timeEnd: 0,
+      timeStart: 1737357467,
+      uuid: "",
+      ui: 1,
+      downloadUrl: "",
+      err: "",
     }]
 })
 

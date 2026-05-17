@@ -954,14 +954,14 @@ const 读取详细信息 = async (id: number) => {
       专属变量筛选器.value = Number(局_临时整数)
 
 
-      data.value = 返回.data.AppInfo
-      SerVerUrl.value = 返回.data.ServerUrl
+      data.value = 返回.data.appInfo
+      SerVerUrl.value = 返回.data.serverUrl
       //判断是否已经有了端口,没有在添加 有端口可能是内网映射
-      if (!SerVerUrl.value.indexOf(":") && 返回.data.Port > 0) {
-        SerVerUrl.value += +":" + 返回.data.Port
+      if (!SerVerUrl.value.indexOf(":") && 返回.data.port > 0) {
+        SerVerUrl.value += +":" + 返回.data.port
       }
-      对象_卡类型.value = 返回.data.KaClass
-      if (返回.data.AppType === 2 || 返回.data.AppType === 4) {
+      对象_卡类型.value = 返回.data.kaClass
+      if (data.value.AppType === 2 || data.value.AppType === 4) {
         isVipType.value = false
       } else {
         isVipType.value = true
@@ -1148,7 +1148,7 @@ const on读取专属变量 = async () => {
   const res = await GetList({AppId: data.value.AppId, Type: 1, Size: 500, Order: 1, Page: 1, Keywords: ""})
   is加载中.value = false
   if (res.code == 10000) {
-    专属变量.value = res.data.List
+    专属变量.value = res.data.list
     专属变量.value.reverse()
     ElMessage.success(res.msg)
   }

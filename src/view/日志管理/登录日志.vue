@@ -5,8 +5,8 @@
         <el-form-item label="选择应用" prop="" style="width:300px">
           <el-select v-model.number="对象_搜索条件.Appid" clear placeholder="请选择应用" filterable @change="on读取列表">
             <el-option label="全部" :value="0"/>
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="status" style="width:250px">
@@ -89,7 +89,7 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -129,7 +129,7 @@
                 size="small"
                 :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
                 :pager-count="is移动端()?5:9"
-                :total="parseInt( Data.Count)"
+                :total="parseInt( Data.count)"
                 @current-change="on读取列表"
             />
           </el-config-provider>
@@ -217,8 +217,8 @@ const on选择框被选择 = (val: any) => {
 }
 
 const Data = ref({
-  "Count": 0,
-  "List": [
+  "count": 0,
+  "list": [
     {
       "Id": 1,
       "User": "",
@@ -289,7 +289,7 @@ const on表格列宽初始化 = () => {
   }
 }
 onMounted(async () => {
-      Data.value.List=[]
+      Data.value.list=[]
     }
 )
 
@@ -299,8 +299,8 @@ onMounted(async () => {
 onMounted(async () => {
   await onGetAppIdNameList()
   Data.value = {
-    "Count": 0,
-    "List": []
+    "count": 0,
+    "list": []
   }
 
   onReset()
@@ -379,14 +379,14 @@ const MapAppId_Name = ref({
   11: "WebSocket",
 })
 const 数组AppId_Name = ref([{
-  "Appid": 1,
-  "AppName": "1级代理平台"
+  "appId": 1,
+  "appName": "1级代理平台"
 }])
 const onGetAppIdNameList = async () => {
 
   const res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  MapAppId_Name.value = res.data.Map
+  数组AppId_Name.value = res.data.array
+  MapAppId_Name.value = res.data.map
   let a={
     1: "1级代理平台",
     2: "2级代理平台",
@@ -397,7 +397,7 @@ const onGetAppIdNameList = async () => {
     11: "WebSocket",
   }
   for ( let key in a){
-    数组AppId_Name.value.push({"Appid":Number(key),"AppName":a[key]})
+    数组AppId_Name.value.push({appId:Number(key),appName:a[key]})
     MapAppId_Name.value[Number(key)]=a[key]
   }
 

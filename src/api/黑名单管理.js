@@ -1,12 +1,12 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/Blacklist/"
+const url=取url根入口路径() +"/blacklist/"
 
 // 黑名单列表
 export const GetList = (data) => {
   return service({
-    url: url+'GetList',
+    url: url+'getList',
     method: 'post',
     data: data
   })
@@ -15,7 +15,7 @@ export const GetList = (data) => {
 //  添加
 export const Create = (data) => {
   return service({
-    url: url+'Create',
+    url: url+'create',
     method: 'post',
     data: data
   })
@@ -23,7 +23,7 @@ export const Create = (data) => {
 //  Del批量删除
 export const Delete = (data) => {
   return service({
-    url: url+'Delete',
+    url: url+'delete',
     method: 'post',
     data: data
   })
@@ -32,7 +32,7 @@ export const Delete = (data) => {
 //  Del批量删除Ka
 export const Update = (data) => {
   return service({
-    url: url+'Update',
+    url: url+'update',
     method: 'post',
     data: data
   })
@@ -40,7 +40,7 @@ export const Update = (data) => {
 //  查询
 export const Info = (data) => {
   return service({
-    url: url+'Info',
+    url: url+'info',
     method: 'post',
     data: data
   })
@@ -49,7 +49,7 @@ export const Info = (data) => {
 //  批量维护删除
 export const DeleteBatch = (data) => {
   return service({
-    url: url+'DeleteBatch',
+    url: url+'deleteBatch',
     method: 'post',
     data: data
   })

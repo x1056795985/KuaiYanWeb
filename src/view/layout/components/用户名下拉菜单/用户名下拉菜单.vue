@@ -1,6 +1,6 @@
 <template>
-  <el-badge v-if="!is移动端()" :value="Store.state.UserInfo.UserMsgNoRead" :max="99" class="item"
-            :hidden="Store.state.UserInfo.UserMsgNoRead===0">
+  <el-badge v-if="!is移动端()" :value="Store.state.userInfo.userMsgNoRead" :max="99" class="item"
+            :hidden="Store.state.userInfo.userMsgNoRead===0">
     <el-icon class="右上角图标" @click="on路由跳转('用户消息')">
       <Bell/>
     </el-icon>
@@ -8,7 +8,7 @@
 
   <el-dropdown>
     <span class="el-dropdown-link" style="color:#0c0d0e ;font-size: 18px;">
-      <el-icon class="右上角图标"><User/></el-icon>  {{ is移动端() ? '' : Store.state.UserInfo?.AdminInfo?.User }}
+      <el-icon class="右上角图标"><User/></el-icon>  {{ is移动端() ? '' : Store.state.userInfo?.adminInfo?.User }}
       <el-icon class="el-icon--right">
         <arrow-down/>
       </el-icon>
@@ -71,16 +71,16 @@ const on个人中心 = async () => {
   on路由跳转("个人中心")
 }
 const onGetUserInfo = async () => {
-  console.log(Store.state.UserInfo)
-  if (!Store.state.UserInfo?.AdminInfo?.User) {
+  console.log(Store.state.userInfo)
+  if (!Store.state.userInfo?.adminInfo?.User) {
     console.log("用户信息没有了需要更新")
     const res = await GetAdminInfo()
     console.log(res.data)
-    if (res.data.AdminInfo?.Id!==undefined) {
+    if (res.data.adminInfo?.Id!==undefined) {
       Store.commit("setUserInfo", res.data)
-      console.log("res.data.ServerName")
-      console.log(res.data.ServerName)
-      Store.commit("setUserInfo", res.data.ServerName)
+      console.log("res.data.serverName")
+      console.log(res.data.serverName)
+      Store.commit("set服务器名称", res.data.serverName)
     }
 
   }

@@ -18,21 +18,21 @@
             <i class="el-icon-user"></i>
 
           </template>
-          <el-tag v-if="Props.UserInfo.AgentUid>0 " size="small">定制编号{{Props.UserInfo.AgentUid}}</el-tag>
+          <el-tag v-if="Props.UserInfo.agentUid>0 " size="small">定制编号{{Props.UserInfo.agentUid}}</el-tag>
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <i class="el-icon-s-custom"></i>
             用户名
           </template>
-          {{ Props.UserInfo.User }}
+          {{ Props.UserInfo.user }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <i class="el-icon-odometer"></i>
             注册时间
           </template>
-          {{ 时间_时间戳到时间(Props.UserInfo.RegisterTime) }}
+          {{ 时间_时间戳到时间(Props.UserInfo.registerTime) }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
@@ -40,28 +40,28 @@
             <i class="el-icon-female"></i>
             类型
           </template>
-          <el-tag size="small"> {{ Props.UserInfo.UserClassName }}</el-tag>
+          <el-tag size="small"> {{ Props.UserInfo.userClassName }}</el-tag>
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <i class="el-icon-message"></i>
             邮箱Email
           </template>
-          {{ Props.UserInfo.Email }}
+          {{ Props.UserInfo.email }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <i class="el-icon-location-outline"></i>
             登录Ip
           </template>
-          {{ Props.UserInfo.LoginIp }}
+          {{ Props.UserInfo.loginIp }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <i class="el-icon-office-building"></i>
             登录时间
           </template>
-          {{ 时间_时间戳到时间(Props.UserInfo.LoginTime) }}
+          {{ 时间_时间戳到时间(Props.UserInfo.loginTime) }}
 
         </el-descriptions-item>
         <el-descriptions-item>
@@ -69,7 +69,7 @@
             <i class="el-icon-location-outline"></i>
             当前版本
           </template>
-          {{ Props.UserInfo.AppVer }}({{ Props.UserInfo.AppVerUpdateTime }})
+          {{ Props.UserInfo.appVer }}({{ Props.UserInfo.appVerUpdateTime }})
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
@@ -77,13 +77,13 @@
             最新版本
           </template>
           <div class="工具栏">
-            {{ Props.UserInfo.AppVerNew }}
+            {{ Props.UserInfo.appVerNew }}
             <el-tooltip
                 effect="dark"
                 content="升级到最新版本"
                 placement="right"
             >
-              <el-icon size="20"  v-if="Props.UserInfo.AppVer!==Props.UserInfo.AppVerNew"  @click="on升级最新版本">
+              <el-icon size="20"  v-if="Props.UserInfo.appVer!==Props.UserInfo.appVerNew"  @click="on升级最新版本">
                 <UploadFilled/>
               </el-icon>
             </el-tooltip>
@@ -100,25 +100,25 @@
 import {快验系统更新} from "@/api/快验个人中心api.js";
 import {ElMessage} from "element-plus";
 
-const Props = defineProps({
-  UserInfo: {
-    type: Object,
-    default: {
-      User: "",
-      UserClassName: "",
-      VipNumber: 180.00,
-      RMB: 180.01,
-      VipTime: 1685678065,
-      Email: "13888888888@qq.com",
-      LoginTime: 1685678065,
-      LoginIp: "127.0.0.1",
-      RegisterTime: 1685678065,
-      AppVer: "",
-      AppVerUpdateTime: "",
-      AppVerNew: "",
+  const Props = defineProps({
+    UserInfo: {
+      type: Object,
+      default: {
+        user: "",
+        userClassName: "",
+        vipNumber: 180.00,
+        rmb: 180.01,
+        vipTime: 1685678065,
+        email: "13888888888@qq.com",
+        loginTime: 1685678065,
+        loginIp: "127.0.0.1",
+        registerTime: 1685678065,
+        appVer: "",
+        appVerUpdateTime: "",
+        appVerNew: "",
+      }
     }
-  }
-})
+  })
 const on升级最新版本 = () => {
   ElMessageBox.confirm(
       '确定要升级到最新版本吗?',

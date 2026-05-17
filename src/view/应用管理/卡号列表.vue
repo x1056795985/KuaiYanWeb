@@ -4,8 +4,8 @@
       <el-form :inline="true">
         <el-form-item :label="is移动端()?'':'选择应用'" prop=""   :style="{ width: is移动端() ? '100%' : '280px' }">
           <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable @change="on读取列表">
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+ (item.appId?.toString() ?? '') +')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="status" style="width:120px" v-show="is更多筛选||!is移动端()">
@@ -160,7 +160,7 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -350,12 +350,12 @@
     </div>
   </div>
   <KaNew v-if="is对话框可见" :id="is对话框id" :AppId="对象_搜索条件.AppId"
-         :AppName="MapAppId_Name[对象_搜索条件.AppId.toString()]" :AppType="Data.AppType"
+         :AppName="MapAppId_Name?.[对象_搜索条件.AppId?.toString() ?? '0'] ?? ''" :AppType="Data.appType"
          @on对话框详细信息关闭="on对话框详细信息关闭" :KaClass="对象_卡类型"
          :批量维护导入卡号="批量维护导入卡号"></KaNew>
 
   <KaEdit :is对话框可见="is对话框可见卡详细信息" :id="is对话框卡详细信息id" :AppId="对象_搜索条件.AppId"
-          :AppName="MapAppId_Name[对象_搜索条件.AppId.toString()]" :AppType="Data.AppType"
+          :AppName="MapAppId_Name?.[对象_搜索条件.AppId?.toString() ?? '0'] ?? ''" :AppType="Data.appType"
           @on对话框详细信息关闭="on对话框详细信息关闭" :KaClass="对象_卡类型" :UserType="对象_用户类型"></KaEdit>
   <ChartData v-if="is图表分析抽屉可见" @on图表分析抽屉关闭="is图表分析抽屉可见 = false"/>
 </template>
@@ -401,9 +401,9 @@ const on批量冻结解冻 = async (Status: number) => {
   if (res.code == 10000) {
     ElMessage.success(res.msg)
 
-    for (let i = 0; i < Data.value.List.length; i++) {
-      if (ids.some(ele => ele === Data.value.List[i].Id)) { //判断数组内是否存在该ID,如果存在则修改状态
-        Data.value.List[i].Status = Status
+    for (let i = 0; i < Data.value.list.length; i++) {
+      if (ids.some(ele => ele === Data.value.list[i].Id)) { //判断数组内是否存在该ID,如果存在则修改状态
+        Data.value.list[i].Status = Status
       }
     }
     return true
@@ -520,35 +520,9 @@ const on选择框被选择 = (val: any) => {
 }
 
 const Data = ref({
-  "Count": 1,
-  "AppType": 1,
-  "List": [
-    {
-      "Id": 1,
-      "AppId": 0,
-      "KaClassId": 1,
-      "Name": "T1KVzqz462i308rK6bivirps8",
-      "Status": 1,
-      "RegisterUser": "admin",
-      "RegisterTime": 1681569065,
-      "AdminNote": "",
-      "AgentNote": "",
-      "VipTime": 86400,
-      "InviteCount": 3600,
-      "RMb": 5.55,
-      "VipNumber": 10,
-      "Money": 5.01,
-      "AgentMoney": 3.01,
-      "UserClassId": 13,
-      "NoUserClass": 1,
-      "KaType": 1,
-      "MaxOnline": 1,
-      "Num": 0,
-      "NumMax": 1,
-      "user": "",
-      "UserTime": "",
-      "inviteUser": ""
-    }]
+  count: 0,
+  appType: 1,
+  list: []
 })
 const Store = useStore()
 const 对象_搜索条件 = ref({
@@ -600,10 +574,14 @@ const onGetKaList = async () => {
   const res = await GetKaList(对象_搜索条件.value)
   console.log(res)
   is加载中.value = false
-  Data.value = res.data
-  对象_用户类型.value = res.data.UserClass
-  对象_用户类型.value["0"] = "未分类"
-  对象_卡类型.value = res.data.KaClass
+  if (res.code === 10000 && res.data) {
+    Data.value.count = res.data.count ?? 0
+    Data.value.appType = res.data.appType ?? 1
+    Data.value.list = res.data.list ?? []
+    对象_用户类型.value = res.data.userClass ?? {}
+    对象_用户类型.value["0"] = "未分类"
+    对象_卡类型.value = res.data.kaClass ?? {}
+  }
   console.log("对象_用户类型")
   console.log(对象_用户类型.value)
   Store.commit("set搜索_默认选择应用AppId", 对象_搜索条件.value.AppId)
@@ -611,18 +589,25 @@ const onGetKaList = async () => {
 
 const MapAppId_Name = ref({})
 const 数组AppId_Name = ref([{
-  "Appid": 10004,
-  "AppName": ""
+  "appId": 10004,
+  "appName": ""
 }])
 const onGetAppIdNameList = async () => {
   const res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  MapAppId_Name.value = res.data.Map
-  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.Map[对象_搜索条件.value.AppId.toString()])
+  数组AppId_Name.value = res.data?.array ?? []
+  MapAppId_Name.value = res.data?.map ?? {}
+  const appIdStr = 对象_搜索条件.value.AppId?.toString() ?? '0'
+  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + (MapAppId_Name.value[appIdStr] ?? 'null'))
 
-  if (res.data.Map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
-    let 局_默认appid=Store.state.搜索_默认选择应用AppId
-    对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.Appid === 局_默认appid)?局_默认appid:数组AppId_Name.value[0].Appid
+  if (!MapAppId_Name.value[appIdStr] || 对象_搜索条件.value.AppId <= 10000) {
+    let 局_默认appid = Store.state.搜索_默认选择应用AppId
+    if (数组AppId_Name.value.length > 0) {
+      对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.appId === 局_默认appid)
+        ? 局_默认appid
+        : 数组AppId_Name.value[0].appId
+    } else {
+      对象_搜索条件.value.AppId = 0 // no app available
+    }
   }
 
 }
@@ -681,7 +666,7 @@ const on冻结状态被改变 = async (表项索引: number, ID: number, Status:
     ElMessage.success(res.msg)
     return true
   } else {
-    Data.value.List[表项索引].Status = Status == 1 ? 2 : 1
+    Data.value.list[表项索引].Status = Status == 1 ? 2 : 1
     return false
   }
 
@@ -700,7 +685,7 @@ const on管理员备注被改变 = async (表项索引: number, ID: number, Admi
         const res = await SetAdminNote({"Id": [ID], "AdminNote": 新管理员备注})
         console.log(res)
         if (res.code == 10000) {
-          Data.value.List[表项索引].AdminNote = 新管理员备注   //成功赋新值
+          Data.value.list[表项索引].AdminNote = 新管理员备注   //成功赋新值
           ElMessage.success(res.msg)
           return true
         } else {

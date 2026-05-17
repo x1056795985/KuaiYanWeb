@@ -1,13 +1,13 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/UserClass/"
+const url=取url根入口路径() +"/userClass/"
 // 分页获取UserClass信息列表
 //{ "Page": 0,"Size": 10 }
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 export const GetUserClassList = (data) => {
   return service({
-    url: url+'GetList',
+    url: url+'getList',
     method: 'post',
     data: data
   })
@@ -18,7 +18,7 @@ export const GetUserClassList = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "注销成功"}"
 export const Del批量删除UserClass = (data) => {
   return service({
-    url: url+'Delete',
+    url: url+'delete',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export const Del批量删除UserClass = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const GetUserClass详细信息 = (data) => {
   return service({
-    url:  url+'GetInfo',
+    url:  url+'getInfo',
     method: 'post',
     data: data
   })
@@ -40,7 +40,7 @@ export const GetUserClass详细信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const  SaveUserClass信息 = (data) => {
   return service({
-    url:  url+'SaveInfo',
+    url:  url+'saveInfo',
     method: 'post',
     data: data
   })
@@ -51,7 +51,7 @@ export const  SaveUserClass信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "添加成功"}"
 export const  NewUserClass信息 = (data) => {
   return service({
-    url: url+'New',
+    url: url+'new',
     method: 'post',
     data: data
   })
@@ -62,7 +62,7 @@ export const  NewUserClass信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  SetStatus = (data) => {
   return service({
-    url: url+'SetStatus',
+    url: url+'setStatus',
     method: 'post',
     data: data
   })
@@ -73,7 +73,7 @@ export const  SetStatus = (data) => {
 
 export const  GetIdNameList = (data) => {
   return service({
-    url: url+'GetIdNameList',
+    url: url+'getIdNameList',
     method: 'post',
     data: data
   })

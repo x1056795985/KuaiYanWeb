@@ -9,18 +9,18 @@
         <div class="PersonTop_text">
           <div class="user_text">
             <div class="user_name">
-              <span>  {{ UserInfo.User }}  </span>
+              <span>  {{ UserInfo.user }}  </span>
             </div>
             <div class="user-v">
-              <span class="user-v-font">{{ UserInfo.UserClassName }}</span>
+              <span class="user-v-font">{{ UserInfo.userClassName }}</span>
             </div>
             <div class="user_qianming">
-<!--              <span v-if="UserInfo.VipTime>时间_取现行时间戳()"> 有效期:{{ 时间_时间戳到时间(UserInfo.VipTime) }}</span>
+<!--              <span v-if="UserInfo.vipTime>时间_取现行时间戳()"> 有效期:{{ 时间_时间戳到时间(UserInfo.vipTime) }}</span>
               <span style="color: red" v-else-if="UserInfo.linkTokenCount>120">恭喜管理员同时在线用户数量已超过100,当前{{UserInfo.linkTokenCount}},请开通商业会员,感谢您的支持</span>-->
 
 <!--因为客户看着不舒服,所以不显示了-->
 <!--              <span
-                  v-if="UserInfo.UserClassName !=='商业会员' || UserInfo.VipTime<时间_取现行时间戳()">{{
+                  v-if="UserInfo.userClassName !=='商业会员' || UserInfo.vipTime<时间_取现行时间戳()">{{
                   "在线用户量(" + UserInfo.linkTokenCount + ")<100无需开通商业会员"
                 }}</span>-->
 
@@ -44,11 +44,11 @@
           </div>
           <div class="user_num">
             <div style="cursor: pointer">
-              <div class="num_number">{{ UserInfo.RMB }}</div>
+              <div class="num_number">{{ UserInfo.rmb }}</div>
               <span class="num_text">历史赞助</span>
             </div>
             <div style="cursor: pointer">
-              <div class="num_number">{{ UserInfo.VipNumber }}</div>
+              <div class="num_number">{{ UserInfo.vipNumber }}</div>
               <span class="num_text">会员积分</span>
             </div>
           </div>
@@ -122,22 +122,22 @@ import {时间_取现行时间戳} from "@/utils/utils";
 
 const Store = useStore()
 
-const UserInfo = ref({
-  User: "",
-  UserClassName: "",
-  VipNumber: 180.00,
-  RMB: 180.01,
-  VipTime: 1685678065,
-  Email: "13888888888@qq.com",
-  loginTime: 1685678065,
-  loginIp: "127.0.0.1",
-  RegisterTime: 1685678065,
-  AppVar: "",
-  AppVerUpdateTime: "",
-  AppVarNew: "",
-  linkTokenCount: 0,
-  AgentUid: 0,
-});
+  const UserInfo = ref({
+    user: "",
+    userClassName: "",
+    vipNumber: 180.00,
+    rmb: 180.01,
+    vipTime: 1685678065,
+    email: "13888888888@qq.com",
+    loginTime: 1685678065,
+    loginIp: "127.0.0.1",
+    registerTime: 1685678065,
+    appVar: "",
+    appVerUpdateTime: "",
+    appVarNew: "",
+    linkTokenCount: 0,
+    agentUid: 0,
+  });
 const is加载中 = ref(false);
 const 当前选择 = ref("个人信息");
 
@@ -154,8 +154,8 @@ const on更新个人信息 = async () => {
   if (返回.code == 10000) {
     UserInfo.value = 返回.data
   }
-  is对话框可见.value = UserInfo.value.User.length < 6
-  console.log(UserInfo.value.User.length < 6)
+  is对话框可见.value = UserInfo.value.user.length < 6
+  console.log(UserInfo.value.user.length < 6)
   console.log(UserInfo.value)
 
 }

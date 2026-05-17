@@ -1,13 +1,13 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/Agent/"
+const url=取url根入口路径() +"/agent/"
 // 分页获取用户信息列表
 //{ "Page": 0,"Size": 10 }
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 export const GetUserList = (data) => {
   return service({
-    url: url+'GetAgentUserList',
+    url: url+'getAgentUserList',
     method: 'post',
     data: data
   })
@@ -18,7 +18,7 @@ export const GetUserList = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "注销成功"}"
 export const Del批量删除用户 = (data) => {
   return service({
-    url: url+'DeleteAgentUser',
+    url: url+'deleteAgentUser',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export const Del批量删除用户 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const Get用户详细信息 = (data) => {
   return service({
-    url: url+'GetAgentUserInfo',
+    url: url+'getAgentUserInfo',
     method: 'post',
     data: data
   })
@@ -42,7 +42,7 @@ export const Get用户详细信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const  Save用户信息 = (data) => {
   return service({
-    url: url+'SaveAgentUser',
+    url: url+'saveAgentUser',
     method: 'post',
     data: data
   })
@@ -60,7 +60,7 @@ export const  Save用户信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "msg"}"
 export const  SetUserStatus = (data) => {
   return service({
-    url: url+'SetAgentUserStatus',
+    url: url+'setAgentUserStatus',
     method: 'post',
     data: data
   })
@@ -70,7 +70,7 @@ export const  SetUserStatus = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "添加成功"}"
 export const  New用户信息 = (data) => {
   return service({
-    url: url+'NewAgentUser',
+    url: url+'newAgentUser',
     method: 'post',
     data: data
   })
@@ -80,7 +80,7 @@ export const  New用户信息 = (data) => {
 //设置 排序 权重
 export const  SetAgentSort = (data) => {
   return service({
-    url:  url+'SetSort',
+    url:  url+'setSort',
     method: 'post',
     data: data
   })
@@ -92,7 +92,7 @@ export const  SetAgentSort = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const Get代理可制卡类列表 = (data) => {
   return service({
-    url: url+'GetAgentKaClassAuthority',
+    url: url+'getAgentKaClassAuthority',
     method: 'post',
     data: data
   })
@@ -102,7 +102,7 @@ export const Get代理可制卡类列表 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const Set代理可制卡类列表 = (data) => {
   return service({
-    url: url+'SetAgentKaClassAuthority',
+    url: url+'setAgentKaClassAuthority',
     method: 'post',
     data: data
   })
@@ -110,7 +110,7 @@ export const Set代理可制卡类列表 = (data) => {
 
 export const Get销售统计 = (data) => {
   return service({
-    url: url+'GetKaSalesStatistics',
+    url: url+'getKaSalesStatistics',
     method: 'post',
     data: data
   })

@@ -31,8 +31,8 @@
 
         <el-form-item label="归属应用" prop="" style="width:100%">
           <el-select v-model.number="data.AppId" clear placeholder="请选择应用" filterable style="width:100%"  >
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+(item.Appid>10000?'('+item.Appid.toString()+')':'')" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+(item.appId>10000?'('+item.appId.toString()+')':'')" :value="item.appId"/>
 
           </el-select>
         </el-form-item>
@@ -272,12 +272,12 @@ const on对话框被关闭 = () => {
 
 const MapAppId_Name = ref({})
 const 数组AppId_Name = ref([{
-  "Appid": 10004,
-  "AppName": ""
+  "appId": 10004,
+  "appName": ""
 }])
 const onGetAppIdNameList = async () => {
   const res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
+  数组AppId_Name.value = res.data.array
   数组AppId_Name.value.unshift({
     "Appid": 1,
     "AppName": "全局"
@@ -295,7 +295,7 @@ const onGetAppIdNameList = async () => {
     "AppName": "WebSocket"
   })
 
-  MapAppId_Name.value = res.data.Map
+  MapAppId_Name.value = res.data.map
 }
 
 onMounted(async () => {

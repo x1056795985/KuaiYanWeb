@@ -3,7 +3,7 @@ import service from '@/api/request'
 import {取url根入口路径} from "@/utils/utils"
 
 // AI配置管理 - 后端API
-const aiConfigUrl = 取url根入口路径() + "/SetSystem/"
+const aiConfigUrl = 取url根入口路径() + "/setSystem/"
 
 export const defaultConfig = {
   apiUrl: 'https://api.deepseek.com/v1/chat/completions',
@@ -16,7 +16,7 @@ export const defaultConfig = {
 export async function getAiConfig() {
   try {
     const res = await service({
-      url: aiConfigUrl + 'GetInfoAiConfig',
+      url: aiConfigUrl + 'getInfoAiConfig',
       method: 'post',
       data: {}
     })

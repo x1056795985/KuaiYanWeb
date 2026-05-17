@@ -7,7 +7,7 @@ const url = 取url根入口路径() +"/menu/"
 // @Router /menu/getMenu [post]
 export const asyncMenu = () => {
   return service({
-    url: url+'GetMenu',
+    url: url+'getMenu',
     method: 'post'
   })
 }

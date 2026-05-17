@@ -55,8 +55,8 @@
         <el-form-item label="复制指定" prop="">
           <el-tooltip content="新应用会复制该应用除了公私密钥以外的信息,含卡类列表,用户类型列表,专属云变量" effect="dark" placement="right">
           <el-select v-model.number="data.CopyAppId" clear placeholder="复制指定应用" >
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
           </el-tooltip>
         </el-form-item>
@@ -150,8 +150,8 @@ const 读取当前最大Appid = async () => {
   console.info("读取当前最大Appid")
   console.info(返回)
   if (返回.code == 10000) {
-    console.info(返回.data.AppIdMax)
-    data.value.AppId = 返回.data.AppIdMax + 1
+    console.info(返回.data.appIdMax)
+    data.value.AppId = 返回.data.appIdMax + 1
   }
 }
 
@@ -163,21 +163,21 @@ const on对话框被关闭 = () => {
 }
 
 const 数组AppId_Name = ref([{
-  "Appid": 0,
-  "AppName": "不复制"
+  "appId": 0,
+  "appName": "不复制"
 }])
 const onGetAppIdNameList = async () => {
   let res = await GetAppIdNameList();
-// 假设 res.data.Map 是你提供的数组
-  const maxAppIdItem = res.data.Array.reduce((max, current) => (current.Appid > max.Appid ? current : max), res.data.Array[0]);
-  data.value.AppId = maxAppIdItem.Appid + 1
-  数组AppId_Name.value = res.data.Array
+// 假设 res.data.map 是你提供的数组
+  const maxAppIdItem = res.data.array.reduce((max, current) => (current.appId > max.appId ? current : max), res.data.array[0]);
+  data.value.AppId = maxAppIdItem.appId + 1
+  数组AppId_Name.value = res.data.array
 
   数组AppId_Name.value.push({
-    "Appid": 0,
-    "AppName": "不复制"
+    "appId": 0,
+    "appName": "不复制"
   })
-  if (res.data.Map[data.value.AppId.toString()] == null || data.value.AppId <= 10000) {
+  if (res.data.map[data.value.AppId.toString()] == null || data.value.AppId <= 10000) {
     data.value.CopyAppId = 0
   }
 }

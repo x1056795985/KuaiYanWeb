@@ -6,13 +6,13 @@ import createPersistedState from 'vuex-persistedstate'
 
 interface state全局状态 {
     count: number
-    ServerName: string
+    serverName: string
     备案号: string
-    Token: string
-    ITabList: Array<ITab>
+    token: string
+    iTabList: Array<ITab>
     Tabs菜单当前Path: string
     权限json: object
-    UserInfo: object
+    userInfo: object
     搜索_默认选择应用AppId: number
     搜索_在线用户: object
     搜索_用户账号: object
@@ -89,23 +89,23 @@ export const store = createStore<state全局状态>({
     state() {
         return {
             count: 0,
-            ITabList: [],
+            iTabList: [],
             Tabs菜单当前Path: "",
-            ServerName: "系统名称待初始化",
+            serverName: "系统名称待初始化",
             备案号: "暂无备案号",
-            Token: window.localStorage.getItem('AdminToken') || '',
+            token: window.localStorage.getItem('AdminToken') || '',
             权限json: 权限json,
-            UserInfo: {
-                "AdminInfo": {
-                    "Id": 1,
-                    "User": "",
+            userInfo: {
+                "adminInfo": {
+                    "id": 1,
+                    "user": "",
                     "phone": "",
-                    "Email": "",
-                    "Qq": "",
-                    "Status": 1,
+                    "email": "",
+                    "qq": "",
+                    "status": 1,
                     "authority": "All"
                 },
-                "UserMsgNoRead": 0
+                "userMsgNoRead": 0
             },
             搜索_在线用户: {},
             搜索_用户账号: {},
@@ -137,7 +137,7 @@ export const store = createStore<state全局状态>({
             搜索_签到日志: {},
             搜索_绑定日志: {},
             搜索_默认选择应用AppId: 10001,
-            搜索_个人中心: {数组_可购买充值卡:[],支付通道状态:{},订单信息:{订单ID: "", PayQRCode: "", PayURL: "", 订单状态: 0}},
+            搜索_个人中心: {数组_可购买充值卡:[],支付通道状态:{},订单信息:{订单ID: "", payQrCode: "", payUrl: "", 订单状态: 0}},
         }
     },
     mutations: {
@@ -146,36 +146,36 @@ export const store = createStore<state全局状态>({
         },
 
         addITab(state全局状态: state全局状态, ITab: ITab) {
-            const isSome = state全局状态.ITabList.some((item) => item.path == ITab.path)
+            const isSome = state全局状态.iTabList.some((item) => item.path == ITab.path)
             //console.log("isSome" + isSome + " path:" + ITab.path + ",Title:" + ITab.title)
             if (!isSome) {
-                state全局状态.ITabList.push(ITab)
+                state全局状态.iTabList.push(ITab)
             }
         },
         DeleteITab(state全局状态: state全局状态, Path: string) {
-            const isSome = state全局状态.ITabList.findIndex((item) => item.path == Path)
+            const isSome = state全局状态.iTabList.findIndex((item) => item.path == Path)
             if (isSome!=-1){
-                state全局状态.ITabList.splice(isSome, 1)
+                state全局状态.iTabList.splice(isSome, 1)
             }
         },
         on更新菜单当前Path(state全局状态: state全局状态, Path: string) {
             state全局状态.Tabs菜单当前Path = Path
         },
         onTabs菜单删除(state全局状态: state全局状态, 命令: string) {
-            const index = state全局状态.ITabList.findIndex((item) => item.path == state全局状态.Tabs菜单当前Path)
+            const index = state全局状态.iTabList.findIndex((item) => item.path == state全局状态.Tabs菜单当前Path)
             switch (命令) {
                 case "关闭所有":
-                    state全局状态.ITabList = [{path: "/控制面板/仪表台", title: "仪表台"}]
+                    state全局状态.iTabList = [{path: "/控制面板/仪表台", title: "仪表台"}]
                     sessionStorage.removeItem("Tabs_Router")
                     break;
                 case "关闭左边":
-                    state全局状态.ITabList.splice(0, index)
+                    state全局状态.iTabList.splice(0, index)
                     break;
                 case "关闭右边":
-                    state全局状态.ITabList.splice(index + 1)
+                    state全局状态.iTabList.splice(index + 1)
                     break;
                 case "关闭其他":
-                    state全局状态.ITabList = state全局状态.ITabList.filter((item) => item.path == state全局状态.Tabs菜单当前Path)
+                    state全局状态.iTabList = state全局状态.iTabList.filter((item) => item.path == state全局状态.Tabs菜单当前Path)
                     break;
                 default:
                     console.info("菜单命令信息错误")
@@ -183,21 +183,21 @@ export const store = createStore<state全局状态>({
         },
         set服务器名称(state全局状态: state全局状态, 服务器名称: string) {
             document.title = 服务器名称
-            state全局状态.ServerName = 服务器名称
+            state全局状态.serverName = 服务器名称
         },
         set服务器备案号(state全局状态: state全局状态, 备案号: string) {
             state全局状态.备案号 = 备案号
         },
         setToken(state全局状态: state全局状态, Token: string) {
-            state全局状态.Token = Token
+            state全局状态.token = Token
             window.localStorage.setItem('AdminToken', Token)
         },
         setUserInfo(state全局状态: state全局状态, UserInfo: object) {
-            state全局状态.UserInfo = UserInfo
+            state全局状态.userInfo = UserInfo
             window.localStorage.setItem('UserInfo', JSON.stringify(UserInfo))
         },
         NeedInit(state全局状态: state全局状态) {
-            state全局状态.Token = ''
+            state全局状态.token = ''
             window.localStorage.removeItem('AdminToken')
             localStorage.clear()
 
@@ -292,7 +292,7 @@ export const store = createStore<state全局状态>({
     },
     getters: {
         getItabArray(state全局状态: state全局状态) {
-            return state全局状态.ITabList
+            return state全局状态.iTabList
         }
     }
 

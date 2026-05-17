@@ -61,7 +61,7 @@
 
       </div>
 
-      <el-table v-loading="is加载中" :data="List.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="List.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -87,14 +87,14 @@
         <el-table-column prop="Name" label="队列剩余" width="130">
           <template #default="scope">
             <el-tag>
-              {{ scope.row.QueueCount }}
+              {{ scope.row.queueCount }}
             </el-tag>
-            <el-icon v-if="scope.row.QueueCount>0" class="复制按钮" @click="on清空队列(scope.$index,scope.row)">
+            <el-icon v-if="scope.row.queueCount>0" class="复制按钮" @click="on清空队列(scope.$index,scope.row)">
               <Delete/>
             </el-icon>
           </template>
         </el-table-column>
-        <el-table-column prop="TaskCount" label="30天任务总计" width="130"/>
+        <el-table-column prop="taskCount" label="30天任务总计" width="130"/>
 
         <el-table-column prop="HookSubmitDataStart" label="Hook函数创建入库前" width="230"/>
         <el-table-column prop="HookSubmitDataEnd" label="Hook函数创建入库后" width="230"/>
@@ -138,7 +138,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( List.Count)"
+              :total="parseInt( List.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -207,7 +207,7 @@ const on清空队列 = async (索引: number, row: any) => {
         is加载中.value = true
         返回 = await 清空队列Tid({Id: [row.Id]});
         is加载中.value = false
-        List.value.List[索引].QueueCount = 0
+        List.value.list[索引].QueueCount = 0
         console.log(返回)
         if (返回.code == 10000) {
           ElMessage.success(返回.msg)
@@ -229,7 +229,7 @@ const on添加uuid到队列 = async () => {
         is加载中.value = true
         返回 = await 添加uuid到队列({uuid: value});
         is加载中.value = false
-        List.value.List[索引].QueueCount = 0
+        List.value.list[索引].QueueCount = 0
         console.log(返回)
         if (返回.code == 10000) {
           ElMessage.success(返回.msg)
@@ -291,8 +291,8 @@ type TaskPool = {
 
 
 const List = ref({
-  "Count": 0,
-  "List": [
+  "count": 0,
+  "list": [
     {
       "Id": 1,
       "Name": "test3",
@@ -369,7 +369,7 @@ const on状态被改变 = async (表项索引: number, ID: number, Status: numbe
     ElMessage.success(res.msg)
     return true
   } else {
-    List.value.List[表项索引].Status = Status == 1 ? 2 : 1
+    List.value.list[表项索引].Status = Status == 1 ? 2 : 1
     return false
   }
 
@@ -382,19 +382,19 @@ const on置顶 = async (TaskPool: TaskPool) => {
   let 局_新sort = TaskPool.Sort > 100 ? 0 : 时间_取现行时间戳();
   let 返回 = await SetTaskPoolTypeSort({ Id: TaskPool.Id, Sort: 局_新sort });
   if (返回.code === 10000) {
-    const currentIndex = List.value.List.findIndex(item => item.Id === TaskPool.Id);
+    const currentIndex = List.value.list.findIndex(item => item.Id === TaskPool.Id);
     if (currentIndex === -1) return;
     // 更新排序数值
-    List.value.List[currentIndex].Sort = 局_新sort;
+    List.value.list[currentIndex].Sort = 局_新sort;
     // 分离非零排序项和零排序项
-    const nonZeroSort = List.value.List.filter(item => Number(item.Sort) >1000 );
-    const zeroSort = List.value.List.filter(item => Number(item.Sort) <1000);
+    const nonZeroSort = List.value.list.filter(item => Number(item.Sort) >1000 );
+    const zeroSort = List.value.list.filter(item => Number(item.Sort) <1000);
     const newList = [
       ...nonZeroSort.sort((a, b) => Number(b.Sort) - Number(a.Sort)),
       ...zeroSort.sort((a, b) => Number(a.Id) - Number(b.Id))
     ];
 
-    List.value.List.splice(0, List.value.List.length, ...newList);
+    List.value.list.splice(0, List.value.list.length, ...newList);
   }
 };
 

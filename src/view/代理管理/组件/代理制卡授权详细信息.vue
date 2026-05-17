@@ -5,23 +5,26 @@
              @close="on对话框被关闭">
 
     <div v-loading="is加载中">
-      <!--      const D代理功能_卡号冻结 = -1
-            const D代理功能_卡号解冻 = -2
-            const D代理功能_更换卡号 = -3
-            const D代理功能_删除卡号 = -4 //附加信息  {}
-            const D代理功能_余额充值 = -5
-            const D代理功能_发展下级代理 = -6
-            const D代理功能_卡号追回 = -7  -->
+      <!-- 功能授权部分 -->
       <el-tooltip content="点击进入官网查看权限详细说明"
                   effect="dark"
                   placement="top">
         <el-divider><el-link href="https://www.fnkuaiyan.cn/%E6%8C%87%E5%8D%97/3%E7%BA%A7%E4%BB%A3%E7%90%86%E7%B3%BB%E7%BB%9F.html#代理权限说明" target="_blank">功能授权<el-icon><WarningFilled /></el-icon></el-link></el-divider>
 
       </el-tooltip>
-      <el-checkbox-group v-model="D代理功能_功能已选中测" @change="on代理选中被改变">
-        <el-checkbox v-for="(Key,val) in D代理功能_功能可见ID测 " :Id="Key"
-                     :label="val" border :value="val"/>
-      </el-checkbox-group>
+      <div v-if="D代理功能_功能可见ID测 && Object.keys(D代理功能_功能可见ID测).length > 0">
+        <el-checkbox-group v-model="D代理功能_功能已选中测" @change="on代理选中被改变">
+          <el-checkbox v-for="(value, key) in D代理功能_功能可见ID测"
+                       :key="key"
+                       :label="key" 
+                       border>
+            {{ key }}
+          </el-checkbox>
+        </el-checkbox-group>
+      </div>
+      <div v-else>
+        <el-text type="info">暂无功能权限可配置</el-text>
+      </div>
 
         <el-tooltip content="应用必须有可以授权的卡类且卡类代理价格>0,才会显示到下方"
                     effect="dark"
@@ -38,13 +41,14 @@
           node-key="id"
           highlight-current
 
-          :props="{ class: customNodeClass }"
+          :props="defaultProps"
+          :class="customNodeClass"
       />
     </div>
     <template #footer>
       <div class="dialog-footer" v-loading="is加载中">
         <el-button
-            @click="treeRef.setCheckedKeys([], false);  D代理功能_功能已选中测 = []">
+            @click="if (treeRef.value) { treeRef.value.setCheckedKeys([], false); } D代理功能_功能已选中测 = []">
           清空
         </el-button>
         <el-button @click="is对话框可见2=false">取 消</el-button>
@@ -82,7 +86,8 @@ const Props = defineProps({
 const emit = defineEmits(['on对话框详细信息关闭'])
 
 const customNodeClass = (data: Tree, node: Node) => {
-  if (data.id === 0) {
+  // 顶级节点没有 parent，所以用 node.level === 1 来判断
+  if (node.level === 1) {
     return 'is-penultimate'
   }
   return null
@@ -103,32 +108,7 @@ const D代理功能_功能已选中测 = ref([])
 const D代理功能_功能可见ID测 = ref({})
 //const D代理功能_功能可见ID测 =ref({卡号冻结: -1, 卡号解冻: -2, 卡号追回: -7})
 
-const data = ref([
-  {
-    id: 0,
-    label: '测试RSa混合加密',
-    children: [
-      {
-        id: 3,
-        label: '注册送卡'
-      },
-    ],
-  },
-  {
-    id: 0,
-    label: '测试计点',
-    children: [
-      {
-        id: 6,
-        label: '天卡',
-      },
-      {
-        id: 7,
-        label: '季卡',
-      },
-    ],
-  },
-])
+const data = ref<Tree[]>([])
 
 const treeRef = ref<InstanceType<typeof ElTree>>()
 const getCheckedNodes = () => {
@@ -153,23 +133,25 @@ const is重新读取 = ref(false)
 const on确定按钮被点击 = async (formEl: FormInstance | undefined) => {
   is加载中.value = true
   let 返回;
-  let Kids = treeRef.value!.getCheckedKeys(false)  //获取已选中卡号
-  //需要过滤掉ID为0的 卡号
-  /*const D代理功能_卡号冻结 = -1
-    const D代理功能_卡号解冻 = -2
-    const D代理功能_更换卡号 = -3
-    const D代理功能_删除卡号 = -4 //附加信息  {}
-    const D代理功能_余额充值 = -5
-    const D代理功能_发展下级代理 = -6
-  */
-
+  let Kids: number[] = [];
+  if (treeRef.value) {
+    Kids = treeRef.value.getCheckedKeys(false)  //获取已选中卡号
+  }
+  
+  // 添加功能权限到卡类ID列表
   for (let i = 0; i < D代理功能_功能已选中测.value.length; i++) {
-    Kids.push(D代理功能_功能可见ID测.value[D代理功能_功能已选中测.value[i]])
+    const funcId = D代理功能_功能可见ID测.value[D代理功能_功能已选中测.value[i]];
+    if (funcId !== undefined && funcId !== null) {
+      Kids.push(funcId);
+    }
   }
 
-  Kids = Kids.filter(function (num) {
-    return num !== 0;
-  })
+  // 过滤掉ID为0的卡号（顶级分类）
+  Kids = Kids.filter(num => num !== 0);
+  
+  // 去重
+  Kids = [...new Set(Kids)];
+  
   返回 = await Set代理可制卡类列表({Id: Props.id, Kid: Kids})
   is加载中.value = false
   console.log(返回)
@@ -177,6 +159,8 @@ const on确定按钮被点击 = async (formEl: FormInstance | undefined) => {
     is重新读取.value = true
     is对话框可见2.value = false
     ElMessage.success(返回.msg)
+  } else {
+    ElMessage.error(返回.msg || '操作失败')
   }
 
 }
@@ -197,32 +181,36 @@ const 读取详细信息 = async (id: number) => {
     let 返回 = await Get代理可制卡类列表({"Id": id})
 
     if (返回.code == 10000) {
-      data.value = 返回.data.KaList
-      treeRef.value!.setCheckedKeys(返回.data.IdListAuthority, false)
-      D代理功能_功能可见ID测.value = 返回.data.FunctionList
-      console.log(返回.data.FunctionList)
-      D代理功能_功能已选中测.value = []
-      for (let key in D代理功能_功能可见ID测.value) {
-        for (let a = 0; a < 返回.data.FunctionId.length; a++) {
-          if (D代理功能_功能可见ID测.value[key] === 返回.data.FunctionId[a]) {
-            D代理功能_功能已选中测.value.push(key)
+      // 确保 KaList 存在且是数组
+      data.value = Array.isArray(返回.data.kaList) ? 返回.data.kaList : [];
+      
+      // 确保 idListAuthority 是数组
+      const idList = Array.isArray(返回.data.idListAuthority) ? 返回.data.idListAuthority : [];
+      if (treeRef.value) {
+        treeRef.value.setCheckedKeys(idList, false);
+      }
+      
+      // 确保 functionList 是对象
+      D代理功能_功能可见ID测.value = 返回.data.functionList || {};
+      console.log(返回.data.functionList)
+      
+      // 初始化功能选中数组
+      D代理功能_功能已选中测.value = [];
+      
+      // 处理功能权限
+      if (返回.data.functionList && 返回.data.functionId) {
+        for (let key in 返回.data.functionList) {
+          const funcId = 返回.data.functionList[key];
+          if (返回.data.functionId.includes(funcId)) {
+            D代理功能_功能已选中测.value.push(key);
           }
         }
       }
 
-
-      /*
-            D代理功能_卡号冻结.value = 返回.data.FunctionId.includes(-1)
-            D代理功能_卡号解冻.value = 返回.data.FunctionId.includes(-2)
-            D代理功能_更换卡号.value = 返回.data.FunctionId.includes(-3)
-            //D代理功能_删除卡号.value=返回.data.FunctionId.includes(-4)
-            D代理功能_余额充值.value = 返回.data.FunctionId.includes(-5)
-            D代理功能_发展下级代理.value = 返回.data.FunctionId.includes(-6)
-            D代理功能_卡号追回.value = 返回.data.FunctionId.includes(-7)*/
-
     } else {
       is重新读取.value = false
       is对话框可见2.value = false
+      ElMessage.error(返回.msg || '获取数据失败')
     }
     is加载中.value = false
   }

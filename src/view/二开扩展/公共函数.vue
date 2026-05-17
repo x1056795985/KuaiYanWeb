@@ -5,8 +5,8 @@
         <el-form-item label="选择应用" prop="">
           <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable>
             <el-option :key="0" label="全部" :value="0"/>
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.AppId"
-                       :label="item.AppName+'('+item.AppId.toString()+')'" :value="item.AppId"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -79,7 +79,7 @@
         <el-table-column prop="AppId" label="函数归属" width="200">
           <template #default="scope">
             <el-tag  :type="scope.row.AppId>10000?'primary':'success'">
-              {{ scope.row.AppName }}
+              {{ scope.row.appName }}
             </el-tag>
           </template>
         </el-table-column>
@@ -138,7 +138,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -239,8 +239,8 @@ const on选择框被选择 = (val: any) => {
 }
 
 const Data = ref({
-  "Count": 0,
-  "List": [
+  "count": 0,
+  "list": [
     {
       "Id": 0,
       "AppId": 1,
@@ -299,7 +299,7 @@ const on表格列宽初始化 = () => {
 
 onMounted(async () => {
 
-  Data.value.List = []
+  Data.value.list = []
   onReset()
   //如果 Store zize 不为0 且不为 null  才读取,不然就使用默认的
   if (Store.state.搜索_公共函数.Size != 0 && Store.state.搜索_公共函数.Size != null) {
@@ -317,8 +317,8 @@ onBeforeUnmount(() => {
 })
 
 type AppInfo = {
-  AppId: number,
-  AppName: string
+  appId: number,
+  appName: string
 }
 const 数组AppId_Name = ref<AppInfo[]>()
 

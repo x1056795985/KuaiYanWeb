@@ -5,8 +5,8 @@
         <el-form-item label="选择应用" prop="">
           <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable>
             <el-option :key="0" label="全部" :value="0"/>
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -67,7 +67,7 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -75,7 +75,7 @@
                 fit="fit"
                 :header-cell-style="{background:'#FAFAFAFF',color:'#606266'}">
         <el-table-column type="selection" width="45"/>
-        <el-table-column prop="AppName" label="应用名称" width="220" show-overflow-tooltip=""/>
+        <el-table-column prop="appName" label="应用名称" width="220" show-overflow-tooltip=""/>
         <el-table-column prop="Ka" label="用户" width="210" show-overflow-tooltip="">
           <template #default="scope">
             <el-icon class="复制按钮" @click="置剪辑版文本(scope.row.User,'已复制到剪辑版')">
@@ -135,7 +135,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -168,16 +168,16 @@ import {GetAppIdNameList} from "@/api/应用列表api";
 
 const MapAppId_Name = ref({})
 const 数组AppId_Name = ref([{
-  "Appid": 10000,
-  "AppName": ""
+  "appId": 10000,
+  "appName": ""
 }])
 const onGetAppIdNameList = async () => {
   let res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  MapAppId_Name.value = res.data.Map
-  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.Map[对象_搜索条件.value.AppId.toString()])
+  数组AppId_Name.value = res.data.array
+  MapAppId_Name.value = res.data.map
+  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.map[对象_搜索条件.value.AppId.toString()])
 
-  if (res.data.Map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
+  if (res.data.map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
     // let 局_默认appid=Store.state.搜索_默认选择应用AppId
     // 对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.Appid === 局_默认appid)?局_默认appid:数组AppId_Name.value[0].Appid
   }
@@ -242,8 +242,8 @@ const on选择框被选择 = (val: any) => {
 }
 
 const Data = ref({
-  "Count": 0,
-  "List": [
+  "count": 0,
+  "list": [
     {
       "AppId": 1,
       "Name": "",
@@ -300,7 +300,7 @@ const on表格列宽初始化 = () => {
 }
 
 onMounted(async () => {
-  Data.value.List = []
+  Data.value.list = []
   onReset()
   //如果 Store zize 不为0 且不为 null  才读取,不然就使用默认的
   if (Store.state.搜索_用户云配置 .Size != 0 && Store.state.搜索_用户云配置.Size != null) {
@@ -334,8 +334,8 @@ const on云配置值被改变 = async (表项索引: number, row:any ) => {
         const res = await SetUserConfig({"AppId": row.AppId,"Uid":row.Uid,"Name":row.Name, "Value": 新云配置值})
         console.log(res)
         if (res.code == 10000) {
-          Data.value.List[表项索引].Value = 新云配置值   //成功赋新值
-          Data.value.List[表项索引].UpdateTime = 时间_取现行时间戳()   //成功赋新值
+          Data.value.list[表项索引].Value = 新云配置值   //成功赋新值
+          Data.value.list[表项索引].UpdateTime = 时间_取现行时间戳()   //成功赋新值
           ElMessage.success(res.msg)
           return true
         } else {

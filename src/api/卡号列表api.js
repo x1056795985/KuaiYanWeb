@@ -1,13 +1,13 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/Ka/"
+const url=取url根入口路径() +"/ka/"
 // 分页获取Ka信息列表
 //{ "Page": 0,"Size": 10 }
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 export const GetKaList = (data) => {
   return service({
-    url: url+'GetList',
+    url: url+'getList',
     method: 'post',
     data: data
   })
@@ -16,7 +16,7 @@ export const GetKaList = (data) => {
 //  Del批量维护_删除
 export const Del批量删除Ka = (data) => {
   return service({
-    url: url+'Delete',
+    url: url+'delete',
     method: 'post',
     data: data
   })
@@ -26,7 +26,7 @@ export const Del批量删除Ka = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "注销成功"}"
 export const Del批量维护_删除 = (data) => {
   return service({
-    url: url+'DeleteBatch',
+    url: url+'deleteBatch',
     method: 'post',
     data: data
   })
@@ -36,7 +36,7 @@ export const Del批量维护_删除 = (data) => {
 //{ "id": [ 5 ]}
 export const Del批量追回Ka = (data) => {
   return service({
-    url: url+'Recover',
+    url: url+'recover',
     method: 'post',
     data: data
   })
@@ -47,7 +47,7 @@ export const Del批量追回Ka = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const GetKa详细信息 = (data) => {
   return service({
-    url:  url+'GetInfo',
+    url:  url+'getInfo',
     method: 'post',
     data: data
   })
@@ -58,7 +58,7 @@ export const GetKa详细信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const  SaveKa信息 = (data) => {
   return service({
-    url:  url+'SaveInfo',
+    url:  url+'saveInfo',
     method: 'post',
     data: data
   })
@@ -69,7 +69,7 @@ export const  SaveKa信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "添加成功"}"
 export const  NewKa信息 = (data) => {
   return service({
-    url: url+'New',
+    url: url+'new',
     method: 'post',
     data: data
   })
@@ -90,7 +90,7 @@ export const  NewKa信息_指定卡号 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  SetStatus = (data) => {
   return service({
-    url: url+'SetStatus',
+    url: url+'setStatus',
     method: 'post',
     data: data
   })
@@ -101,7 +101,7 @@ export const  SetStatus = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const SetAdminNote = (data) => {
   return service({
-    url: url+'SetAdminNote',
+    url: url+'setAdminNote',
     method: 'post',
     data: data
   })
@@ -113,7 +113,7 @@ export const SetAdminNote = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const SetKaTemplate = (data) => {
   return service({
-    url: url+'SetKaTemplate',
+    url: url+'setKaTemplate',
     method: 'post',
     data: data
   })
@@ -124,7 +124,7 @@ export const SetKaTemplate = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const GetKaTemplate = (data) => {
   return service({
-    url: url+'GetKaTemplate',
+    url: url+'getKaTemplate',
     method: 'post',
     data: data
   })

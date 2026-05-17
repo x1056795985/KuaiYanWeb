@@ -9,7 +9,7 @@ const url = 取url根入口路径() + "/base/";
 // @Router /init/initdb [post]
 export const initDB = (data) => {
   return service({
-    url: url+'InitDB',
+    url: url+'initDB',
     method: 'post',
     data
   })
@@ -22,7 +22,7 @@ export const initDB = (data) => {
 // @Router /init/checkdb [post]
 export const checkDB = () => {
   return service({
-    url: url+'CheckDB',
+    url: url+'checkDB',
     method: 'post'
   })
 }

@@ -1,13 +1,13 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/PublicData/"
+const url=取url根入口路径() +"/publicData/"
 // GetList
 //{ "Page": 0,"Size": 10 }
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 export const GetList = (data) => {
   return service({
-    url: url+'GetList',
+    url: url+'getList',
     method: 'post',
     data: data
   })
@@ -28,7 +28,7 @@ export const GetList = (data) => {
 // }
 export const DeleteInfo= (data) => {
   return service({
-    url: url+'Delete',
+    url: url+'delete',
     method: 'post',
     data: data
   })
@@ -41,7 +41,7 @@ export const DeleteInfo= (data) => {
 // }*/
 export const GetInfo = (data) => {
   return service({
-    url:  url+'GetInfo',
+    url:  url+'getInfo',
     method: 'post',
     data: data
   })
@@ -56,7 +56,7 @@ export const GetInfo = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const  SaveInfo = (data) => {
   return service({
-    url:  url+'SaveInfo',
+    url:  url+'saveInfo',
     method: 'post',
     data: data
   })
@@ -72,7 +72,7 @@ export const  SaveInfo = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "添加成功"}"
 export const  New = (data) => {
   return service({
-    url: url+'New',
+    url: url+'new',
     method: 'post',
     data: data
   })

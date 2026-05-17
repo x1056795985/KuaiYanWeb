@@ -304,7 +304,7 @@ const 读取详细信息 = async (id: number) => {
         Keywords: data.value.Uid.toString()
       })
       if (res.code == 10000) {
-        用户云配置.value = res.data.List
+        用户云配置.value = res.data.list
         用户云配置.value.reverse()
         ElMessage.success(res.msg)
       }

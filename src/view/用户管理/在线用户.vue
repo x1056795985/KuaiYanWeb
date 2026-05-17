@@ -5,8 +5,8 @@
         <el-form-item label="选择应用" prop="">
           <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable>
             <el-option :key="0" label="全部" :value="0"/>
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status" style="width:120px">
@@ -94,7 +94,7 @@
 
       </div>
 
-      <el-table v-loading="is加载中" :data="List.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="List.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -129,10 +129,10 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="AppName" label="登录位置" width="282" show-overflow-tooltip="">
+        <el-table-column prop="appName" label="登录位置" width="282" show-overflow-tooltip="">
           <template #default="scope">
             <div>
-              {{ scope.row.AppName }}
+              {{ scope.row.appName }}
               <el-tag type="success" v-if="scope.row.AppVer">
                 {{ scope.row.AppVer }}
               </el-tag>
@@ -144,7 +144,7 @@
         </el-table-column>
         <el-table-column prop="Tab" label="动态标记" width="140" show-overflow-tooltip=""/>
         <el-table-column prop="Key" label="绑定信息" width="140" show-overflow-tooltip=""/>
-        <el-table-column prop="Note" label="软件用户备注" width="140" show-overflow-tooltip=""/>
+        <el-table-column prop="note" label="软件用户备注" width="140" show-overflow-tooltip=""/>
         <el-table-column label="在线ip" width="140" show-overflow-tooltip="">
           <template #default="scope">
             {{ scope.row.Ip + " " + scope.row.IPCity }}
@@ -191,7 +191,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( List.Count)"
+              :total="parseInt( List.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -230,10 +230,10 @@ const on单个注销 = async (id: number) => {
   console.log(res)
   if (res.code == 10000) {
 ElMessage.success(res.msg)
-    for (let i = 0; i < List.value.List.length; i++) {
-      //console.log(List.value.List[i])
-      if (List.value.List[i].Id == id) {
-        List.value.List[i].Status = 2
+    for (let i = 0; i < List.value.list.length; i++) {
+      //console.log(List.value.list[i])
+      if (List.value.list[i].Id == id) {
+        List.value.list[i].Status = 2
         break
       }
 
@@ -254,9 +254,9 @@ const on批量注销 = async () => {
   if (res.code == 10000) {
 ElMessage.success(res.msg)
 
-    for (let i = 0; i < List.value.List.length; i++) {
-      if (ids.includes(List.value.List[i].Id)) {
-        List.value.List[i].Status = 2
+    for (let i = 0; i < List.value.list.length; i++) {
+      if (ids.includes(List.value.list[i].Id)) {
+        List.value.list[i].Status = 2
       }
     }
   }
@@ -281,9 +281,9 @@ const on批量永不注销 = async () => {
         const res = await 批量永不注销({"Id": ids, "OutTime": 9999999999})
         if (res.code == 10000) {
           ElMessage.success(res.msg)
-          for (let i = 0; i < List.value.List.length; i++) {
-            if (ids.includes(List.value.List[i].Id)) {
-              List.value.List[i].OutTime = 9999999999
+          for (let i = 0; i < List.value.list.length; i++) {
+            if (ids.includes(List.value.list[i].Id)) {
+              List.value.list[i].OutTime = 9999999999
             }
           }
         }
@@ -302,23 +302,23 @@ ElMessage.success(res.msg)
 }
 const MapAppId_Name = ref({})
 const 数组AppId_Name = ref([{
-  "Appid": 10000,
-  "AppName": ""
+  "appId": 10000,
+  "appName": ""
 }])
 const onGetAppIdNameList = async () => {
   let res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  数组AppId_Name.value.push({Appid:1,AppName:"管理平台"})
-  数组AppId_Name.value.push({Appid:2,AppName:"代理平台"})
-  数组AppId_Name.value.push({Appid:3,AppName:"WebApi"})
-  数组AppId_Name.value.push({Appid:10,AppName:"WebUser"})
-  数组AppId_Name.value.push({Appid:11,AppName:"WebSocket"})
-  MapAppId_Name.value = res.data.Map
-  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.Map[对象_搜索条件.value.AppId.toString()])
+  数组AppId_Name.value = res.data.array
+  数组AppId_Name.value.push({appId:1,appName:"管理平台"})
+  数组AppId_Name.value.push({appId:2,appName:"代理平台"})
+  数组AppId_Name.value.push({appId:3,appName:"WebApi"})
+  数组AppId_Name.value.push({appId:10,appName:"WebUser"})
+  数组AppId_Name.value.push({appId:11,appName:"WebSocket"})
+  MapAppId_Name.value = res.data.map
+  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.map[对象_搜索条件.value.AppId.toString()])
 
-  if (res.data.Map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
+  if (res.data.map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
     // let 局_默认appid=Store.state.搜索_默认选择应用AppId
-    // 对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.Appid === 局_默认appid)?局_默认appid:数组AppId_Name.value[0].Appid
+    // 对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.appId === 局_默认appid)?局_默认appid:数组AppId_Name.value[0].appId
   }
 
 }

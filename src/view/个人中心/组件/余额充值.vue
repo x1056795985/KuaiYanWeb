@@ -167,7 +167,7 @@ const on取支付结果 = async () => {//轮询当前订单状态s
       //请求成功后
       //console.log(返回)
       if (返回.code === 10000) {
-        订单信息.value.订单状态 = 返回.data.Status
+        订单信息.value.订单状态 = 返回.data.status
       } else {
         clearInterval(轮询id.value)  //订单不存在停止轮询
       }

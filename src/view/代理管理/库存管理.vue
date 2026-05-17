@@ -85,7 +85,7 @@
 
       </div>
 
-      <el-table v-loading="is加载中" :data="List.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="List.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -93,9 +93,9 @@
                 :header-cell-style="{background:'#FAFAFAFF',color:'#606266'}">
         <el-table-column type="selection" width="45"/>
         <el-table-column prop="Id" label="Id" width="80"/>
-        <el-table-column prop="User" label="用户名" width="130" show-overflow-tooltip=""/>
-        <el-table-column prop="AppName" label="归属应用" width="230"/>
-        <el-table-column prop="KaClassName" label="卡类名称" width="130"/>
+        <el-table-column prop="user" label="用户名" width="130" show-overflow-tooltip=""/>
+        <el-table-column prop="appName" label="归属应用" width="230"/>
+        <el-table-column prop="kaClassName" label="卡类名称" width="130"/>
         <el-table-column label="已用/总数" width="140">
           <template #default="scope">
             <el-tag :type="scope.row.Num<scope.row.NumMax?'primary':'warning'">
@@ -132,7 +132,7 @@
         <el-table-column prop="SourceID" label="来源" width="160">
           <template #default="scope">
             {{
-              scope.row.SourceID > 0 ? "上级代理" : scope.row.SourceID = 0 ? "自购" : scope.row.SourceID = -1 ? "管理员手动创建" : "开发者手动创建"
+              scope.row.SourceID > 0 ? "上级代理" : (scope.row.SourceID === 0 ? "自购" : (scope.row.SourceID === -1 ? "管理员手动创建" : "开发者手动创建"))
             }}
           </template>
         </el-table-column>
@@ -166,7 +166,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( List.Count)"
+              :total="parseInt( List.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>

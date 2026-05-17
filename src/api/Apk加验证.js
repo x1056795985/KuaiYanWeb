@@ -1,10 +1,10 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/ApkTools/"
+const url=取url根入口路径() +"/apkTools/"
 export const GetList = (data) => {
   return service({
-    url: url+'GetList',
+    url: url+'getList',
     method: 'post',
     data: data
   })
@@ -15,7 +15,7 @@ export const GetList = (data) => {
 //{"Path": "aa/aa.apk"}
 export const GetUploadToken = (data) => {
   return service({
-    url:  url+'GetUploadToken',
+    url:  url+'getUploadToken',
     method: 'post',
     data: data
   })
@@ -26,7 +26,7 @@ export const GetUploadToken = (data) => {
 //{"Path": "aa/aa.apk"}
 export const CreateApkAddFNKYTask = (data) => {
   return service({
-    url:  url+'CreateApkAddFNKYTask',
+    url:  url+'createApkAddFNKYTask',
     method: 'post',
     data: data
   })
@@ -35,7 +35,7 @@ export const CreateApkAddFNKYTask = (data) => {
 
 export const GetTaskIdStatus = () => {
   return service({
-    url:  url+'GetTaskIdStatus',
+    url:  url+'getTaskIdStatus',
     method: 'post'
   })
 }

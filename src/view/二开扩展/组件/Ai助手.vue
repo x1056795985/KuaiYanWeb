@@ -284,8 +284,8 @@ function onTool查询应用列表(): Promise<string> {
         return
       }
       const result = Props.appList.map((item: any) => ({
-        AppId: item.Appid,
-        AppName: item.AppName,
+        AppId: item.appId,
+        AppName: item.appName,
       }))
       resolve(JSON.stringify(result, null, 2))
     }, 100)

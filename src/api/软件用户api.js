@@ -1,13 +1,13 @@
 import service from '@/api/request'
 
 import {取url根入口路径} from "@/utils/utils";
-const url=取url根入口路径() +"/AppUser/"
+const url=取url根入口路径() +"/appUser/"
 // 分页获取AppUser信息列表
 //{ "Page": 0,"Size": 10 }
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 export const GetAppUserList = (data) => {
   return service({
-    url: url+'GetList',
+    url: url+'getList',
     method: 'post',
     data: data
   })
@@ -18,7 +18,7 @@ export const GetAppUserList = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "注销成功"}"
 export const Del批量删除AppUser = (data) => {
   return service({
-    url: url+'Delete',
+    url: url+'delete',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export const Del批量删除AppUser = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const GetAppUser详细信息 = (data) => {
   return service({
-    url:  url+'GetInfo',
+    url:  url+'getInfo',
     method: 'post',
     data: data
   })
@@ -40,7 +40,7 @@ export const GetAppUser详细信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "获取成功"}"
 export const  SaveAppUser信息 = (data) => {
   return service({
-    url:  url+'SaveInfo',
+    url:  url+'saveInfo',
     method: 'post',
     data: data
   })
@@ -51,7 +51,7 @@ export const  SaveAppUser信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "添加成功"}"
 export const  NewAppUser信息 = (data) => {
   return service({
-    url: url+'New',
+    url: url+'new',
     method: 'post',
     data: data
   })
@@ -62,7 +62,7 @@ export const  NewAppUser信息 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  SetStatus = (data) => {
   return service({
-    url: url+'SetStatus',
+    url: url+'setStatus',
     method: 'post',
     data: data
   })
@@ -73,7 +73,7 @@ export const  SetStatus = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  Set批量维护增减时间点数 = (data) => {
   return service({
-    url: url+'SetBatchAddVipTime',
+    url: url+'setBatchAddVipTime',
     method: 'post',
     data: data
   })
@@ -84,7 +84,7 @@ export const  Set批量维护增减时间点数 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  Set批量维护增减积分 = (data) => {
   return service({
-    url: url+'SetBatchAddVipNumber',
+    url: url+'setBatchAddVipNumber',
     method: 'post',
     data: data
   })
@@ -94,7 +94,7 @@ export const  Set批量维护增减积分 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  Set批量维护置用户云配置 = (data) => {
   return service({
-    url: url+'SetBatchSetUserConfig',
+    url: url+'setBatchSetUserConfig',
     method: 'post',
     data: data
   })
@@ -104,7 +104,7 @@ export const  Set批量维护置用户云配置 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  Set批量维护修改用户类型 = (data) => {
   return service({
-    url: url+'SetBatchUserClass',
+    url: url+'setBatchUserClass',
     method: 'post',
     data: data
   })
@@ -114,7 +114,7 @@ export const  Set批量维护修改用户类型 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  Set批量维护修改用户备注 = (data) => {
   return service({
-    url: url+'BatchSetAppUserNote',
+    url: url+'batchSetAppUserNote',
     method: 'post',
     data: data
   })
@@ -125,7 +125,7 @@ export const  Set批量维护修改用户备注 = (data) => {
 // @Success 200 {string} json "{"code": 0, "data": {},"msg": "修改成"}"
 export const  Set批量维护_全部用户增减时间点数 = (data) => {
   return service({
-    url: url+'SetBatchAllUserVipTime',
+    url: url+'setBatchAllUserVipTime',
     method: 'post',
     data: data
   })
@@ -134,7 +134,7 @@ export const  Set批量维护_全部用户增减时间点数 = (data) => {
 //  Del批量维护_删除
 export const Del批量维护_删除 = (data) => {
   return service({
-    url: url+'DeleteBatch',
+    url: url+'deleteBatch',
     method: 'post',
     data: data
   })
@@ -143,7 +143,7 @@ export const Del批量维护_删除 = (data) => {
 //  Del批量维护_删除
 export const Del批量维护_设置用户绑定信息 = (data) => {
   return service({
-    url: url+'BatchSetAppUserKey',
+    url: url+'batchSetAppUserKey',
     method: 'post',
     data: data
   })

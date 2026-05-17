@@ -275,7 +275,7 @@ router.beforeEach(async (to, from) => {
         } else {
             //递归添加路由(routes);
             isF = true;
-            return {...to, replace: true};
+            return true;
         }
     }
 });

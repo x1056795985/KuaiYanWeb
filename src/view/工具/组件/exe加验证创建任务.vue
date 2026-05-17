@@ -30,8 +30,8 @@
       </el-form-item>
       <el-form-item label="选择应用" prop="">
         <el-select v-model.number="FormData.AppId" clear placeholder="请选择应用" filterable style="width: 100%;">
-          <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                     :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+          <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                     :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
         </el-select>
       </el-form-item>
       <!-- ... existing code ... -->
@@ -123,15 +123,15 @@ onMounted(() => {
 
 const MapAppId_Name = ref({})
 const 数组AppId_Name = ref([{
-  "Appid": 10000,
-  "AppName": ""
+  "appId": 10000,
+  "appName": ""
 }])
 const onGetAppIdNameList = async () => {
   let res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  MapAppId_Name.value = res.data.Map
-  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.Map[FormData.value.AppId.toString()])
-  if (res.data.Map[FormData.value.AppId.toString()] == null || FormData.value.AppId <= 10000) {
+  数组AppId_Name.value = res.data.array
+  MapAppId_Name.value = res.data.map
+  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.map[FormData.value.AppId.toString()])
+  if (res.data.map[FormData.value.AppId.toString()] == null || FormData.value.AppId <= 10000) {
     FormData.value.AppId = 数组AppId_Name.value[0].Appid
   }
 }

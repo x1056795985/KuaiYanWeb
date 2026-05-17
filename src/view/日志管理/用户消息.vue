@@ -5,8 +5,8 @@
         <el-form-item label="选择应用" prop="" style="width:300px">
           <el-select v-model.number="对象_搜索条件.Appid" clear placeholder="请选择应用" filterable @change="on读取列表">
             <el-option label="全部" :value="0"/>
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="MsgType" label="消息类型">
@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -174,7 +174,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -261,10 +261,10 @@ const on删除重复消息 = async () => {
 const on单个已读 = async (表项索引: number, id: number) => {
   const res = await 批量已读({"Id": [id], "IsRead": true, Type: 1})
   if (res.code == 10000) {
-    Data.value.List[表项索引].IsRead = true
+    Data.value.list[表项索引].IsRead = true
 
-    let temp = Store.state.UserInfo
-    temp.UserMsgNoRead--
+    let temp = Store.state.userInfo
+    temp.userMsgNoRead--
     Store.commit("setUserInfo", temp)
     ElMessage.success(res.msg)
     return true
@@ -275,13 +275,13 @@ const on单个已读 = async (表项索引: number, id: number) => {
 const on全部已读 = async () => {
   const res = await 批量已读({"Id": [], "IsRead": true, Type: 2})
   if (res.code == 10000) {
-    for (let i = 0; Data.value.List.length > i; i++) {
-      if (!Data.value.List[i].IsRead) {
-        Data.value.List[i].IsRead = true
+    for (let i = 0; Data.value.list.length > i; i++) {
+      if (!Data.value.list[i].IsRead) {
+        Data.value.list[i].IsRead = true
       }
     }
-    let temp = Store.state.UserInfo
-    temp.UserMsgNoRead = 0
+    let temp = Store.state.userInfo
+    temp.userMsgNoRead = 0
     Store.commit("setUserInfo", temp)
 
     ElMessage.success(res.msg)
@@ -314,8 +314,8 @@ const on消息类型标签 = (MsgType: number) => {
   return Msg[MsgType - 1]
 }
 const Data = ref({
-  "Count": 0,
-  "List": [
+  "count": 0,
+  "list": [
     {
       "Id": 1,
       "User": "",
@@ -535,14 +535,14 @@ const MapAppId_Name = ref({
   11: "WebSocket",
 })
 const 数组AppId_Name = ref([{
-  "Appid": 1,
-  "AppName": "1级代理平台"
+  "appId": 1,
+  "appName": "1级代理平台"
 }])
 const onGetAppIdNameList = async () => {
 
   const res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  MapAppId_Name.value = res.data.Map
+  数组AppId_Name.value = res.data.array
+  MapAppId_Name.value = res.data.map
   let a={
     1: "管理平台",
     2: "系统自动",
@@ -551,7 +551,7 @@ const onGetAppIdNameList = async () => {
     11: "WebSocket",
   }
   for ( let key in a){
-    数组AppId_Name.value.push({"Appid":Number(key),"AppName":a[key]})
+    数组AppId_Name.value.push({appId:Number(key),appName:a[key]})
     MapAppId_Name.value[Number(key)]=a[key]
   }
 

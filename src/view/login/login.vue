@@ -119,7 +119,7 @@ import {useRouter} from "vue-router";
 import {useStore} from 'vuex'
 import {reactive, ref} from 'vue'
 import {onMounted} from 'vue'
-import router from "@/router";
+const router = useRouter();
 
 const is移动端 = ()=> {
   if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
@@ -211,13 +211,19 @@ const onLogin = async (loginInfo) => {
   console.info(res)
   if (res.code === 10000) {
 
-    Store.commit("setToken", res.data.Token)
-    Store.commit("setUserInfo", res.data.UserInfo)
+    Store.commit("setToken", res.data.token)
+    Store.commit("setUserInfo", res.data.userInfo)
 
     if (res.data.KuaiYan === true) {
-      router.push('/个人中心')
+      router.push('/个人中心').catch(err => {
+        console.error('路由跳转失败:', err)
+        ElMessage.error('跳转失败: ' + err.message)
+      })
     } else {
-      router.replace({path: "/"})
+      router.replace({path: "/"}).catch(err => {
+        console.error('路由跳转失败:', err)
+        ElMessage.error('跳转失败: ' + err.message)
+      })
     }
     ElMessage.success(res.msg)
     return true
@@ -273,10 +279,10 @@ const checkInit = async () => {
 } */
 
   /* 把系统名称赋值 */
-  Store.commit("set服务器名称", res.data.ServerName)
-  Store.commit("set服务器备案号", res.data.Filing)
-  console.log("set服务器名称:" + res.data.ServerName)
-  console.log("set服务器备案号:" + res.data.Filing)
+  Store.commit("set服务器名称", res.data.serverName)
+  Store.commit("set服务器备案号", res.data.filing)
+  console.log("set服务器名称:" + res.data.serverName)
+  console.log("set服务器备案号:" + res.data.filing)
   console.log(res)
   /* 判断你是否需要初始化数据库如果需要直接跳转 */
   if (res.code === 10000) {

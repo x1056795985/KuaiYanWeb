@@ -5,8 +5,8 @@
         <el-form-item label="选择应用" prop="" style="width:300px">
           <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable
                      @change="on读取列表">
-            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.Appid"
-                       :label="item.AppName+'('+item.Appid.toString()+')'" :value="item.Appid"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
           </el-select>
         </el-form-item>
         <el-form-item label="在线" style="width:130px">
@@ -118,13 +118,13 @@
             <li class="工具_更多_li" @click="on批量维护积分输入框将打开">批量增减积分</li>
             <li class="工具_更多_li" @click="on维护用户云配置输入框将打开">批量置用户配置</li>
             <li class="工具_更多_li" @click="on批量维护输入框将打开">
-              批量增减{{ (Data.AppType === 2 || Data.AppType === 4) ? "点数" : "时间" }}
+              批量增减{{ (Data.appType === 2 || Data.appType === 4) ? "点数" : "时间" }}
             </li>
             <li class="工具_更多_li" @click="on批量维护删除(1)">
-              删除{{ (Data.AppType === 2 || Data.AppType === 4) ? "0点数" : "vip到期" }}
+              删除{{ (Data.appType === 2 || Data.appType === 4) ? "0点数" : "vip到期" }}
             </li>
             <li class="工具_更多_li" @click="on批量维护删除(2)" v-if="isAppType卡号2">
-              删除{{ (Data.AppType === 2 || Data.AppType === 4) ? "0点数" : "vip到期" }}且删卡号
+              删除{{ (Data.appType === 2 || Data.appType === 4) ? "0点数" : "vip到期" }}且删卡号
             </li>
             <li class="工具_更多_li" @click="is批量修改全部用户时间点数=true">
               批量维护修改全部软件用户
@@ -154,7 +154,7 @@
         </div>
       </div>
 
-      <el-table v-loading="is加载中" :data="Data.List" border style="width: 100% ;white-space: pre-wrap;"
+      <el-table v-loading="is加载中" :data="Data.list" border style="width: 100% ;white-space: pre-wrap;"
                 ref="tableRef"
                 @header-dragend="on表格列宽被改变"
                 :max-height="tableHeight"
@@ -168,14 +168,14 @@
                          show-overflow-tooltip="">
           <template #default="scope">
             <el-icon class="复制按钮"
-                     @click="置剪辑版文本( isAppType卡号2?scope.row.Name:scope.row.User,'已复制到剪辑版')">
+                     @click="置剪辑版文本( isAppType卡号2?scope.row.name:scope.row.user,'已复制到剪辑版')">
               <DocumentCopy/>
             </el-icon>
             {{
-              isAppType卡号2 ? scope.row.Name === '' ? '已删卡号ID' + scope.row.Uid : scope.row.Name : scope.row.User
+              isAppType卡号2 ? scope.row.name === '' ? '已删卡号ID' + scope.row.Uid : scope.row.name : scope.row.user
             }}
-            <el-tag v-if="scope.row.LinksCount>0">
-              在线 {{ scope.row.LinksCount > 1 ? scope.row.LinksCount : "" }}
+            <el-tag v-if="scope.row.linksCount>0">
+              在线 {{ scope.row.linksCount > 1 ? scope.row.linksCount : "" }}
             </el-tag>
 
 
@@ -188,12 +188,12 @@
             <el-switch
                 :active-value="1"
                 :inactive-value="2"
-                v-model="scope.row.Status"
+                v-model="scope.row.status"
                 inline-prompt
                 style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
                 active-text="正常"
                 inactive-text="冻结"
-                @change="on冻结状态被改变(scope.$index,scope.row.Id,scope.row.Status)"
+                @change="on冻结状态被改变(scope.$index,scope.row.Id,scope.row.status)"
             />
           </template>
         </el-table-column>
@@ -242,9 +242,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="MaxOnline" label="最大在线数量" width="110"/>
-        <el-table-column prop="AgentName" label="归属代理" width="110">
+        <el-table-column prop="agentName" label="归属代理" width="110">
           <template #default="scope">
-            {{ scope.row.AgentName }}
+            {{ scope.row.agentName }}
             <el-tag v-if="scope.row.AgentUid" type="info">
               {{ scope.row.AgentUid }}
             </el-tag>
@@ -285,7 +285,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
@@ -294,33 +294,33 @@
     </div>
   </div>
   <AppUserinfo v-if="is对话框可见" :id="is对话框id" :AppId="对象_搜索条件.AppId"
-               :AppName="MapAppId_Name[对象_搜索条件.AppId.toString()]" :AppType="Data.AppType"
+               :AppName="MapAppId_Name[对象_搜索条件.AppId.toString()]" :AppType="Data.appType"
                @on对话框详细信息关闭="on对话框详细信息关闭" :UserType="对象_用户类型"></AppUserinfo>
   <ChartData v-if="is图表分析抽屉可见" @on图表分析抽屉关闭="is图表分析抽屉可见 = false" :AppId="对象_搜索条件.AppId"/>
 
   <BatchElMessage :is批量维护输入框可见="is批量维护输入框可见" 标题="批量修改勾选用户,负数可能减到0以下"
                   :提示信息='isAppType计点()?"请输入增减点数(点)":"请输入增减时间(秒)"'
-                  :AppType="Data.AppType"
+                  :AppType="Data.appType"
                   @on批量维护输入框被关闭="on批量维护输入框被关闭"></BatchElMessage>
 
 
   <BatchElMessage2 v-if="is批量维护积分输入框可见"
-                   :AppInfo="{AppType:Data.AppType,AppId:对象_搜索条件.AppId, ids:局_ids}"
+                   :AppInfo="{AppType:Data.appType,AppId:对象_搜索条件.AppId, ids:局_ids}"
                    :UserClassId="对象_用户类型Arr"
                    @on批量维护输入框被关闭="on批量维护积分输入框被关闭"></BatchElMessage2>
   <BatchElMessage3 v-if="is维护用户云配置输入框可见"
-                   :AppInfo="{AppType:Data.AppType,AppId:对象_搜索条件.AppId}"
+                   :AppInfo="{AppType:Data.appType,AppId:对象_搜索条件.AppId}"
                    :Uids="局_uids"
                    @on批量维护输入框被关闭="on维护用户云配置输入框被关闭"></BatchElMessage3>
 
   <BatchSetAllUserVipTime v-if="is批量修改全部用户时间点数"
-                          :AppInfo="{AppType:Data.AppType,AppId:对象_搜索条件.AppId, AppName:MapAppId_Name[对象_搜索条件.AppId.toString()]}"
+                          :AppInfo="{AppType:Data.appType,AppId:对象_搜索条件.AppId, AppName:MapAppId_Name[对象_搜索条件.AppId.toString()]}"
                           :UserClassId="对象_用户类型Arr"
                           @on批量维护输入框被关闭="on对话框修改全部用户时间点数关闭"></BatchSetAllUserVipTime>
 
 
   <BatchElMessage4 v-if="is批量导入软件用户信息将打开可见"
-                   :AppInfo="{AppType:Data.AppType,AppId:对象_搜索条件.AppId}"
+                   :AppInfo="{AppType:Data.appType,AppId:对象_搜索条件.AppId}"
                    @on批量维护输入框被关闭="on批量导入软件用户信息被关闭"></BatchElMessage4>
   <el-dialog v-model="is批量修改用户类型" title="Shipping address">
     <el-form>
@@ -405,9 +405,9 @@ const on批量维护输入框被关闭 = async (is确定: boolean, 增减值: nu
   console.log(res)
   if (res.code == 10000) {
     ElMessage.success(res.msg)
-    for (let i = 0; i < Data.value.List.length; i++) {
-      if (ids.some(ele => ele === Data.value.List[i].Id)) { //判断数组内是否存在该ID,如果存在则修改状态
-        Data.value.List[i].VipTime += 增减值
+    for (let i = 0; i < Data.value.list.length; i++) {
+      if (ids.some(ele => ele === Data.value.list[i].Id)) { //判断数组内是否存在该ID,如果存在则修改状态
+        Data.value.list[i].VipTime += 增减值
       }
     }
     return true
@@ -426,10 +426,10 @@ const on单个删除 = async (id: number) => {
   }
 }
 const isAppType计点 = () => {
-  return Data.value.AppType === 2 || Data.value.AppType === 4
+  return Data.value.appType === 2 || Data.value.appType === 4
 }
 const isAppType计点2 = computed(() => {
-  if (Data.value.AppType === 2 || Data.value.AppType === 4) {
+  if (Data.value.appType === 2 || Data.value.appType === 4) {
     return true
   }
   return false
@@ -437,10 +437,10 @@ const isAppType计点2 = computed(() => {
 
 
 const isAppType卡号 = () => {
-  return Data.value.AppType === 3 || Data.value.AppType === 4
+  return Data.value.appType === 3 || Data.value.appType === 4
 }
 const isAppType卡号2 = computed(() => {
-  if (Data.value.AppType === 3 || Data.value.AppType === 4) {
+  if (Data.value.appType === 3 || Data.value.appType === 4) {
     return true
   }
   return false
@@ -460,7 +460,7 @@ const on冻结状态被改变 = async (表项索引: number, ID: number, Status:
     ElMessage.success(res.msg)
     return true
   } else {
-    Data.value.List[表项索引].Status = Status == 1 ? 2 : 1
+    Data.value.list[表项索引].status = Status == 1 ? 2 : 1
     return false
   }
 
@@ -480,9 +480,9 @@ const on批量冻结解冻 = async (Status: number) => {
   if (res.code == 10000) {
     ElMessage.success(res.msg)
 
-    for (let i = 0; i < Data.value.List.length; i++) {
-      if (ids.some(ele => ele === Data.value.List[i].Id)) { //判断数组内是否存在该ID,如果存在则修改状态
-        Data.value.List[i].Status = Status
+    for (let i = 0; i < Data.value.list.length; i++) {
+      if (ids.some(ele => ele === Data.value.list[i].Id)) { //判断数组内是否存在该ID,如果存在则修改状态
+        Data.value.list[i].status = Status
       }
     }
     return true
@@ -515,7 +515,7 @@ const on批量维护清空绑定信息 = async () => {
 
 const on批量维护删除 = async (Type: number) => {
   let app类型 = "vip到期"
-  if (Data.value.AppType === 2 || Data.value.AppType === 4) {
+  if (Data.value.appType === 2 || Data.value.appType === 4) {
     app类型 = "0点数"
   }
   var 提示信息 = {
@@ -599,20 +599,20 @@ const on排序被改变 = (column: any) => {
 }
 
 const Data = ref({
-  "Count": 0,
-  "AppType": 1,
-  "List": [
+  "count": 0,
+  "appType": 1,
+  "list": [
     {
       "Id": 1,
       "Uid": 1,
-      "Status": 1,
+      "status": 1,
       "Key": "绑定的key",
       "VipTime": 12346579,
       "VipNumber": 999,
       "Note": "用户备注",
       "MaxOnline": 1,
       "UserClassId": 0,
-      "LinksCount": 0
+      "linksCount": 0
     }]
 })
 
@@ -634,7 +634,7 @@ const 对象_搜索条件 = ref({
 })
 
 const on读取列表 = () => {
-  Data.value.List = []
+  Data.value.list = []
   console.log("对象_搜索条件")
   console.log(对象_搜索条件.value)
   onGetAppUserList()
@@ -698,7 +698,7 @@ const onGetAppUserList = async () => {
   console.log(res)
   is加载中.value = false
   Data.value = res.data
-  对象_用户类型.value = res.data.UserClass
+  对象_用户类型.value = res.data.userClass
   //对象_用户类型.value["0"] = "未分类"
   对象_用户类型.value = {...对象_用户类型.value, 0: '未分类'};
   对象_用户类型Arr.value = []
@@ -715,20 +715,20 @@ const onGetAppUserList = async () => {
 
 const MapAppId_Name = ref({})
 const 数组AppId_Name = ref([{
-  "Appid": 10004,
-  "AppName": ""
+  "appId": 10004,
+  "appName": ""
 }])
 
 const onGetAppIdNameList = async () => {
   const res = await GetAppIdNameList()
-  数组AppId_Name.value = res.data.Array
-  MapAppId_Name.value = res.data.Map
+  数组AppId_Name.value = res.data.array
+  MapAppId_Name.value = res.data.map
 
-  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.Map[对象_搜索条件.value.AppId.toString()])
+  console.log("没有搜索条件的应用,修改第一个,现在搜索条件的值为:" + res.data.map[对象_搜索条件.value.AppId.toString()])
 
-  if (res.data.Map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
+  if (res.data.map[对象_搜索条件.value.AppId.toString()] == null || 对象_搜索条件.value.AppId <= 10000) {
     let 局_默认appid = Store.state.搜索_默认选择应用AppId
-    对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.Appid === 局_默认appid) ? 局_默认appid : 数组AppId_Name.value[0].Appid
+    对象_搜索条件.value.AppId = 数组AppId_Name.value.some(item => item.appId === 局_默认appid) ? 局_默认appid : 数组AppId_Name.value[0].appId
   }
 
 }
@@ -797,9 +797,9 @@ const on批量维护修改用户类型 = async (新类型: number) => {
   console.log(res)
   if (res.code == 10000) {
     ElMessage.success(res.msg)
-    for (let i = 0; i < Data.value.List.length; i++) {
-      if (ids.some(ele => ele === Data.value.List[i].Id)) { //判断数组内是否存在该ID,如果存在则修改状态
-        Data.value.List[i].UserClassId = 新类型
+    for (let i = 0; i < Data.value.list.length; i++) {
+      if (ids.some(ele => ele === Data.value.list[i].Id)) { //判断数组内是否存在该ID,如果存在则修改状态
+        Data.value.list[i].UserClassId = 新类型
       }
     }
     return true
@@ -871,7 +871,7 @@ const on软件用户备注被改变 = async (表项索引: number, AppUserId: nu
         })
         console.log(res)
         if (res.code == 10000) {
-          Data.value.List[表项索引].Note = 新备注   //成功赋新值
+          Data.value.list[表项索引].Note = 新备注   //成功赋新值
 
           return true
         } else {
