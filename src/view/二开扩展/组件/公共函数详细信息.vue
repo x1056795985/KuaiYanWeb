@@ -279,20 +279,20 @@ const onGetAppIdNameList = async () => {
   const res = await GetAppIdNameList()
   数组AppId_Name.value = res.data.array
   数组AppId_Name.value.unshift({
-    "Appid": 1,
-    "AppName": "全局"
+    "appId": 1,
+    "appName": "全局"
   })
   数组AppId_Name.value.unshift({
-    "Appid": 2,
-    "AppName": "任务池Hook函数"
+    "appId": 2,
+    "appName": "任务池Hook函数"
   })
   数组AppId_Name.value.unshift({
-    "Appid": 3,
-    "AppName": "ApiHook函数"
+    "appId": 3,
+    "appName": "ApiHook函数"
   })
   数组AppId_Name.value.unshift({
-    "Appid": 11,
-    "AppName": "WebSocket"
+    "appId": 11,
+    "appName": "WebSocket"
   })
 
   MapAppId_Name.value = res.data.map
