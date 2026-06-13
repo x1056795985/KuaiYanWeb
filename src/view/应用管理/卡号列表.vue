@@ -233,7 +233,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="RMb" label="余额" width="60" v-if="Data.AppType<=2"/>
+        <el-table-column prop="RMb" label="余额" width="60" v-if="Data.appType<=2"/>
         <el-table-column prop="VipNumber" label="积分" width="60"/>
         <el-table-column prop="Num" label="已用/最大" width="85">
           <template #default="scope">
@@ -341,7 +341,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.count)"
               @current-change="on读取列表"
           />
         </el-config-provider>
