@@ -60,7 +60,7 @@
           <el-input v-model="data.Note" type="textarea" placeholder="请输入备注"/>
         </el-form-item>
       </el-form>
-          <el-descriptions v-show="data.id!==0" class="margin-top" title="其他信息" :column="is移动端()?1:2" border>
+          <el-descriptions v-show="data.Id!==0" class="margin-top" title="其他信息" :column="is移动端()?1:2" border>
             <template slot="extra">
               <el-button type="primary">操作</el-button>
             </template>
@@ -182,53 +182,53 @@ const on对话框被关闭 = () => {
 const is对话框可见2 = ref(true)
 const is加载中 = ref(false)
 interface UserInfo {
-  id: number;
-  status: number;
-  user: string;
-  phone: string;
-  passWord: string;
-  superPassWord: string;
-  email: string;
-  qq: string;
-  rmb: number;
-  role: number;
-  note: string;
-  realNameAttestation: string;
-  uPAgentId: number;
-  uPAgentUser: string;
-  agentDiscount: number;
-  loginTime: number;
-  loginIp: string;
-  loginAppName: string;
-  registerTime: number;
-  registerIp: string;
-  sort: number;
-  loginAppid: number;
+  Id: number;
+  Status: number;
+  User: string;
+  Phone: string;
+  PassWord: string;
+  SuperPassWord: string;
+  Email: string;
+  Qq: string;
+  Rmb: number;
+  Role: number;
+  Note: string;
+  RealNameAttestation: string;
+  UPAgentId: number;
+  UPAgentUser: string;
+  AgentDiscount: number;
+  LoginTime: number;
+  LoginIp: string;
+  LoginAppName: string;
+  RegisterTime: number;
+  RegisterIp: string;
+  Sort: number;
+  LoginAppid: number;
 }
 
 const data = ref<UserInfo>({
-  id: 0,
-  status: 1,
-  user: "",
-  phone: "",
-  passWord: "",
-  superPassWord: "",
-  email: "",
-  qq: "",
-  rmb: 0.0,
-  role: 0,
-  note: "",
-  realNameAttestation: "",
-  uPAgentId: 0,
-  uPAgentUser: "",
-  agentDiscount: 0,
-  loginTime: 0,
-  loginIp: "",
-  loginAppName: "",
-  registerTime: 0,
-  registerIp: "",
-  sort: 0,
-  loginAppid: 0,
+  Id: 0,
+  Status: 1,
+  User: "",
+  Phone: "",
+  PassWord: "",
+  SuperPassWord: "",
+  Email: "",
+  Qq: "",
+  Rmb: 0.0,
+  Role: 0,
+  Note: "",
+  RealNameAttestation: "",
+  UPAgentId: 0,
+  UPAgentUser: "",
+  AgentDiscount: 0,
+  LoginTime: 0,
+  LoginIp: "",
+  LoginAppName: "",
+  RegisterTime: 0,
+  RegisterIp: "",
+  Sort: 0,
+  LoginAppid: 0,
 })
 
 const ruleFormRef = ref<FormInstance>()
@@ -356,9 +356,9 @@ const 读取详细信息 = async (id: number) => {
       // ✅ 直接 shallow assign，字段名完全对齐 API（小驼峰）
       Object.assign(data.value, 返回.data);
       // 防御性默认值（可选）
-      data.value.rmb = data.value.rmb ?? 0.0;
-      data.value.status = data.value.status ?? 1;
-      data.value.role = data.value.role ?? 0;
+      data.value.Rmb = data.value.Rmb ?? 0.0;
+      data.value.Status = data.value.Status ?? 1;
+      data.value.Role = data.value.Role ?? 0;
     } else {
       is重新读取.value = false;
       is对话框可见2.value = false;
