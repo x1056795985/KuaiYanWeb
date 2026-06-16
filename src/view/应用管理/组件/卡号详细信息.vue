@@ -159,14 +159,20 @@
                     <el-radio-button :value="2">每用户一次</el-radio-button>
                   </el-radio-group>
                 </el-form-item>-->
-        <!--        <el-form-item label="最大在线数" prop="MaxOnline">
-                  <el-input-number v-model="data.MaxOnline" :step="1" :value-on-clear="1" :min="1"/>
-                </el-form-item>-->
+        <el-form-item label="最大在线数" prop="MaxOnline">
+          <el-tooltip
+              :trigger-keys="[]"
+              class="box-item"
+              effect="light"
+              content="值为0,充值后不修改原在线数"
+              placement="left"
+          >
+            <el-input-number v-model="data.MaxOnline" :step="1" :value-on-clear="1"  />
+          </el-tooltip>
+
+        </el-form-item>
         <div v-if="Props.id>0 " class="展示不可修改信息">
           <ul>
-            <li class="li展示不可修改信息">最大在线数:
-              <el-text type="info" size="large">{{ data.MaxOnline }}</el-text>
-            </li>
             <li class="li展示不可修改信息">充值方式:
               <el-text type="info" size="large">{{ data.KaType === 1 ? "有次数即可" : "每用户一次" }}</el-text>
             </li>
@@ -183,7 +189,9 @@
               <el-text type="info" size="large">{{ data.InviteUser }}</el-text>
             </li>
             <li class="li展示不可修改信息">
-              <el-link type="warning" :href="软件用户跳转地址" size="large">提示:卡号使用后会转换成软件用户,如需修改使用后卡号信息,请去软件用户内修改</el-link>
+              <el-link type="warning" :href="软件用户跳转地址" size="large">
+                提示:卡号使用后会转换成软件用户,如需修改使用后卡号信息,请去软件用户内修改
+              </el-link>
             </li>
           </ul>
         </div>
@@ -205,7 +213,8 @@ import {ElMessage, FormInstance} from "element-plus";
 import {is移动端, 取url根入口路径, 时间_取现行时间戳, 时间_时间戳到时间, 时间_计算天时分秒提示} from "@/utils/utils";
 // 引入中文包
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-const 软件用户跳转地址 = 取url根入口路径()+"/#/应用管理/软件用户"
+
+const 软件用户跳转地址 = 取url根入口路径() + "/#/应用管理/软件用户"
 const Props = defineProps({
   is对话框可见: {
     type: Boolean,
@@ -293,7 +302,7 @@ const on确定按钮被点击 = async (formEl: FormInstance | undefined) => {
   if (返回.code == 10000) {
     is重新读取.value = true
     is对话框可见2.value = false
-ElMessage.success(返回.msg)
+    ElMessage.success(返回.msg)
   }
 }
 
