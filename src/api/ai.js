@@ -32,7 +32,7 @@ export async function getAiConfig() {
 /** 保存AI配置到后端 */
 export async function saveAiConfig(config) {
   const res = await service({
-    url: aiConfigUrl + 'SaveInfoAiConfig',
+    url: aiConfigUrl + 'saveInfoAiConfig',
     method: 'post',
     data: config
   })
