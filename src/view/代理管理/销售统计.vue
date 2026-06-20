@@ -16,6 +16,13 @@
                        :value="Number(index)"/>
           </el-select>
         </el-form-item>
+        <el-form-item prop="status" style="width:120px" >
+          <el-select v-model="对象_搜索条件.Status" clear placeholder="请选择">
+            <el-option key="0" label="全部状态" :value="0"/>
+            <el-option key="1" label="正常" :value="1"/>
+            <el-option key="2" label="冻结" :value="2"/>
+          </el-select>
+        </el-form-item>
         <el-form-item prop="status" style="width:120px"  >
           <el-select v-model="对象_搜索条件.AgentLv" clear placeholder="请选择">
             <el-option key="0" label="代理自身" :value="0"/>
@@ -103,6 +110,7 @@ import {Delete} from "@element-plus/icons-vue";
 import router from "@/router";
 import {GetKaList} from "@/api/卡号列表api";
 import {GetKaClassList} from "@/api/卡类列表api";
+import {is移动端} from "@/utils/utils";
 
 
 const Data = ref("")
@@ -115,6 +123,7 @@ const 对象_搜索条件 = ref({
   KaClassId: 0,
   AgentLv: 0,
   AgentName: "",
+  Status: 0,
 })
 
 const on读取列表 = () => {
@@ -132,6 +141,7 @@ const onReset = () => {
     KaClassId: 0,
     AgentLv: 0,
     AgentName: "",
+    Status: 0,
   }
   onGetAppIdNameList()
 }
