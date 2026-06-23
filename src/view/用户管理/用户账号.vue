@@ -244,9 +244,9 @@ const on单个编辑 = async (id: number) => {
 }
 
 const on批量删除 = async () => {
-  const ids = 表格被选中列表.value.map((item => item.Id))
+  const ids = 表格被选中列表.value.map((item => item.id))
   console.log(ids)
-  const res = await Del批量删除用户({"ID": ids})
+  const res = await Del批量删除用户({"id": ids})
   console.log(res)
   if (res.code == 10000) {
     ElMessage.success(res.msg)

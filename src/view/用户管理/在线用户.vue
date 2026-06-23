@@ -249,7 +249,7 @@ const on批量注销 = async () => {
     ElMessage.error("选中数据不能为0")
     return
   }
-  const res = await Del批量注销({"ID": ids})
+  const res = await Del批量注销({"id": ids})
   console.log(res)
   if (res.code == 10000) {
 ElMessage.success(res.msg)
