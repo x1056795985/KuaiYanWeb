@@ -105,6 +105,11 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import("@/view/系统管理/系统设置3改.vue"),
             },
             {
+                path: "系统管理/提现设置",
+                name: "提现设置",
+                component: () => import("@/view/系统管理/提现设置.vue"),
+            },
+            {
                 path: "二开扩展/用户云配置",
                 name: "用户云配置",
                 component: () => import("@/view/二开扩展/用户云配置.vue"),
@@ -185,9 +190,19 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import("@/view/日志管理/绑定日志.vue"),
             },
             {
+                path: "日志管理/提现操作日志",
+                name: "提现操作日志",
+                component: () => import("@/view/日志管理/提现操作日志.vue"),
+            },
+            {
                 path: "财务管理/支付充值订单",
                 name: "支付充值订单",
                 component: () => import("@/view/财务管理/支付充值订单.vue"),
+            },
+            {
+                path: "财务管理/提现审核",
+                name: "提现审核",
+                component: () => import("@/view/财务管理/提现审核.vue"),
             },
             {
                 path: "营销管理/cps佣金订单",

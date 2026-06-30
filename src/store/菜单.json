@@ -205,6 +205,16 @@
           "icon": "document-checked"
         },
         "children": []
+      },
+      {
+        "ID": 46,
+        "path": "财务管理/提现审核",
+        "name": "提现审核",
+        "meta": {
+          "title": "提现审核",
+          "icon": "Money"
+        },
+        "children": []
       }
     ]
   },
@@ -225,6 +235,16 @@
         "meta": {
           "title": "系统设置",
           "icon": "Tools"
+        },
+        "children": []
+      },
+      {
+        "ID": 48,
+        "path": "系统管理/提现设置",
+        "name": "提现设置",
+        "meta": {
+          "title": "提现设置",
+          "icon": "Setting"
         },
         "children": []
       }
@@ -359,6 +379,16 @@
         "meta": {
           "title": "绑定日志",
           "icon": "Postcard"
+        },
+        "children": []
+      },
+      {
+        "ID": 47,
+        "path": "日志管理/提现操作日志",
+        "name": "提现操作日志",
+        "meta": {
+          "title": "提现操作日志",
+          "icon": "Tickets"
         },
         "children": []
       }

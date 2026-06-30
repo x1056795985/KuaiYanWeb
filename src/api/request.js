@@ -34,6 +34,9 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         //console.info(response)
+        if (response.config?.responseType === 'blob') {
+            return response
+        }
         // 响应成功 返回data内容
         if (response.data.code === 10000) {
             return response.data
