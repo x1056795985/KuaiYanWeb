@@ -357,7 +357,7 @@
   <KaEdit :is对话框可见="is对话框可见卡详细信息" :id="is对话框卡详细信息id" :AppId="对象_搜索条件.AppId"
           :AppName="MapAppId_Name?.[对象_搜索条件.AppId?.toString() ?? '0'] ?? ''" :AppType="Data.appType"
           @on对话框详细信息关闭="on对话框详细信息关闭" :KaClass="对象_卡类型" :UserType="对象_用户类型"></KaEdit>
-  <ChartData v-if="is图表分析抽屉可见" @on图表分析抽屉关闭="is图表分析抽屉可见 = false"/>
+  <ChartData v-if="is图表分析抽屉可见" :AppId="对象_搜索条件.AppId" @on图表分析抽屉关闭="is图表分析抽屉可见 = false"/>
 </template>
 
 <script lang="ts" setup>

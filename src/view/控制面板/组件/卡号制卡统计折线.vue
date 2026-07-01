@@ -21,6 +21,12 @@ import {nextTick, onMounted, onUnmounted, ref, shallowRef} from 'vue'
 import {is移动端,获取前几个个月的月份} from "@/utils/utils";
 import {get图表卡号统计制卡} from "@/api/分析页Api.js";
 
+const Props = defineProps({
+  AppId: {
+    type: Number,
+    default: 0
+  }
+})
 const is加载中 = ref(false)
 const 图表时间单位 = ref(1)
 const chart = shallowRef(null)
@@ -95,7 +101,7 @@ const setOptions = (单位,data) => {
 const on读取图表数据 = async () => {
   is加载中.value=true
   let 返回;
-  返回 = await get图表卡号统计制卡({Type:图表时间单位.value})
+  返回 = await get图表卡号统计制卡({Type:图表时间单位.value, AppId: Props.AppId})
   is加载中.value=false
   console.log(返回)
   if (返回.code === 10000) {

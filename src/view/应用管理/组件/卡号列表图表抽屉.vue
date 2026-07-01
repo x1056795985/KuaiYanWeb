@@ -12,7 +12,7 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
-          <Echarts在线统计/>
+          <Echarts在线统计 :AppId="Props.AppId"/>
         </el-col>
       </el-row>
     </template>
@@ -32,6 +32,10 @@ import {onMounted, ref, watch} from "vue";
 
 
 const Props = defineProps({
+  AppId: {
+    type: Number,
+    default: 0
+  }
 })
 const emit = defineEmits(['on图表分析抽屉关闭'])
 
