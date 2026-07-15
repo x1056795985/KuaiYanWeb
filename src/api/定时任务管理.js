@@ -58,7 +58,7 @@ export const DeleteBatch = (data) => {
 //  更新状态
 export const UpdateStatus = (data) => {
   return service({
-    url: url+'UpdateStatus',
+    url: url+'updateStatus',
     method: 'post',
     data: data
   })
@@ -67,7 +67,7 @@ export const UpdateStatus = (data) => {
 //  测试执行
 export const TestRunId = (data) => {
   return service({
-    url: url+'TestRunId',
+    url: url+'testRunId',
     method: 'post',
     data: data
   })
