@@ -8,6 +8,15 @@
         </el-tag>
         </el-form-item>
         <el-form-item>
+          <el-input
+                    v-model.number="对象_搜索条件.submitUid"
+                    placeholder="生产者uid"
+                    style="top:0 ; width: auto;padding: 0;margin: 0"
+                    clearable
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item>
           <el-input class="搜索框"
                     v-model.trim="对象_搜索条件.Keywords"
                     placeholder="搜索内容"
@@ -314,7 +323,7 @@ interface DB_TaskPoolData {
 const List = ref<{Count:number,List:DB_TaskPoolData[] }>([])
 
 const Store = useStore()
-const 对象_搜索条件 = ref({Type: 2, Size: 10, Page: 1, Keywords: "",Order:2,Tid:4,TidName:"任务类型名称"})
+const 对象_搜索条件 = ref({Type: 2, Size: 10, Page: 1, Keywords: "",Order:2,Tid:4,submitUid:0,TidName:"任务类型名称"})
 
 const on读取列表 = () => {
   console.log("对象_搜索条件")
