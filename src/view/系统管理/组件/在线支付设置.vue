@@ -199,6 +199,28 @@
               <el-input type="textarea" v-model="Data.微信支付商户证书串"/>
             </el-tooltip>
           </el-form-item>
+          <el-form-item label="微信支付公钥ID" disabled="disabled">
+            <el-tooltip
+                :trigger-keys="[]"
+                class="box-item"
+                effect="dark"
+                content="在微信支付商户平台「API安全」->「微信支付公钥」中获取公钥ID，用于验证微信支付身份"
+                placement="top"
+            >
+              <el-input v-model="Data.微信支付公钥ID"/>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="微信支付公钥" disabled="disabled">
+            <el-tooltip
+                :trigger-keys="[]"
+                class="box-item"
+                effect="dark"
+                content="在微信支付商户平台「API安全」->「微信支付公钥」中下载的pub格式公钥文件全部文本"
+                placement="top"
+            >
+              <el-input type="textarea" v-model="Data.微信支付公钥"/>
+            </el-tooltip>
+          </el-form-item>
 
           <el-form-item label="单次最大金额" disabled="disabled">
             <el-input-number v-model="Data.微信支付单次最大金额"/>
@@ -402,6 +424,8 @@ const Data = ref({
   "微信支付商户证书串": "66666666666",
   "微信支付商户证书序列号": "66666666666",
   "微信支付异步回调Url": "6666666666666",
+  "微信支付公钥ID": "",
+  "微信支付公钥": "",
   "微信支付单次最大金额": 500,
 
   "虎皮椒支付开关": false,

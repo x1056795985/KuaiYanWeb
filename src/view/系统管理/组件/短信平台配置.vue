@@ -84,7 +84,7 @@
           <el-divider content-position="left">系统自带Api
           </el-divider>
           <el-form-item label="说明" disabled="disabled">
-            <el-text>快验系统Api,系统自带开放使用,必须登录系统,且余额充足,目前为腾讯云接口价格1w/470元短息包,约0.04元/条(因为系统计费只能计费到分),如果以后用的人多,会购买量更大更合适的短信包</el-text>
+            <el-text>快验系统Api,系统自带开放使用,必须登录系统,且余额充足0.06元/条,</el-text>
           </el-form-item>
         </div>
         <div class="内容div" v-if="Data.当前选择===5">

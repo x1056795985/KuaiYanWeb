@@ -117,6 +117,22 @@ export const get图表卡号统计制卡 = (data) => {
         data: data
     })
 }
+export const get图表卡号月度汇总 = (data) => {
+    return service({
+        url: url+'chartKaMonthSummary',
+        method: 'POST',
+        donNotShowLoading: true,
+        data: data
+    })
+}
+export const get图表仪表台汇总 = (data) => {
+    return service({
+        url: url+'chartDashboardSummary',
+        method: 'POST',
+        donNotShowLoading: true,
+        data: data
+    })
+}
 export const get图表卡号列表统计应用卡可用已用 = (data) => {
     return service({
         url: url+'chartAppKa',
