@@ -278,16 +278,18 @@ const 对象_搜索条件 = ref({
   Page: 1,
   Keywords: "",
   Count: 0,
-  AppId: 0
+  AppId: 0,
+  Order: 2
 })
 
 const on读取列表 = (Type: number) => {
   if (Type === 1) {
     对象_搜索条件.value.Count = 0 //只有翻页缓存总数数据,新搜索不缓存总数
   }
+  对象_搜索条件.value.Order=2
   console.log("对象_搜索条件")
   console.log(对象_搜索条件.value)
-  onGetLogRMBPayOrderList()
+  onGetkeyLogList()
 }
 const onReset = () => {
   对象_搜索条件.value = {
@@ -298,13 +300,14 @@ const onReset = () => {
     Page: 1,
     Keywords: "",
     Count: 0,
-    AppId: 0
+    AppId: 0,
+    Order: 2
   }
 }
 
 
 const is加载中 = ref(false)
-const onGetLogRMBPayOrderList = async () => {
+const onGetkeyLogList = async () => {
   is加载中.value = true
   const res = await 绑定日志api.getList(对象_搜索条件.value)
   is加载中.value = false
@@ -324,7 +327,7 @@ onMounted(async () => {
     console.log(Store.state.搜索_绑定日志.Size)
     console.log(Store.state.搜索_绑定日志)
   }
-  await onGetLogRMBPayOrderList()
+  await onGetkeyLogList()
   on表格列宽初始化()
   onGetAppIdNameList()
 })

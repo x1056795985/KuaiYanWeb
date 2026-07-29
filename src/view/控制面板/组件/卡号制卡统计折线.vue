@@ -6,19 +6,12 @@
         class="dashboard-line"
         style="width: 100%;min-height: 200px;z-index:99;position:absolute">
     </div>
-    <!--这里是放置按钮让其显示在最前面-->
-    <div style="padding-left: 120px; z-index:999;float:left;position:absolute">
-      <el-radio-group v-model="图表时间单位" size="small" @change="on读取图表数据">
-        <el-radio-button :value="1">单位(日)</el-radio-button>
-        <el-radio-button :value="2">单位(月)</el-radio-button>
-      </el-radio-group>
-    </div>
   </div>
 </template>
 <script setup>
 import * as echarts from 'echarts'
 import {nextTick, onMounted, onUnmounted, ref, shallowRef} from 'vue'
-import {is移动端,获取前几个个月的月份} from "@/utils/utils";
+import {is移动端} from "@/utils/utils";
 import {get图表卡号统计制卡} from "@/api/分析页Api.js";
 
 const Props = defineProps({
@@ -28,34 +21,30 @@ const Props = defineProps({
   }
 })
 const is加载中 = ref(false)
-const 图表时间单位 = ref(1)
 const chart = shallowRef(null)
 const echart = ref(null)
 const initChart = () => {
   chart.value = echarts.init(echart.value /* 'macarons' */)
-  setOptions(1,[{
-    name: '制卡数量',
-    type: 'line',
-    data: [120, 132, 101, 134, 90, 230, 210]
-  }
+  setOptions(['1日'], [
+    {name: '本月', type: 'line', data: []},
+    {name: '上月', type: 'line', data: []},
+    {name: '上上月', type: 'line', data: []}
   ])
 }
 
-const setOptions = (单位,data) => {
-
+const setOptions = (x轴数据, series数据) => {
   let 图数据 = {
     title: {
-      text: '制卡数量统计'
+      text: '制卡数量统计(本月/上月/上上月对比)'
     },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        // Use axis to trigger tooltip
-        type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+        type: 'shadow'
       },
     },
     legend: {
-      data: ['制卡数量']
+      data: series数据.map(s => s.name)
     },
     grid: {
       left: '3%',
@@ -71,41 +60,32 @@ const setOptions = (单位,data) => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['大大大大前天', '大大大前天', '大大前天', '大前天', '前天', '昨天', '今天']
+      data: x轴数据
     },
     yAxis: {
       type: 'value'
     },
-    series: data
+    series: series数据
   }
   图数据.title = is移动端() ? "" : 图数据.title
-  //创建date变量
-  let nowDate = new Date();
-
-//添加天数
-  if (单位=== 2) {
-    图数据.xAxis.data=获取前几个个月的月份(7)
-    图数据.xAxis.data[6] += "(本月)"
-  } else {
-    for (let i = 0; i < 7; i++) {
-      图数据.xAxis.data[6 - i] = nowDate.getDate().toString() + "日"
-      nowDate.setDate(nowDate.getDate() - 1);
-    }
-    图数据.xAxis.data[6] += "(今天)"
-    图数据.xAxis.data[5] += "(昨天)"
-  }
-
-  console.log(图数据.xAxis.data)
-  chart.value.setOption(图数据)
+  chart.value.setOption(图数据, true)
 }
+
 const on读取图表数据 = async () => {
-  is加载中.value=true
-  let 返回;
-  返回 = await get图表卡号统计制卡({Type:图表时间单位.value, AppId: Props.AppId})
-  is加载中.value=false
-  console.log(返回)
-  if (返回.code === 10000) {
-    setOptions(图表时间单位.value,返回.data)
+  is加载中.value = true
+  try {
+    const 返回 = await get图表卡号统计制卡({Type: 1, AppId: Props.AppId})
+    if (返回.code === 10000 && 返回.data && 返回.data.length >= 4) {
+      const x轴数据 = 返回.data[3].data
+      const series数据 = [
+        {name: '本月', type: 'line', smooth: true, data: 返回.data[0].data},
+        {name: '上月', type: 'line', smooth: true, data: 返回.data[1].data},
+        {name: '上上月', type: 'line', smooth: true, data: 返回.data[2].data}
+      ]
+      setOptions(x轴数据, series数据)
+    }
+  } finally {
+    is加载中.value = false
   }
 }
 onMounted(async () => {
@@ -122,7 +102,7 @@ onUnmounted(() => {
   chart.value = null
 })
 window.onresize = function () {
-  if (chart.value){
+  if (chart.value) {
     chart.value.resize();
   }
 }

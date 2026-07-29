@@ -6,21 +6,13 @@
         class="dashboard-line"
         style="width: 100%;min-height: 200px;z-index:99;position:absolute">
     </div>
-    <!--这里是放置按钮让其显示在最前面-->
-    <div style="padding-left: 120px; z-index:999;float:left;position:absolute">
-      <el-radio-group v-model="图表时间单位" size="small" @change="on读取图表数据">
-        <el-radio-button :value="1">今日</el-radio-button>
-        <el-radio-button :value="2">昨日</el-radio-button>
-        <el-radio-button :value="3">前日</el-radio-button>
-      </el-radio-group>
-    </div>
   </div>
 </template>
 <script setup>
 import * as echarts from 'echarts'
 import {nextTick, onMounted, onUnmounted, ref, shallowRef} from 'vue'
-import {is移动端, 获取前几个个月的月份, 获取前几个小时的小时} from "@/utils/utils";
-import {get图表在线用户登录活动时间, Get统计分时段在线总数} from "@/api/分析页Api.js";
+import {is移动端} from "@/utils/utils";
+import {Get统计分时段在线总数} from "@/api/分析页Api.js";
 
 const Props = defineProps({
   AppId: {
@@ -29,34 +21,30 @@ const Props = defineProps({
   }
 })
 const is加载中 = ref(false)
-const 图表时间单位 = ref(1)
 const chart = shallowRef(null)
 const echart = ref(null)
 const initChart = () => {
   chart.value = echarts.init(echart.value /* 'macarons' */)
-  setOptions(1,[
-    {
-      name: '分时在线统计',
-      type: 'line',
-      data: [9920, 332, 341, 354, 390, 220, 9450]
-    }
+  setOptions(['0时','1时','2时','3时','4时','5时','6时','7时','8时','9时','10时','11时','12时','13时','14时','15时','16时','17时','18时','19时','20时','21时','22时','23时'], [
+    { name: '今日', type: 'line', data: [] },
+    { name: '昨日', type: 'line', data: [] },
+    { name: '前日', type: 'line', data: [] }
   ])
 }
 
-const setOptions = (单位,data) => {
+const setOptions = (x轴数据, series数据) => {
   let 图数据 = {
     title: {
-      text: '分时在线统计'
+      text: '分时在线统计(今日/昨日/前日对比)'
     },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        // Use axis to trigger tooltip
-        type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+        type: 'shadow'
       },
     },
     legend: {
-      data: ['分时在线统计']
+      data: series数据.map(s => s.name)
     },
     grid: {
       left: '3%',
@@ -72,31 +60,33 @@ const setOptions = (单位,data) => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['大大大大前天', '大大大前天', '大大前天', '大前天', '前天', '昨天', '今天']
+      data: x轴数据
     },
     yAxis: {
       type: 'value'
     },
-    series: data
+    series: series数据
   }
   图数据.title = is移动端() ? "" : 图数据.title
-  //创建date变量
-  let nowDate = new Date();
-
-//添加天数
-  图数据.xAxis.data=单位
-
-  console.log(图数据.xAxis.data)
-  chart.value.setOption(图数据)
+  chart.value.setOption(图数据, true)
 }
+
 const on读取图表数据 = async () => {
-  is加载中.value=true
-  let 返回;
-  返回 = await Get统计分时段在线总数({Type:图表时间单位.value ,AppId:Props.AppId})
-  is加载中.value=false
-  console.log(返回)
-  if (返回.code === 10000) {
-    setOptions(返回.data[1].data,返回.data[0])
+  is加载中.value = true
+  try {
+    // 后端一次性返回今日/昨日/前日三天数据,只需请求一次
+    const 返回 = await Get统计分时段在线总数({Type: 1, AppId: Props.AppId})
+    if (返回.code === 10000 && 返回.data && 返回.data.length >= 4) {
+      const x轴数据 = 返回.data[3].data // 统计分时段在线时间(0-23时)
+      const series数据 = [
+        { name: '今日', type: 'line', smooth: true, data: 返回.data[0].data },
+        { name: '昨日', type: 'line', smooth: true, data: 返回.data[1].data },
+        { name: '前日', type: 'line', smooth: true, data: 返回.data[2].data }
+      ]
+      setOptions(x轴数据, series数据)
+    }
+  } finally {
+    is加载中.value = false
   }
 }
 onMounted(async () => {

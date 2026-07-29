@@ -93,32 +93,6 @@
       </el-col>
     </el-row>
 
-    <!-- 快捷入口 -->
-    <el-card shadow="never" class="dashboard-section quick-entrance-card">
-      <template #header>
-        <div class="section-header">
-          <span class="section-title">快捷入口</span>
-        </div>
-      </template>
-      <el-row :gutter="16">
-        <el-col
-          v-for="(card, key) in toolCards"
-          :key="key"
-          :xs="8" :sm="6" :md="4" :lg="4"
-          class="quick-entrance-col"
-        >
-          <div class="quick-entrance-item" @click="toTarget(card.name)">
-            <div class="quick-entrance-item-icon" :style="{ backgroundColor: card.bg }">
-              <el-icon :size="22" :style="{ color: card.color }">
-                <component :is="card.icon" />
-              </el-icon>
-            </div>
-            <span class="quick-entrance-item-text">{{ card.label }}</span>
-          </div>
-        </el-col>
-      </el-row>
-    </el-card>
-
     <!-- 图表区域 -->
     <el-row :gutter="16" class="chart-row">
       <el-col :xs="24" :sm="24" :md="16" :lg="16">
@@ -168,7 +142,7 @@ const statCards = ref([
     color: '#409eff',
     bg: 'rgba(64, 158, 255, 0.1)',
     loading: true,
-    api: () => GetLinkUserList({ Page: 0, Size: 1 }),
+    api: () => GetLinkUserList({ Page: 0, Size: 1,Type:2,Status:1,Tourist:1,Keywords:"",AppId:0 }),
   },
   {
     label: '注册用户',
