@@ -2,7 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const distPath = 'E:\\yun\\project\\TY通用后台管理系统\\server2\\core\\dist\\VueAdmin';
+const distPath = 'E:\\yun\\project\\TY通用后台管理系统\\server2\\app\\web\\VueAdmin';
 
 if (fs.existsSync(distPath)) {
     fs.readdirSync(distPath).forEach((file) => {

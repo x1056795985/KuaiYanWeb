@@ -23,7 +23,7 @@ export default defineConfig({
         }
     },
     build: {
-        outDir:'E:\\yun\\project\\TY通用后台管理系统\\server2\\core\\dist\\VueAdmin',
+        outDir:'E:\\yun\\project\\TY通用后台管理系统\\server2\\app\\web\\VueAdmin',
         minify: "terser",
         terserOptions: {
             compress: {
