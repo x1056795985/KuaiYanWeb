@@ -190,6 +190,13 @@
               </el-icon>
               退款
             </el-button>
+            <el-button link type="primary" size="default" @click="on手动补单(scope.row)" style="color:#e6a23c"
+                       v-show="scope.row.Status===1 || scope.row.Status===7">
+              <el-icon color="#e6a23c" class="no-inherit">
+                <Edit/>
+              </el-icon>
+              补单
+            </el-button>
           </template>
         </el-table-column>
 
@@ -209,7 +216,7 @@
               size="small"
               :layout="is移动端()?'total,prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :pager-count="is移动端()?5:9"
-              :total="parseInt( Data.Count)"
+              :total="parseInt( Data.count)"
               @current-change="on读取列表(0)"
           />
         </el-config-provider>
@@ -225,7 +232,7 @@
 
 <script lang="ts" setup>
 import {onBeforeUnmount, onMounted, ref, watch} from "vue";
-import {GetLogRMBPayOrderList, Del批量删除LogRMBPayOrder, SetPayOrderNote} from "@/api/支付充值订单api.js";
+import {GetLogRMBPayOrderList, Del批量删除LogRMBPayOrder, SetPayOrderNote, MakeUpRMBPayOrder} from "@/api/支付充值订单api.js";
 import {
   时间_时间戳到时间,
   时间_取现行时间戳,
@@ -520,6 +527,34 @@ const on对话框退款关闭 = (is重新读取: boolean) => {
   if (is重新读取) {
     onGetLogRMBPayOrderList()
   }
+}
+
+const on手动补单 = async (订单: any) => {
+  await ElMessageBox.confirm(
+      '确定对订单 ' + 订单.PayOrder + ' 进行手动补单? 用户: ' + 订单.User + ', 金额: ' + 订单.Rmb,
+      '手动补单确认',
+      {
+        confirmButtonText: '确定补单',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  ).then(async () => {
+    await ElMessageBox.prompt('请输入补单备注(可选)', '手动补单', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputValue: '管理员手动补单',
+    }).then(async ({value}) => {
+      is加载中.value = true
+      const res = await MakeUpRMBPayOrder({payOrder: 订单.PayOrder, note: value})
+      is加载中.value = false
+      if (res.code == 10000) {
+        ElMessage.success(res.msg)
+        onGetLogRMBPayOrderList()
+      }
+    }).catch(() => {
+    })
+  }).catch(() => {
+  })
 }
 </script>
 

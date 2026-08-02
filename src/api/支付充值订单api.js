@@ -53,3 +53,13 @@ export const SetPayOrderNote = (data) => {
     data: data
   })
 }
+
+//  手动补单 - 对未支付订单进行手动补单
+//{ "payOrder": "订单号", "note": "备注" }
+export const MakeUpRMBPayOrder = (data) => {
+  return service({
+    url: url+'makeUp',
+    method: 'post',
+    data: data
+  })
+}
