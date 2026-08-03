@@ -233,8 +233,8 @@ const on图表分析被点击 = () => {
   Store.commit("set搜索_活动列表", 对象_搜索条件.value)
   is图表分析抽屉可见.value = true
 }
-// 1-cps 2-签到"
-const 对象_活动类型 = {1: "cps(拉新推广)", 2: "签到"}
+// 1-cps 2-签到 3-大转盘"
+const 对象_活动类型 = {1: "cps(拉新推广)", 2: "签到", 3: "大转盘抽奖"}
 
 
 const on批量结束活动 = async (Status: number) => {
@@ -454,6 +454,8 @@ const on单个重置 = async (row: list_item) => {
     提示信息 += "<span style='color:red;'>用户邀请记录,<br/>邀请累计数量和金额,<br/>cps佣金订单信息<br/></span>"
   } else if (row.promotionType == 2) {
     提示信息 += "<span style='color:red;'>用户签到记录,<br/>用户签到分,<br/>用户的签到分变化记录<br/></span>"
+  } else if (row.promotionType == 3) {
+    提示信息 += "<span style='color:red;'>用户抽奖次数,<br/>抽奖记录<br/></span>"
   }
   提示信息+="仅建议活动结束后,在重置."
 
