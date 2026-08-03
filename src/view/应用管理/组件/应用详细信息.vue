@@ -72,7 +72,7 @@
                     :trigger-keys="[]"
                     class="box-item"
                     effect="light"
-                    content="支持使用变量 最新版本号: {{AppVer}}  {{云存储_取外链('10001/app2.apk',0)}} "
+                    content="支持使用变量 最新版本号: {{AppVer}}  {{云存储_取外链('10001/app2.apk',0)}} {{云存储_取ETag('10001/飞鸟快验{{AppVer}}.bin')}}"
                     placement="top-end"
                 >
                   <el-input class="no-inherit" type="textarea" autosize v-model="data.UrlDownload"/>
