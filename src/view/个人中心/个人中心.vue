@@ -45,11 +45,11 @@
           <div class="user_num">
             <div style="cursor: pointer">
               <div class="num_number">{{ UserInfo.rmb }}</div>
-              <span class="num_text">历史赞助</span>
+              <span class="num_text">余额</span>
             </div>
             <div style="cursor: pointer">
               <div class="num_number">{{ UserInfo.vipNumber }}</div>
-              <span class="num_text">会员积分</span>
+              <span class="num_text">历史赞助</span>
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
                   index="余额充值"
               >
                 <i class="el-icon-document"></i>
-                <span slot="title">我要赞助</span>
+                <span slot="title">充值赞助</span>
               </el-menu-item>
             </el-menu>
           </el-card>

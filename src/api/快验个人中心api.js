@@ -94,6 +94,14 @@ export const 取余额充值地址 = (data) => {
   })
 }
 
+export const 取购卡直冲地址 = (data) => {
+  return service({
+    url:  url+'payKaUsa',
+    method: 'post',
+    data: data
+  })
+}
+
 
 export const 取开启验证码接口列表 = (data) => {
   return service({
