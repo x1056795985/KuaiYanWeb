@@ -135,6 +135,9 @@
             <li class="工具_更多_li" @click="on批量维护清空绑定信息()">
               批量清空绑定信息
             </li>
+            <li class="工具_更多_li" @click="on批量发放优惠券将打开">
+              批量发放优惠券
+            </li>
           </el-popover>
           <el-tooltip content="分析"
                       effect="dark"
@@ -332,6 +335,13 @@
       </el-form-item>
     </el-form>
   </el-dialog>
+  <BatchGrantCoupon
+      v-if="is批量发放优惠券可见"
+      :AppId="对象_搜索条件.AppId"
+      :Uids="表格被选中列表.map(item => item.Uid)"
+      :Users="表格被选中列表"
+      @on批量发放优惠券被关闭="on批量发放优惠券被关闭"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -361,11 +371,35 @@ import BatchElMessage2 from "./组件/批量维护积分.vue";
 import BatchElMessage3 from "./组件/批量维护用户云配置.vue";
 import BatchElMessage4 from "./组件/批量导入账号.vue";
 import BatchSetAllUserVipTime from "./组件/批量维护全部用户时间点数.vue";
+import BatchGrantCoupon from "./组件/批量发放优惠券.vue";
 import ChartData from "@/view/应用管理/组件/软件用户图表抽屉.vue";
 
 
 const is图表分析抽屉可见 = ref(false)
 const is更多筛选 = ref(false)
+const is批量发放优惠券可见 = ref(false)
+
+const on批量发放优惠券将打开 = () => {
+  if (!对象_搜索条件.value.AppId || 对象_搜索条件.value.AppId === 10000) {
+    ElMessage.warning("请先选择应用")
+    return
+  }
+  if (表格被选中列表.value.length === 0) {
+    ElMessage.warning("请先勾选软件用户")
+    return
+  }
+  is批量发放优惠券可见.value = true
+}
+
+const on批量发放优惠券被关闭 = (is重新读取: boolean) => {
+  is批量发放优惠券可见.value = false
+  if (is重新读取) {
+    tableRef.value?.clearSelection()
+    表格被选中列表.value = []
+    is批量删除禁用.value = true
+    on读取列表()
+  }
+}
 
 
 const on图表分析被点击 = () => {

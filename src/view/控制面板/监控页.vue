@@ -18,59 +18,64 @@
       </div>
     </el-card>
 
-    <el-row :gutter="16" class="summary-grid">
-      <el-col :xs="24" :md="12" :xl="6">
-        <el-card class="summary-card">
-          <template #header>进程概览</template>
-          <div class="metric-row"><span>Go 版本</span><strong>{{ serverOs.goVersion || '-' }}</strong></div>
-          <div class="metric-row"><span>系统</span><strong>{{ serverOs.goos || '-' }}</strong></div>
-          <div class="metric-row"><span>Goroutine</span><strong>{{ runtimeInfo.goroutines || 0 }}</strong></div>
-          <div class="metric-row"><span>线程创建数</span><strong>{{ runtimeInfo.threadCreateCount || 0 }}</strong></div>
-          <div class="metric-row"><span>已运行</span><strong>{{ formatSeconds(runtimeInfo.uptimeSeconds) }}</strong></div>
-        </el-card>
-      </el-col>
+    <section class="monitor-kpi-grid" aria-label="核心运行指标">
+      <article v-for="item in kpis" :key="item.key" class="monitor-card metric-card">
+        <div class="metric-card__icon" :class="`is-${item.level}`">
+          <el-icon><component :is="item.icon" /></el-icon>
+        </div>
+        <div class="metric-card__content">
+          <div class="metric-card__label">{{ item.label }}</div>
+          <div class="metric-card__value">{{ item.value }}<span>{{ item.unit }}</span></div>
+          <div class="metric-card__meta">{{ item.meta }}</div>
+        </div>
+      </article>
+    </section>
 
-      <el-col :xs="24" :md="12" :xl="6">
-        <el-card class="summary-card">
-          <template #header>CPU / 调度</template>
-          <div class="metric-row"><span>逻辑核数</span><strong>{{ serverOs.numCpu || 0 }}</strong></div>
-          <div class="metric-row"><span>GOMAXPROCS</span><strong>{{ runtimeInfo.goMaxProcs || 0 }}</strong></div>
-          <div class="metric-row"><span>Cgo 调用</span><strong>{{ runtimeInfo.numCgoCall || 0 }}</strong></div>
-          <div class="metric-row"><span>GC CPU 占比</span><strong>{{ percent(runtimeInfo.gcCpuFraction) }}</strong></div>
-          <div class="mini-bars">
-            <div v-for="(item, index) in serverCpu.cpus || []" :key="index" class="mini-bar-item">
-              <span>#{{ index + 1 }}</span>
-              <el-progress :percentage="Number(Number(item || 0).toFixed(0))" :stroke-width="10" />
-            </div>
+    <section class="monitor-chart-grid">
+      <el-card class="monitor-card" shadow="never">
+        <RuntimeTrendChart
+          title="CPU 趋势"
+          unit="%"
+          :points="history"
+          :series="[{ key: 'hostCpu', name: '主机平均' }, { key: 'processCpu', name: '当前进程' }]"
+        />
+      </el-card>
+      <el-card class="monitor-card" shadow="never">
+        <RuntimeTrendChart
+          title="内存趋势"
+          unit="MB"
+          :points="history"
+          :series="[{ key: 'rssMb', name: '进程 RSS' }, { key: 'heapMb', name: 'Go Heap' }]"
+        />
+      </el-card>
+      <el-card class="monitor-card" shadow="never">
+        <RuntimeTrendChart
+          title="协程与 GC"
+          unit="数量"
+          :points="history"
+          :series="[{ key: 'goroutines', name: 'goroutine' }, { key: 'gcCount', name: 'GC 次数' }]"
+        />
+      </el-card>
+      <el-card class="monitor-card resource-panel" shadow="never">
+        <template #header>
+          <div class="section-title">基础资源</div>
+        </template>
+        <div class="resource-grid">
+          <div class="resource-row"><span>系统 / 架构</span><strong>{{ serverOs.goos || '-' }} / {{ serverOs.compiler || '-' }}</strong></div>
+          <div class="resource-row"><span>Go 版本</span><strong>{{ serverOs.goVersion || '-' }}</strong></div>
+          <div class="resource-row"><span>进程 PID</span><strong>{{ processInfo.pid || '-' }}</strong></div>
+          <div class="resource-row"><span>运行时长</span><strong>{{ formatSeconds(runtimeInfo.uptimeSeconds) }}</strong></div>
+          <div class="resource-progress">
+            <div><span>主机内存</span><strong>{{ serverRam.usedMb || 0 }} / {{ serverRam.totalMb || 0 }} MB</strong></div>
+            <el-progress :percentage="Number(serverRam.usedPercent || 0)" :stroke-width="8" />
           </div>
-        </el-card>
-      </el-col>
-
-      <el-col :xs="24" :md="12" :xl="6">
-        <el-card class="summary-card">
-          <template #header>内存 / GC</template>
-          <div class="metric-row"><span>进程 Alloc</span><strong>{{ mb(runtimeInfo.allocMb) }}</strong></div>
-          <div class="metric-row"><span>HeapAlloc</span><strong>{{ mb(runtimeInfo.heapAllocMb) }}</strong></div>
-          <div class="metric-row"><span>HeapInuse</span><strong>{{ mb(runtimeInfo.heapInuseMb) }}</strong></div>
-          <div class="metric-row"><span>HeapObjects</span><strong>{{ runtimeInfo.heapObjects || 0 }}</strong></div>
-          <div class="metric-row"><span>Next GC</span><strong>{{ mb(runtimeInfo.nextGcMb) }}</strong></div>
-          <div class="metric-row"><span>最近 GC 暂停</span><strong>{{ ms(runtimeInfo.lastGcPauseMs) }}</strong></div>
-        </el-card>
-      </el-col>
-
-      <el-col :xs="24" :md="12" :xl="6">
-        <el-card class="summary-card">
-          <template #header>宿主机资源</template>
-          <div class="metric-row"><span>内存占用</span><strong>{{ serverRam.usedMb || 0 }} / {{ serverRam.totalMb || 0 }} MB</strong></div>
-          <el-progress :percentage="Number(serverRam.usedPercent || 0)" />
-          <div class="metric-row disk-row"><span>磁盘占用</span><strong>{{ serverDisk.usedGb || 0 }} / {{ serverDisk.totalGb || 0 }} GB</strong></div>
-          <el-progress :percentage="Number(serverDisk.usedPercent || 0)" status="warning" />
-          <div class="metric-row"><span>累计申请内存</span><strong>{{ mb(runtimeInfo.totalAllocMb) }}</strong></div>
-          <div class="metric-row"><span>当前向系统申请</span><strong>{{ mb(runtimeInfo.sysMb) }}</strong></div>
-          <div class="metric-note">前者只会持续累加，后者更接近当前进程真正占着的总内存。</div>
-        </el-card>
-      </el-col>
-    </el-row>
+          <div class="resource-progress">
+            <div><span>磁盘</span><strong>{{ serverDisk.usedGb || 0 }} / {{ serverDisk.totalGb || 0 }} GB</strong></div>
+            <el-progress :percentage="Number(serverDisk.usedPercent || 0)" :stroke-width="8" status="warning" />
+          </div>
+        </div>
+      </el-card>
+    </section>
 
     <el-row :gutter="16" class="content-grid">
       <el-col :xs="24" :xl="8">
@@ -503,6 +508,7 @@ import { ElMessage } from 'element-plus'
 import { Download, RefreshRight, SwitchButton, VideoPlay } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import * as monitorApi from '@/api/监控页'
+import RuntimeTrendChart from './组件/运行趋势图.vue'
 
 const createOverview = () => ({
   server: {
@@ -572,6 +578,8 @@ const timer = ref(null)
 const lastRefreshAt = ref('')
 const overview = ref(createOverview())
 const processSnapshot = ref(createProcessSnapshot())
+const history = ref([])
+const HISTORY_WINDOW_MS = 30 * 60 * 1000
 
 const routeKeyword = ref('')
 const routeSort = ref('totalMs')
@@ -619,16 +627,77 @@ const notes = computed(() => overview.value.notes || [])
 const cpuTopRows = computed(() => overview.value.pprof?.lastCpuTop || [])
 const lastRefreshText = computed(() => lastRefreshAt.value || '未刷新')
 const processCollectedAtText = computed(() => processSnapshot.value.collectedAt || '未采集')
+const currentProcess = computed(() => processRows.value[0] || {})
+const processInfo = computed(() => currentProcess.value)
 const processRows = computed(() => {
   return (processSnapshot.value.processes || []).map((item) => ({
     ...item,
     cpuPercent: Number(item.cpuPercent || 0).toFixed(2),
     memoryMb: Number(item.memoryMb || 0).toFixed(2),
     memoryPercent: Number(item.memoryPercent || 0).toFixed(2),
+    vmsMb: Number(item.vmsMb || 0).toFixed(2),
     uptimeText: formatSeconds(item.uptimeSeconds || 0),
     command: item.command || '-'
   }))
 })
+const hostCpuAverage = computed(() => {
+  const values = serverCpu.value.cpus || []
+  if (!values.length) {
+    return 0
+  }
+  return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length
+})
+const kpis = computed(() => [
+  {
+    key: 'processCpu',
+    label: '进程 CPU',
+    value: formatNumber(currentProcess.value.cpuPercent),
+    unit: '%',
+    meta: `单核口径 ${formatNumber(Number(currentProcess.value.cpuPercent || 0) * (serverOs.value.numCpu || 1))}%`,
+    level: metricLevel(currentProcess.value.cpuPercent, 70, 90)
+  },
+  {
+    key: 'rss',
+    label: '进程 RSS',
+    value: formatNumber(currentProcess.value.memoryMb),
+    unit: 'MB',
+    meta: `VMS ${formatNumber(currentProcess.value.vmsMb || currentProcess.value.memoryMb)} MB`,
+    level: 'normal'
+  },
+  {
+    key: 'heap',
+    label: 'Go Heap',
+    value: formatNumber(runtimeInfo.value.heapAllocMb),
+    unit: 'MB',
+    meta: `${formatNumber(runtimeInfo.value.heapObjects, 0)} 个对象`,
+    level: 'normal'
+  },
+  {
+    key: 'goroutines',
+    label: 'goroutine',
+    value: formatNumber(runtimeInfo.value.goroutines, 0),
+    unit: '个',
+    meta: `栈 ${formatNumber(runtimeInfo.value.stackInuseMb)} MB`,
+    level: 'normal'
+  },
+  {
+    key: 'gc',
+    label: '最近 GC 暂停',
+    value: formatNumber(runtimeInfo.value.lastGcPauseMs, 3),
+    unit: 'ms',
+    meta: `累计 ${formatNumber(runtimeInfo.value.numGc || 0, 0)} 次`,
+    level: metricLevel(runtimeInfo.value.lastGcPauseMs, 10, 50)
+  },
+  {
+    key: 'mutex',
+    label: '互斥锁等待',
+    value: formatNumber(runtimeInfo.value.mutexWaitSeconds, 2),
+    unit: 's',
+    meta: `${formatNumber(runtimeInfo.value.mutexProfileRecords || 0, 0)} 条采样记录`,
+    level: 'normal'
+  }
+])
+const historyPoints = computed(() => history.value)
 const alertRows = computed(() => {
   const list = overview.value.alerts || []
   if (list.length > 0) {
@@ -846,6 +915,22 @@ const resizeRouteTrendChart = () => {
   routeTrendChart?.resize()
 }
 
+const appendHistory = () => {
+  const now = Date.now()
+  const process = processInfo.value || {}
+  history.value.push({
+    timestamp: now,
+    time: new Date(now).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    hostCpu: Number(hostCpuAverage.value || 0),
+    processCpu: Number(process.cpuPercent || 0),
+    rssMb: Number(process.memoryMb || 0),
+    heapMb: Number(runtimeInfo.value.heapAllocMb || 0),
+    goroutines: Number(runtimeInfo.value.goroutines || 0),
+    gcCount: Number(runtimeInfo.value.numGc || 0)
+  })
+  history.value = history.value.filter((item) => now - item.timestamp <= HISTORY_WINDOW_MS)
+}
+
 const loadOverview = async (showLoading = false) => {
   if (showLoading) {
     loading.value = true
@@ -855,6 +940,7 @@ const loadOverview = async (showLoading = false) => {
     overview.value = normalizeOverview(res.data || {})
     syncSettingsFromOverview()
     lastRefreshAt.value = new Date().toLocaleString()
+    appendHistory()
     queueRouteTrendRender()
   } finally {
     if (showLoading) {
@@ -913,6 +999,7 @@ const loadProcessTop = async () => {
   try {
     const res = await monitorApi.getMonitorProcessTop()
     processSnapshot.value = res.data || createProcessSnapshot()
+    appendHistory()
   } finally {
     processLoading.value = false
   }
@@ -1002,6 +1089,7 @@ watch([autoRefresh, autoRefreshSeconds], resetTimer)
 onMounted(async () => {
   window.addEventListener('resize', resizeRouteTrendChart)
   await loadOverview(true)
+  await loadProcessTop()
   resetTimer()
   queueRouteTrendRender()
 })
@@ -1027,6 +1115,28 @@ const formatSeconds = (seconds) => {
     return `${Math.floor(value / 60)}m ${value % 60}s`
   }
   return `${Math.floor(value / 3600)}h ${Math.floor((value % 3600) / 60)}m`
+}
+
+const formatNumber = (value, digits = 1) => {
+  const number = Number(value)
+  if (!Number.isFinite(number)) {
+    return '-'
+  }
+  return number.toLocaleString('zh-CN', {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  })
+}
+
+const metricLevel = (value, warning, danger) => {
+  const number = Number(value || 0)
+  if (number >= danger) {
+    return 'danger'
+  }
+  if (number >= warning) {
+    return 'warning'
+  }
+  return 'normal'
 }
 
 const percent = (value) => `${(Number(value || 0) * 100).toFixed(2)}%`
@@ -1578,10 +1688,171 @@ export default {
 
 <style lang="scss">
 .monitor-page {
+  --monitor-bg: #f4f7fb;
+  --monitor-surface: #ffffff;
+  --monitor-surface-alt: #f8fafc;
+  --monitor-surface-hover: #f5f8fc;
+  --monitor-border: #e5eaf1;
+  --monitor-text: #1f2937;
+  --monitor-text-secondary: #556070;
+  --monitor-text-tertiary: #8590a0;
+  --monitor-accent: #3a7bfd;
+  --monitor-accent-rgb: 58, 123, 253;
+  --monitor-success: #2fb344;
+  --monitor-warning: #e6a23c;
+  --monitor-error: #f04444;
+  --monitor-shadow-rgb: 31, 45, 61;
+
   display: flex;
   flex-direction: column;
+  min-height: 100%;
   gap: 16px;
-  padding: 12px;
+  padding: 16px;
+  background: var(--monitor-bg);
+  color: var(--monitor-text);
+}
+
+.monitor-card,
+.toolbar-card,
+.panel-card,
+.summary-card {
+  border: 1px solid var(--monitor-border);
+  border-radius: 8px;
+  background: var(--monitor-surface);
+  box-shadow: 0 1px 3px rgba(var(--monitor-shadow-rgb), 0.05);
+}
+
+.monitor-page :deep(.el-card__header) {
+  padding: 13px 16px;
+  border-bottom-color: var(--monitor-border);
+}
+
+.monitor-page :deep(.el-card__body) {
+  padding: 16px;
+}
+
+.monitor-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metric-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 112px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.metric-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  color: var(--monitor-accent);
+  background: rgba(var(--monitor-accent-rgb), 0.1);
+}
+
+.metric-card__icon.is-warning {
+  color: var(--monitor-warning);
+}
+
+.metric-card__icon.is-danger {
+  color: var(--monitor-error);
+}
+
+.metric-card__content {
+  min-width: 0;
+}
+
+.metric-card__label {
+  color: var(--monitor-text-secondary);
+  font-size: 12px;
+}
+
+.metric-card__value {
+  margin-top: 2px;
+  color: var(--monitor-text);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.metric-card__value span {
+  margin-left: 4px;
+  color: var(--monitor-text-tertiary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.metric-card__meta {
+  margin-top: 6px;
+  color: var(--monitor-text-tertiary);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.monitor-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.resource-panel {
+  min-width: 0;
+}
+
+.section-title {
+  color: var(--monitor-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+}
+
+.resource-row,
+.resource-progress > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--monitor-text-secondary);
+  font-size: 13px;
+}
+
+.resource-row strong,
+.resource-progress strong {
+  color: var(--monitor-text);
+  font-weight: 500;
+  text-align: right;
+}
+
+.resource-progress {
+  grid-column: 1 / -1;
+}
+
+.resource-progress > div {
+  margin-bottom: 6px;
 }
 
 .toolbar-card,
@@ -1874,6 +2145,11 @@ export default {
 }
 
 @media (max-width: 960px) {
+  .monitor-kpi-grid,
+  .monitor-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
   .route-filter,
   .route-sort,
   .profile-select,
@@ -1902,6 +2178,50 @@ export default {
   }
 
   .setting-input-row :deep(.el-input-number) {
+    width: 100%;
+  }
+}
+
+@media (max-width: 1400px) {
+  .monitor-kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .monitor-page {
+    padding: 10px;
+  }
+
+  .monitor-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metric-card {
+    min-height: 104px;
+    padding: 12px;
+  }
+
+  .metric-card__icon {
+    display: none;
+  }
+
+  .metric-card__value {
+    font-size: 20px;
+  }
+
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header,
+  .toolbar-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbar-actions,
+  .header-tools {
     width: 100%;
   }
 }

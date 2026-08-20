@@ -165,6 +165,26 @@
       "children": []
     },
     {
+      "ID": 53,
+      "path": "营销管理/优惠券管理",
+      "name": "优惠券管理",
+      "meta": {
+        "title": "优惠券管理",
+        "icon": "Ticket"
+      },
+      "children": []
+    },
+    {
+      "ID": 54,
+      "path": "营销管理/用户优惠券",
+      "name": "用户优惠券",
+      "meta": {
+        "title": "用户优惠券",
+        "icon": "UserFilled"
+      },
+      "children": []
+    },
+    {
       "ID": 42,
       "path": "营销管理/cps佣金订单",
       "name": "cps佣金订单",
@@ -389,6 +409,16 @@
         "meta": {
           "title": "绑定日志",
           "icon": "Postcard"
+        },
+        "children": []
+      },
+      {
+        "ID": 55,
+        "path": "日志管理/优惠券流水",
+        "name": "优惠券流水",
+        "meta": {
+          "title": "优惠券流水",
+          "icon": "Tickets"
         },
         "children": []
       },

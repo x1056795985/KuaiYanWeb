@@ -85,6 +85,16 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import("@/view/营销管理/活动列表.vue"),
             },
             {
+                path: "营销管理/优惠券管理",
+                name: "优惠券管理",
+                component: () => import("@/view/营销管理/优惠券管理.vue"),
+            },
+            {
+                path: "营销管理/用户优惠券",
+                name: "用户优惠券",
+                component: () => import("@/view/营销管理/用户优惠券.vue"),
+            },
+            {
                 path: "营销管理/签到日志",
                 name: "签到日志",
                 component: () => import("@/view/营销管理/签到日志.vue"),
@@ -188,6 +198,11 @@ const routes: Array<RouteRecordRaw> = [
                 path: "日志管理/绑定日志",
                 name: "绑定日志",
                 component: () => import("@/view/日志管理/绑定日志.vue"),
+            },
+            {
+                path: "日志管理/优惠券流水",
+                name: "优惠券流水",
+                component: () => import("@/view/日志管理/优惠券流水.vue"),
             },
             {
                 path: "日志管理/提现操作日志",
