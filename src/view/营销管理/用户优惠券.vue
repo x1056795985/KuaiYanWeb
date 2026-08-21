@@ -13,11 +13,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="用户UID">
-          <el-input-number v-model="query.uid" :min="0" :precision="0" @change="search" />
-        </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="query.status" clearable @change="search">
+          <el-select v-model="query.status" clearable @change="search" style="width: 800px">
             <el-option label="全部" :value="0" />
             <el-option label="未使用" :value="1" />
             <el-option label="已锁定" :value="2" />
@@ -26,7 +23,7 @@
             <el-option label="已作废" :value="5" />
           </el-select>
         </el-form-item>
-        <el-form-item label="领取时间">
+        <el-form-item v-show="showMoreFilters" label="领取时间">
           <el-date-picker
             v-model="query.receiveTime"
             type="datetimerange"
@@ -37,7 +34,7 @@
             @change="search"
           />
         </el-form-item>
-        <el-form-item label="使用时间">
+        <el-form-item v-show="showMoreFilters" label="使用时间">
           <el-date-picker
             v-model="query.useTime"
             type="datetimerange"
@@ -53,8 +50,10 @@
             <template #prepend>
               <el-select v-model="query.type" style="width: 100px" @change="search">
                 <el-option label="券名称" :value="2" />
-                <el-option label="订单号" :value="3" />
                 <el-option label="ID" :value="1" />
+                <el-option label="订单号" :value="3" />
+                <el-option label="用户uid" :value="4" />
+                <el-option label="用户名" :value="5" />
               </el-select>
             </template>
           </el-input>
@@ -62,6 +61,10 @@
         <el-form-item>
           <el-button type="primary" @click="search">查询</el-button>
           <el-button @click="reset">重置</el-button>
+          <el-button @click="showMoreFilters = !showMoreFilters">
+            更多筛选
+            <el-icon><ArrowUp v-if="showMoreFilters" /><ArrowDown v-else /></el-icon>
+          </el-button>
         </el-form-item>
       </el-form>
     </section>
@@ -124,10 +127,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import { couponUserApi } from '@/api/webUserCouponUserapi'
 import { GetAppIdNameList } from '@/api/应用列表api.js'
 
 const loading = ref(false)
+const showMoreFilters = ref(false)
 const apps = ref<any[]>([])
 const data = ref({ count: 0, list: [] as any[] })
 const selectedRows = ref<any[]>([])
@@ -180,6 +185,7 @@ async function reset() {
   query.value.keywords = ''
   query.value.receiveTime = []
   query.value.useTime = []
+  showMoreFilters.value = false
   selectedRows.value = []
   await search()
 }

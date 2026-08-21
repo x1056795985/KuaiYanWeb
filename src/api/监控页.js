@@ -71,6 +71,14 @@ export const downloadLastCPUProfile = () => {
   })
 }
 
+export const getMonitorMySQLDiag = () => {
+  return service({
+    url: `${url}getMonitorMySQLDiag`,
+    method: 'post',
+    donNotShowLoading: true
+  })
+}
+
 export const 系统热重启 = () => {
   return service({
     url: `${url}reloadSystem`,

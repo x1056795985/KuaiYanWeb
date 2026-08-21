@@ -505,37 +505,5 @@
         "children": []
       }
     ]
-  },
-  {
-    "ID": 38,
-    "path": "工具",
-    "name": "工具",
-    "meta": {
-      "title": "工具",
-      "icon": "Tools",
-      "text": "工具"
-    },
-    "children": [
-      {
-        "ID": 39,
-        "path": "工具/apk加验证",
-        "name": "apk加验证",
-        "meta": {
-          "title": "apk加验证",
-          "icon": "Cellphone"
-        },
-        "children": []
-      },
-      {
-        "ID": 40,
-        "path": "工具/exe加验证",
-        "name": "exe加验证",
-        "meta": {
-          "title": "exe加验证",
-          "icon": "Cellphone"
-        },
-        "children": []
-      }
-    ]
   }
 ]

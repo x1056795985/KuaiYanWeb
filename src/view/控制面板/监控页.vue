@@ -80,7 +80,12 @@
     <el-row :gutter="16" class="content-grid">
       <el-col :xs="24" :xl="8">
         <el-card class="panel-card alert-card">
-          <template #header>监控告警</template>
+          <template #header>
+            <div class="card-header">
+              <span>监控告警</span>
+              <el-tag :type="alertBadgeType" size="small">{{ alertBadgeText }}</el-tag>
+            </div>
+          </template>
           <div class="alert-list">
             <el-alert
               v-for="(item, index) in alertRows"
@@ -95,6 +100,12 @@
               </template>
             </el-alert>
           </div>
+          <el-empty
+            v-if="alertRows.length === 0"
+            :image-size="64"
+            description="暂无告警"
+            class="monitor-empty"
+          />
         </el-card>
       </el-col>
 
@@ -207,21 +218,36 @@
       </el-col>
 
       <el-col :xs="24" :xl="9">
-        <el-card class="panel-card">
-          <template #header>活动请求 / 慢请求</template>
-          <el-descriptions :column="1" border size="small" class="mini-desc">
-            <el-descriptions-item label="进行中请求">{{ activeRequests.length }}</el-descriptions-item>
-            <el-descriptions-item label="慢请求缓存">{{ slowRequests.length }}</el-descriptions-item>
-            <el-descriptions-item label="Panic 缓存">{{ panicEvents.length }}</el-descriptions-item>
+        <el-card class="panel-card req-card">
+          <template #header>
+            <div class="card-header">
+              <span>活动请求 / 慢请求</span>
+              <div class="header-tools">
+                <el-tag type="warning" size="small">活动 {{ activeRequests.length }}</el-tag>
+                <el-tag type="danger" size="small">慢 {{ slowRequests.length }}</el-tag>
+                <el-tag type="info" size="small">Panic {{ panicEvents.length }}</el-tag>
+              </div>
+            </div>
+          </template>
+          <el-descriptions :column="3" border size="small" class="mini-desc">
+            <el-descriptions-item label="进行中">{{ activeRequests.length }}</el-descriptions-item>
+            <el-descriptions-item label="慢请求">{{ slowRequests.length }}</el-descriptions-item>
+            <el-descriptions-item label="Panic">{{ panicEvents.length }}</el-descriptions-item>
           </el-descriptions>
 
-          <div class="sub-block">
+          <div class="sub-block first-sub-block">
             <div class="sub-title">当前活动请求</div>
             <el-table :data="activeRequests" max-height="180" size="small" stripe>
               <el-table-column prop="method" label="方法" width="80" />
               <el-table-column prop="route" label="路由" min-width="180" show-overflow-tooltip />
               <el-table-column prop="currentDurationMs" label="耗时(ms)" width="110" />
             </el-table>
+            <el-empty
+              v-if="activeRequests.length === 0"
+              :image-size="48"
+              description="无进行中请求"
+              class="monitor-empty-sm"
+            />
           </div>
 
           <div class="sub-block">
@@ -232,6 +258,12 @@
               <el-table-column prop="status" label="状态" width="80" />
               <el-table-column prop="durationMs" label="耗时(ms)" width="110" />
             </el-table>
+            <el-empty
+              v-if="slowRequests.length === 0"
+              :image-size="48"
+              description="暂无慢请求"
+              class="monitor-empty-sm"
+            />
           </div>
         </el-card>
       </el-col>
@@ -243,9 +275,17 @@
           <template #header>
             <div class="card-header">
               <span>数据库死锁 / 慢 SQL</span>
-              <el-tag :type="databaseInfo.enabled ? 'success' : 'info'">
-                {{ databaseInfo.enabled ? '已连接' : '未连接数据库' }}
-              </el-tag>
+              <div class="header-tools">
+                <el-tag :type="databaseInfo.enabled ? 'success' : 'info'">
+                  {{ databaseInfo.enabled ? '已连接' : '未连接数据库' }}
+                </el-tag>
+                <el-button
+                  type="primary"
+                  :icon="VideoPlay"
+                  :loading="mysqlDiagLoading"
+                  @click="loadMySQLDiag"
+                >MySQL 诊断</el-button>
+              </div>
             </div>
           </template>
 
@@ -312,31 +352,194 @@
       </el-col>
     </el-row>
 
+    <el-row v-if="mysqlDiag" :gutter="16" class="content-grid">
+      <el-col :xs="24">
+        <el-card class="panel-card">
+          <template #header>
+            <div class="card-header">
+              <span>MySQL 诊断结果</span>
+              <div class="header-tools">
+                <el-tag :type="mysqlDiag.success ? 'success' : 'warning'">
+                  {{ mysqlDiag.success ? '诊断成功' : '部分失败' }}
+                </el-tag>
+                <el-tag type="info">最近诊断：{{ mysqlDiagCollectedAtText }}</el-tag>
+                <el-button :icon="RefreshRight" :loading="mysqlDiagLoading" @click="loadMySQLDiag">重新诊断</el-button>
+              </div>
+            </div>
+          </template>
+
+          <el-alert
+            v-for="(item, index) in mysqlDiag.notes || []"
+            :key="`mysql-diag-note-${index}`"
+            type="info"
+            :closable="false"
+            :title="item"
+            class="hint-alert"
+          />
+
+          <el-descriptions :column="4" border size="small" class="mini-desc">
+            <el-descriptions-item label="进程总数">{{ mysqlDiag.processCount || 0 }}</el-descriptions-item>
+            <el-descriptions-item label="Sleep 进程">{{ mysqlDiag.sleepProcessCount || 0 }}</el-descriptions-item>
+            <el-descriptions-item label="活跃进程">{{ mysqlDiag.activeProcessCount || 0 }}</el-descriptions-item>
+            <el-descriptions-item label="最长 Sleep(s)">{{ mysqlDiag.maxSleepSeconds || 0 }}</el-descriptions-item>
+            <el-descriptions-item label="慢日志状态">
+              <el-tag :type="mysqlDiag.slowQueryLogStatus === 'ON' ? 'success' : 'info'" size="small">
+                {{ mysqlDiag.slowQueryLogStatus || '-' }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="慢查询阈值(s)">{{ mysqlDiag.longQueryTime || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="慢日志文件" :span="2">
+              <code class="mysql-slow-log-path">{{ mysqlDiag.slowQueryLogFile || '-' }}</code>
+            </el-descriptions-item>
+          </el-descriptions>
+
+          <div class="sub-block first-sub-block">
+            <div class="sub-title">当前进程列表 (SHOW FULL PROCESSLIST)</div>
+            <el-table :data="mysqlDiag.processList || []" size="small" max-height="320" stripe>
+              <el-table-column prop="id" label="Id" width="80" />
+              <el-table-column prop="user" label="User" width="100" />
+              <el-table-column prop="host" label="Host" min-width="180" show-overflow-tooltip />
+              <el-table-column prop="db" label="db" width="100" show-overflow-tooltip />
+              <el-table-column prop="command" label="Command" width="110">
+                <template #default="{ row }">
+                  <el-tag :type="row.command === 'Sleep' ? 'info' : 'warning'" size="small">
+                    {{ row.command }}
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column prop="time" label="Time(s)" width="90" sortable>
+                <template #default="{ row }">
+                  <span :class="`mysql-time-${row.level}`">{{ row.time }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="state" label="State" min-width="160" show-overflow-tooltip />
+              <el-table-column prop="info" label="Info" min-width="420" show-overflow-tooltip />
+            </el-table>
+          </div>
+
+          <div class="sub-block">
+            <div class="sub-title">SQL 摘要 Top 10 (performance_schema, 按累计耗时排序)</div>
+            <el-alert
+              type="info"
+              :closable="false"
+              title="计时已从皮秒换算为毫秒。红色表示单次超过 1 秒或累计超过 10 秒；扫描/发送比值过大说明查询效率低。"
+              class="hint-alert"
+            />
+            <el-table :data="mysqlDiag.statementSummary || []" size="small" max-height="460" stripe>
+              <el-table-column prop="schemaName" label="Schema" width="100" show-overflow-tooltip />
+              <el-table-column prop="digestText" label="SQL 模板" min-width="360" show-overflow-tooltip />
+              <el-table-column prop="countStar" label="执行次数" width="100" sortable />
+              <el-table-column prop="sumTimerMs" label="累计(ms)" width="110" sortable>
+                <template #default="{ row }">
+                  <span :class="`mysql-time-${row.level}`">{{ formatDiagNumber(row.sumTimerMs) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="avgTimerMs" label="平均(ms)" width="100" sortable>
+                <template #default="{ row }">{{ formatDiagNumber(row.avgTimerMs) }}</template>
+              </el-table-column>
+              <el-table-column prop="maxTimerMs" label="最大(ms)" width="100" sortable>
+                <template #default="{ row }">
+                  <span :class="`mysql-time-${row.level}`">{{ formatDiagNumber(row.maxTimerMs) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="sumRowsExamined" label="扫描行" width="100" sortable />
+              <el-table-column prop="sumRowsSent" label="发送行" width="100" sortable />
+              <el-table-column prop="sumTmpDiskTables" label="磁盘临时表" width="110" sortable>
+                <template #default="{ row }">
+                  <el-tag v-if="row.sumTmpDiskTables > 0" type="danger" size="small">{{ row.sumTmpDiskTables }}</el-tag>
+                  <span v-else>0</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="sumNoIndexUsed" label="无索引" width="90" sortable>
+                <template #default="{ row }">
+                  <el-tag v-if="row.sumNoIndexUsed > 0" type="warning" size="small">{{ row.sumNoIndexUsed }}</el-tag>
+                  <span v-else>0</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="lastSeen" label="最近执行" min-width="160" />
+              <el-table-column prop="advice" label="诊断建议" min-width="280" show-overflow-tooltip>
+                <template #default="{ row }">
+                  <el-tag :type="row.level === 'danger' ? 'danger' : row.level === 'warning' ? 'warning' : 'success'" size="small">
+                    {{ row.level === 'danger' ? '高危' : row.level === 'warning' ? '关注' : '正常' }}
+                  </el-tag>
+                  <span class="mysql-advice">{{ row.advice }}</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
     <el-row :gutter="16" class="content-grid">
       <el-col :xs="24" :xl="12">
-        <el-card class="panel-card">
-          <template #header>异常 / 死锁线索</template>
+        <el-card class="panel-card panic-card">
+          <template #header>
+            <div class="card-header">
+              <span>异常 / 死锁线索</span>
+              <div class="header-tools">
+                <el-tag type="danger" size="small">Panic {{ panicEvents.length }}</el-tag>
+                <el-tag type="warning" size="small">SQL错误 {{ dbErrorRows.length }}</el-tag>
+                <el-tag :type="databaseInfo.enabled ? 'success' : 'info'" size="small">
+                  {{ databaseInfo.enabled ? 'DB已连' : 'DB未连' }}
+                </el-tag>
+              </div>
+            </div>
+          </template>
           <el-alert
             type="warning"
             :closable="false"
             title="如果遇到卡死或死锁，先看活动请求、慢请求、慢 SQL，再看 goroutine / block / mutex profile。"
             class="hint-alert"
           />
-          <el-collapse>
-            <el-collapse-item
-              v-for="(item, index) in panicEvents"
-              :key="`${item.createdAt}-${index}`"
-              :title="`${item.createdAt} | ${item.method} ${item.route || item.path}`"
-              :name="index"
-            >
-              <div class="panic-meta">
-                <div>来源 IP：{{ item.clientIp || '-' }}</div>
-                <div>Query：{{ item.query || '-' }}</div>
-                <div>错误：{{ item.error }}</div>
-              </div>
-              <pre class="stack-box">{{ item.stack }}</pre>
-            </el-collapse-item>
-          </el-collapse>
+
+          <div class="sub-block first-sub-block">
+            <div class="sub-title">最近 SQL 错误 / 死锁</div>
+            <el-table :data="dbErrorRows" size="small" max-height="180" stripe>
+              <el-table-column prop="at" label="时间" width="160" />
+              <el-table-column prop="deadlock" label="死锁" width="70">
+                <template #default="{ row }">
+                  <el-tag :type="row.deadlock ? 'danger' : 'warning'" size="small">
+                    {{ row.deadlock ? '是' : '否' }}
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column prop="durationMs" label="耗时(ms)" width="100" />
+              <el-table-column prop="error" label="错误" min-width="180" show-overflow-tooltip />
+              <el-table-column prop="sql" label="SQL" min-width="260" show-overflow-tooltip />
+            </el-table>
+            <el-empty
+              v-if="dbErrorRows.length === 0"
+              :image-size="48"
+              description="暂无 SQL 错误 / 死锁"
+              class="monitor-empty-sm"
+            />
+          </div>
+
+          <div class="sub-block">
+            <div class="sub-title">Panic 异常堆栈</div>
+            <el-collapse v-if="panicEvents.length > 0">
+              <el-collapse-item
+                v-for="(item, index) in panicEvents"
+                :key="`${item.createdAt}-${index}`"
+                :title="`${item.createdAt} | ${item.method} ${item.route || item.path}`"
+                :name="index"
+              >
+                <div class="panic-meta">
+                  <div>来源 IP：{{ item.clientIp || '-' }}</div>
+                  <div>Query：{{ item.query || '-' }}</div>
+                  <div>错误：{{ item.error }}</div>
+                </div>
+                <pre class="stack-box">{{ item.stack }}</pre>
+              </el-collapse-item>
+            </el-collapse>
+            <el-empty
+              v-else
+              :image-size="48"
+              description="暂无 Panic 异常"
+              class="monitor-empty-sm"
+            />
+          </div>
         </el-card>
       </el-col>
 
@@ -492,6 +695,23 @@
               <el-table-column prop="featureText" label="可能关联功能" min-width="220" show-overflow-tooltip />
               <el-table-column prop="locationText" label="关键位置" min-width="180" show-overflow-tooltip />
             </el-table>
+
+            <!-- goroutine 状态分布 -->
+            <div v-if="goroutineStates" class="goroutine-states">
+              <div class="sub-title">goroutine 状态分布</div>
+              <div class="gs-grid">
+                <div v-for="s in goroutineStates.states" :key="s.state" class="gs-item">
+                  <div class="gs-label">
+                    <span class="gs-dot" :style="{ background: stateColor(s.state) }"></span>
+                    <span>{{ s.state }}</span>
+                  </div>
+                  <div class="gs-bar-wrap">
+                    <div class="gs-bar" :style="{ width: s.percent + '%', background: stateColor(s.state) }"></div>
+                    <span class="gs-value">{{ s.count }} ({{ s.percent }}%)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="sub-title raw-profile-title">原始文本</div>
@@ -499,6 +719,8 @@
         </el-col>
       </el-row>
     </el-card>
+
+    <AiHelp :context="aiContext" />
   </div>
 </template>
 
@@ -509,6 +731,7 @@ import { Download, RefreshRight, SwitchButton, VideoPlay } from '@element-plus/i
 import * as echarts from 'echarts'
 import * as monitorApi from '@/api/监控页'
 import RuntimeTrendChart from './组件/运行趋势图.vue'
+import AiHelp from './组件/监控页Ai助手.vue'
 
 const createOverview = () => ({
   server: {
@@ -572,6 +795,8 @@ const loading = ref(false)
 const profileLoading = ref(false)
 const cpuLoading = ref(false)
 const processLoading = ref(false)
+const mysqlDiagLoading = ref(false)
+const mysqlDiag = ref(null)
 const autoRefresh = ref(true)
 const autoRefreshSeconds = ref(5)
 const timer = ref(null)
@@ -627,6 +852,7 @@ const notes = computed(() => overview.value.notes || [])
 const cpuTopRows = computed(() => overview.value.pprof?.lastCpuTop || [])
 const lastRefreshText = computed(() => lastRefreshAt.value || '未刷新')
 const processCollectedAtText = computed(() => processSnapshot.value.collectedAt || '未采集')
+const mysqlDiagCollectedAtText = computed(() => mysqlDiag.value?.collectedAt || '未诊断')
 const currentProcess = computed(() => processRows.value[0] || {})
 const processInfo = computed(() => currentProcess.value)
 const processRows = computed(() => {
@@ -710,6 +936,17 @@ const alertRows = computed(() => {
       detail: 'CPU、内存、磁盘、慢请求和数据库死锁都还在安全范围内。'
     }
   ]
+})
+const alertBadgeType = computed(() => {
+  const list = overview.value.alerts || []
+  if (list.length === 0) return 'success'
+  const hasDanger = list.some((i) => i.level === 'error' || i.level === 'danger')
+  const hasWarning = list.some((i) => i.level === 'warning')
+  return hasDanger ? 'danger' : hasWarning ? 'warning' : 'info'
+})
+const alertBadgeText = computed(() => {
+  const list = overview.value.alerts || []
+  return list.length === 0 ? '正常' : `${list.length} 条告警`
 })
 const routeTrendOptions = computed(() => {
   return (overview.value.routeTrends || []).map((item) => ({
@@ -1005,6 +1242,32 @@ const loadProcessTop = async () => {
   }
 }
 
+const loadMySQLDiag = async () => {
+  mysqlDiagLoading.value = true
+  try {
+    const res = await monitorApi.getMonitorMySQLDiag()
+    mysqlDiag.value = res.data || null
+    if (mysqlDiag.value?.success) {
+      ElMessage.success('MySQL 诊断完成')
+    } else if (mysqlDiag.value?.error) {
+      ElMessage.warning('MySQL 诊断部分失败：' + mysqlDiag.value.error)
+    }
+  } finally {
+    mysqlDiagLoading.value = false
+  }
+}
+
+const formatDiagNumber = (value) => {
+  const number = Number(value || 0)
+  if (!Number.isFinite(number)) {
+    return '-'
+  }
+  return number.toLocaleString('zh-CN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
+}
+
 const downloadBlobResponse = async (response, fallbackName) => {
   const blob = response?.data
   if (!blob) {
@@ -1203,6 +1466,45 @@ const parseGoroutineProfile = (text) => {
     groups
   }
 }
+
+// 从 goroutine profile debug=2 文本中提取状态分布
+const parseGoroutineStates = (text) => {
+  if (!text) return null
+  const normalized = String(text).replace(/\r/g, '')
+  const stateMap = {}
+  const pattern = /goroutine \d+ \[([^\]]+)\]:/g
+  let match
+  let total = 0
+  while ((match = pattern.exec(normalized)) !== null) {
+    const state = match[1].trim()
+    stateMap[state] = (stateMap[state] || 0) + 1
+    total++
+  }
+  if (total === 0) return null
+  const sorted = Object.entries(stateMap)
+    .sort((a, b) => b[1] - a[1])
+    .map(([state, count]) => ({ state, count, percent: ((count / total) * 100).toFixed(1) }))
+  return { total, states: sorted }
+}
+
+const stateColor = (state) => {
+  const s = state.toLowerCase()
+  if (s === 'running') return '#2fb344'
+  if (s === 'runnable') return '#e6a23c'
+  if (s.includes('io')) return '#3a7bfd'
+  if (s === 'select') return '#8590a0'
+  if (s.includes('chan receive') || s.includes('chan send')) return '#f56c6c'
+  if (s.includes('semacquire')) return '#f04444'
+  if (s.includes('sleep') || s.includes('timer')) return '#9b59b6'
+  if (s.includes('syscall')) return '#1abc9c'
+  if (s.includes('gc')) return '#e67e22'
+  return '#909399'
+}
+
+const goroutineStates = computed(() => {
+  if (profileForm.value.name !== 'goroutine' || profileForm.value.debug !== 2) return null
+  return parseGoroutineStates(profileText.value)
+})
 
 const parseHeapProfile = (name, text) => {
   const normalizedText = String(text || '').replace(/\r/g, '')
@@ -1678,6 +1980,170 @@ const formatBytes = (value) => {
   }
   return `${number.toFixed(0)} B`
 }
+
+// ======================== AI 诊断助手上下文 ========================
+// 构建「当前页面所有监控数据」的精简快照，供 AI 读取分析
+const buildAiSnapshot = () => {
+  const ov = overview.value
+  const rt = runtimeInfo.value
+  const topRoutes = [...filteredRoutes.value].slice(0, 15).map((r) => ({
+    method: r.method, route: r.route, count: r.count, inFlight: r.inFlight,
+    avgMs: r.avgMs, p95Ms: r.p95Ms, maxMs: r.maxMs, totalMs: r.totalMs,
+    errorCount: r.errorCount, panicCount: r.panicCount, lastSeenAt: r.lastSeenAt
+  }))
+  const slowSqls = (databaseInfo.value.slowSqls || []).slice(-10).map((s) => ({
+    at: s.at, durationMs: s.durationMs, rowsAffected: s.rowsAffected, sql: s.sql
+  }))
+  const sqlTemplates = (databaseInfo.value.sqlTemplates || []).slice(0, 10).map((t) => ({
+    template: t.template, count: t.count, avgMs: t.avgMs, maxMs: t.maxMs,
+    deadlockCount: t.deadlockCount, lastAt: t.lastAt
+  }))
+  const dbErrors = (databaseInfo.value.errors || []).slice(-10).map((e) => ({
+    at: e.at, deadlock: e.deadlock, durationMs: e.durationMs, error: e.error, sql: e.sql
+  }))
+  const alerts = (ov.alerts || []).map((a) => ({ level: a.level, title: a.title, detail: a.detail }))
+  const activeReq = (ov.activeRequests || []).slice(0, 20).map((r) => ({
+    method: r.method, route: r.route, currentDurationMs: r.currentDurationMs
+  }))
+  const slowReq = (ov.slowRequests || []).slice(0, 20).map((r) => ({
+    method: r.method, route: r.route, status: r.status, durationMs: r.durationMs
+  }))
+  const panics = (ov.panicEvents || []).slice(-5).map((p) => ({
+    createdAt: p.createdAt, method: p.method, route: p.route, clientIp: p.clientIp,
+    error: p.error, stack: (p.stack || '').slice(0, 800)
+  }))
+  const procs = (processRows.value || []).slice(0, 10).map((p) => ({
+    pid: p.pid, name: p.name, cpuPercent: p.cpuPercent, memoryMb: p.memoryMb,
+    memoryPercent: p.memoryPercent, threadCount: p.threadCount, status: p.status,
+    startedAt: p.startedAt, command: (p.command || '').slice(0, 120)
+  }))
+  const hist = (history.value || []).slice(-30).map((h) => ({
+    time: h.time, hostCpu: h.hostCpu, processCpu: h.processCpu, rssMb: h.rssMb,
+    heapMb: h.heapMb, goroutines: h.goroutines, gcCount: h.gcCount
+  }))
+  return {
+    collectedAt: lastRefreshAt.value,
+    kpis: kpis.value,
+    server: {
+      os: serverOs.value,
+      cpuAverage: Number(hostCpuAverage.value || 0).toFixed(2),
+      cpuCores: serverCpu.value.cpus?.length || 0,
+      ram: serverRam.value,
+      disk: serverDisk.value
+    },
+    runtime: {
+      uptimeSeconds: rt.uptimeSeconds, goroutines: rt.goroutines,
+      heapAllocMb: rt.heapAllocMb, heapObjects: rt.heapObjects,
+      stackInuseMb: rt.stackInuseMb, numGc: rt.numGc, lastGcPauseMs: rt.lastGcPauseMs,
+      mutexWaitSeconds: rt.mutexWaitSeconds,
+      blockProfileEnabled: rt.blockProfileEnabled, blockProfileRate: rt.blockProfileRate,
+      mutexProfileEnabled: rt.mutexProfileEnabled, mutexProfileFraction: rt.mutexProfileFraction
+    },
+    database: {
+      enabled: databaseInfo.value.enabled,
+      slowThresholdMs: databaseInfo.value.slowThresholdMs,
+      pool: dbPool.value, slowSqls, sqlTemplates, errors: dbErrors
+    },
+    routes: { top: topRoutes, total: (ov.routes || []).length },
+    activeRequests: activeReq,
+    slowRequests: slowReq,
+    panicEvents: panics,
+    alerts,
+    processTop: procs,
+    mysqlDiag: buildMysqlDiagSummary(),
+    history: hist,
+    pprofProfiles: (profileOptions.value || []).map((p) => ({
+      name: p.name, enabled: p.enabled, count: p.count, description: p.description
+    })),
+    notes: notes.value
+  }
+}
+
+const buildMysqlDiagSummary = () => {
+  const d = mysqlDiag.value
+  if (!d) return null
+  return {
+    success: d.success, error: d.error, collectedAt: d.collectedAt,
+    processCount: d.processCount, sleepProcessCount: d.sleepProcessCount,
+    activeProcessCount: d.activeProcessCount, maxSleepSeconds: d.maxSleepSeconds,
+    slowQueryLogStatus: d.slowQueryLogStatus, longQueryTime: d.longQueryTime,
+    slowQueryLogFile: d.slowQueryLogFile, notes: d.notes,
+    topProcessList: (d.processList || []).slice(0, 15).map((p) => ({
+      id: p.id, user: p.user, host: p.host, db: p.db, command: p.command,
+      time: p.time, state: p.state, info: (p.info || '').slice(0, 200)
+    })),
+    topStatements: (d.statementSummary || []).slice(0, 10).map((s) => ({
+      schemaName: s.schemaName, digestText: (s.digestText || '').slice(0, 200),
+      countStar: s.countStar, sumTimerMs: s.sumTimerMs, avgTimerMs: s.avgTimerMs,
+      maxTimerMs: s.maxTimerMs, sumRowsExamined: s.sumRowsExamined, sumRowsSent: s.sumRowsSent,
+      sumTmpDiskTables: s.sumTmpDiskTables, sumNoIndexUsed: s.sumNoIndexUsed,
+      lastSeen: s.lastSeen, advice: s.advice, level: s.level
+    }))
+  }
+}
+
+const buildCpuSummary = () => {
+  const pprof = overview.value.pprof || {}
+  const rt = overview.value.runtime || {}
+  return {
+    capturedAt: rt.lastCpuProfileAt || '',
+    durationSeconds: rt.lastCpuProfileSeconds || 0,
+    top: (pprof.lastCpuTop || []).map((c) => ({
+      function: c.function, flatMs: c.flatMs, flatPercent: c.flatPercent,
+      cumulativeMs: c.cumulativeMs, cumulativePercent: c.cumulativePercent
+    }))
+  }
+}
+
+const buildProfileSummary = () => {
+  const summary = buildReadableProfile(profileForm.value.name, profileText.value)
+  return {
+    name: profileForm.value.name, debug: profileForm.value.debug,
+    collectedAt: profileMeta.value.collectedAt, truncated: profileMeta.value.truncated,
+    summary,
+    rawText: (profileText.value || '').slice(0, 4000)
+  }
+}
+
+// 供 AI 调用的「读取数据 + 调用本页接口」能力，全部返回 JSON 字符串
+const aiContext = {
+  // 读取当前所有监控数据快照
+  getSnapshot: () => JSON.stringify(buildAiSnapshot()),
+  // 刷新概览+进程排行后返回最新快照
+  refresh: async () => {
+    await loadOverview()
+    await loadProcessTop()
+    return JSON.stringify(buildAiSnapshot())
+  },
+  // 运行 MySQL 诊断并返回结果
+  runMysqlDiag: async () => {
+    await loadMySQLDiag()
+    return JSON.stringify(buildMysqlDiagSummary())
+  },
+  // 抓取 CPU profile
+  captureCpu: async (seconds) => {
+    cpuForm.value.seconds = Number(seconds) || 10
+    await runCpuCapture()
+    return JSON.stringify(buildCpuSummary())
+  },
+  // 读取 pprof 文本并返回解析摘要
+  loadProfile: async (args) => {
+    profileForm.value.name = args?.name || 'goroutine'
+    profileForm.value.debug = args?.debug || 1
+    if (args?.gc !== undefined) profileForm.value.gc = !!args.gc
+    await loadProfileText()
+    return JSON.stringify(buildProfileSummary())
+  },
+  // 保存 pprof 采样开关
+  saveSettings: async (args) => {
+    if (args?.enableBlockProfile !== undefined) settingForm.value.enableBlockProfile = !!args.enableBlockProfile
+    if (args?.blockProfileRate !== undefined) settingForm.value.blockProfileRate = Number(args.blockProfileRate)
+    if (args?.enableMutexProfile !== undefined) settingForm.value.enableMutexProfile = !!args.enableMutexProfile
+    if (args?.mutexFraction !== undefined) settingForm.value.mutexFraction = Number(args.mutexFraction)
+    await saveSettings()
+    return JSON.stringify({ ok: true, settings: { ...settingForm.value } })
+  }
+}
 </script>
 
 <script>
@@ -1983,6 +2449,54 @@ export default {
   line-height: 1.6;
 }
 
+/* 空状态与等高布局 */
+.monitor-empty {
+  padding: 24px 0;
+}
+.monitor-empty-sm {
+  padding: 12px 0;
+}
+
+/* 让同一行 el-card 等高，避免数据少时高度不一致 */
+.content-grid .el-col > .el-card {
+  height: 100%;
+}
+.content-grid .el-col > .el-card > :deep(.el-card__body) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* 监控告警：列表区可滚动，空状态撑开 */
+.alert-card :deep(.el-card__body) {
+  max-height: 360px;
+  overflow: auto;
+}
+.alert-card .alert-list {
+  flex: 1;
+}
+
+/* 活动请求/慢请求：两个子表区域等高 */
+.req-card :deep(.el-card__body) .sub-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.req-card :deep(.el-card__body) .sub-block .el-table {
+  flex: 1;
+}
+
+/* 异常/死锁线索：子表与Panic区等高 */
+.panic-card :deep(.el-card__body) .sub-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.panic-card :deep(.el-card__body) .sub-block .el-table,
+.panic-card :deep(.el-card__body) .sub-block .el-collapse {
+  flex: 1;
+}
+
 .route-trend-route {
   width: 280px;
 }
@@ -2136,12 +2650,94 @@ export default {
   margin-bottom: 8px;
 }
 
+/* goroutine 状态分布 */
+.goroutine-states {
+  margin-bottom: 14px;
+  padding: 14px;
+  background: #f8fafc;
+  border: 1px solid #e5eaf1;
+  border-radius: 10px;
+}
+.gs-grid {
+  display: grid;
+  gap: 8px;
+}
+.gs-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.gs-label {
+  width: 120px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #556070;
+  flex-shrink: 0;
+}
+.gs-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.gs-bar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gs-bar {
+  height: 14px;
+  border-radius: 4px;
+  min-width: 2px;
+  transition: width 0.3s;
+}
+.gs-value {
+  font-size: 12px;
+  color: #1f2937;
+  font-weight: 500;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 .notes-list {
   margin: 16px 0 0;
   padding-left: 18px;
   color: #5e6976;
   font-size: 12px;
   line-height: 1.7;
+}
+
+.mysql-slow-log-path {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  color: #3a7bfd;
+  word-break: break-all;
+}
+
+.mysql-time-normal {
+  color: #1f2937;
+  font-variant-numeric: tabular-nums;
+}
+
+.mysql-time-warning {
+  color: #e6a23c;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.mysql-time-danger {
+  color: #f04444;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.mysql-advice {
+  margin-left: 6px;
+  color: #5e6976;
+  font-size: 12px;
 }
 
 @media (max-width: 960px) {

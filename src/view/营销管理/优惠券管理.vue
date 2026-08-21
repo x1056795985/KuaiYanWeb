@@ -13,14 +13,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="query.status" clearable>
+          <el-select v-model="query.status" clearable style="width: 800px">
             <el-option label="全部" :value="0" />
             <el-option label="启用" :value="1" />
             <el-option label="停用" :value="2" />
           </el-select>
         </el-form-item>
         <el-form-item label="类型">
-          <el-select v-model="query.couponType" clearable>
+          <el-select v-model="query.couponType" clearable style="width: 800px">
             <el-option label="全部" :value="0" />
             <el-option label="满减券" :value="1" />
             <el-option label="折扣券" :value="2" />

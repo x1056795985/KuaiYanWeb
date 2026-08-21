@@ -5,30 +5,12 @@
       <span class="ai-title">AI 助手</span>
       <div class="ai-header-actions">
         <el-tooltip content="设置" placement="top">
-          <el-icon class="ai-icon-btn" @click="is设置可见 = !is设置可见"><Setting/></el-icon>
+          <el-icon class="ai-icon-btn" @click="on跳转设置"><Setting/></el-icon>
         </el-tooltip>
         <el-tooltip content="清空对话" placement="top">
           <el-icon class="ai-icon-btn" @click="on清空对话"><Delete/></el-icon>
         </el-tooltip>
       </div>
-    </div>
-
-    <!-- 设置面板 -->
-    <div v-if="is设置可见" class="ai-settings">
-      <el-form size="small" label-width="80px">
-        <el-form-item label="API地址">
-          <el-input v-model="aiConfig.apiUrl" placeholder="OpenAI兼容接口地址"/>
-        </el-form-item>
-        <el-form-item label="API Key">
-          <el-input v-model="aiConfig.apiKey" type="password" show-password placeholder="输入API Key"/>
-        </el-form-item>
-        <el-form-item label="模型">
-          <el-input v-model="aiConfig.model" placeholder="如 deepseek-chat"/>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="small" @click="on保存设置">保存设置</el-button>
-        </el-form-item>
-      </el-form>
     </div>
 
     <!-- 消息列表 -->
@@ -145,10 +127,11 @@
 </template>
 
 <script setup lang="ts">
-import {ref, nextTick, onMounted, onBeforeUnmount} from 'vue'
+import {ref, nextTick, onBeforeUnmount} from 'vue'
 import {Setting, Delete, ChatDotRound, RefreshLeft, Loading} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
-import {chatWithTools, extractCodeFromReply, getAiConfig, saveAiConfig, defaultConfig, 公共函数系统提示词, mcpTools} from '@/api/ai.js'
+import {useRouter} from 'vue-router'
+import {chatWithTools, extractCodeFromReply, 公共函数系统提示词, mcpTools} from '@/api/ai.js'
 
 const Props = defineProps({
   currentCode: {type: String, default: ''},
@@ -159,18 +142,10 @@ const Props = defineProps({
 
 const emit = defineEmits(['applyCode', 'restoreCode', 'editForm'])
 
-// 配置
-const is设置可见 = ref(false)
-const aiConfig = ref({...defaultConfig})
-
-const on保存设置 = async () => {
-  try {
-    await saveAiConfig(aiConfig.value)
-    is设置可见.value = false
-    ElMessage.success('设置已保存')
-  } catch {
-    ElMessage.error('保存配置失败')
-  }
+// 跳转系统设置 - AI配置
+const router = useRouter()
+const on跳转设置 = () => {
+  router.push({name: '系统设置', query: {tab: 'AI配置'}})
 }
 
 // 聊天消息
@@ -440,16 +415,6 @@ const scrollToBottom = async () => {
   }
 }
 
-onMounted(async () => {
-  // 从后端加载AI配置
-  const config = await getAiConfig()
-  aiConfig.value = config
-  // API Key为空时自动展开设置
-  if (!config.apiKey) {
-    is设置可见.value = true
-  }
-})
-
 onBeforeUnmount(() => {
   if (abortController) {
     abortController.abort()
@@ -491,12 +456,6 @@ onBeforeUnmount(() => {
   font-size: 16px;
   color: #606266;
   &:hover { color: #409eff; }
-}
-
-.ai-settings {
-  padding: 8px 12px;
-  border-bottom: 1px solid #e4e7ed;
-  background: #f5f7fa;
 }
 
 .ai-messages {

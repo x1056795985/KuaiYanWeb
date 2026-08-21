@@ -47,20 +47,37 @@
         </template>
         <oss></oss>
       </el-tab-pane>
+      <el-tab-pane label="AI配置" name="AI配置">
+        <template #title>
+          <el-icon size="18" color="#73767a">
+            <MagicStick/>
+          </el-icon>
+          AI配置
+        </template>
+        <SetAiInfo></SetAiInfo>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
+import {useRoute} from 'vue-router'
 import SetPayInfo from "@/view/系统管理/组件/在线支付设置.vue";
 import SetBaseInfo from "@/view/系统管理/组件/基础信息设置.vue";
 import SetSmsInfo from "@/view/系统管理/组件/短信平台配置.vue";
 import SetCaptcha2Info from "@/view/系统管理/组件/行为验证码平台配置.vue";
 import oss from "@/view/系统管理/组件/云存储配置.vue";
+import SetAiInfo from "@/view/系统管理/组件/AI配置.vue";
 
 
-const activeNames = ref('基础设置')
+const route = useRoute()
+const activeNames = ref((route.query.tab as string) || '基础设置')
+watch(() => route.query.tab, (val) => {
+  if (val) {
+    activeNames.value = val as string
+  }
+})
 const on折叠面板表项被打开 = (val: string[]) => {
   console.log(val)
 }
