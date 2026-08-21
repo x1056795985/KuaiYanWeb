@@ -102,7 +102,7 @@
           placement="right"
       >
 <!--        让icon框靠右侧-->
-        <el-icon size="20"   v-if="Props.UserInfo.AppVer!==Props.UserInfo.AppVerNew" style="margin-left: 90%" @click="on升级最新版本">
+        <el-icon size="20"   style="margin-left: 90%" @click="on升级最新版本">
           <UploadFilled/>
         </el-icon>
       </el-tooltip>
@@ -260,7 +260,7 @@ const on发送短信被点击 = async () => {
   let 返回 = await 取短信验证码(data.value);
   is加载中.value = false
   if (返回.code == 10000) {
-    data.value.CaptCha3.captchaId = 返回.data.CaptchaId
+    data.value.CaptCha3.captchaId = 返回.data.captchaId
     data.value.CaptCha3.CaptChaValue = ""
     data.value.CaptCha2.CaptChaValue = ""   //滑动结果页删除
 ElMessage.success(返回.msg)
@@ -279,7 +279,7 @@ const on刷新验证码 = async () => {
   let 返回 = await 取英数验证码(data.value);
   if (返回.code == 10000) {
     PicPath.value = 返回.data.PicPath
-    data.value.CaptCha1.captchaId = 返回.data.CaptchaId
+    data.value.CaptCha1.captchaId = 返回.data.captchaId
   }
 }
 const 开启验证码接口列表 = ref({UserLogin: 0, GetSMSCaptcha: 0, NewUserInfo: 3})
