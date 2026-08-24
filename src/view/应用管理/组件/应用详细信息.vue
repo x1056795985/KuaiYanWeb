@@ -167,6 +167,8 @@
                   <el-select v-model="data.FreeUpKeyTime" placeholder="Select" style="width: 240px">
                     <el-option label="1小时内" :value="3600"/>
                     <el-option label="24小时内" :value="86400"/>
+                    <el-option label="3天内" :value="259200"/>
+                    <el-option label="5天内" :value="432000"/>
                     <el-option label="1周内" :value="604800"/>
                     <el-option label="1月内" :value="2592000"/>
                     <el-option label="1年内" :value="31536000"/>
@@ -188,6 +190,8 @@
                     <el-option label="1分钟内" :value="60"/>
                     <el-option label="1小时内" :value="3600"/>
                     <el-option label="24小时内" :value="86400"/>
+                    <el-option label="3天内" :value="259200"/>
+                    <el-option label="5天内" :value="432000"/>
                     <el-option label="1周内" :value="604800"/>
                     <el-option label="1月内" :value="2592000"/>
                     <el-option label="1年内" :value="31536000"/>
