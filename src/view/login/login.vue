@@ -8,7 +8,7 @@
               src="@/assets/logo4_128_128.png"
               alt
           >
-          <p class="login_panel_form_title_p">{{ Store.state.ServerName }}</p>
+          <p class="login_panel_form_title_p">{{ Store.state.serverName }}</p>
         </div>
         <el-form
             ref="loginForm"

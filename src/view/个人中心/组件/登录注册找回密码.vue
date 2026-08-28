@@ -278,7 +278,7 @@ const PicPath = ref("")
 const on刷新验证码 = async () => {
   let 返回 = await 取英数验证码(data.value);
   if (返回.code == 10000) {
-    PicPath.value = 返回.data.PicPath
+    PicPath.value = 返回.data.picPath
     data.value.CaptCha1.captchaId = 返回.data.captchaId
   }
 }

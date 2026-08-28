@@ -49,9 +49,9 @@
           <div v-else class="ai-message-text">{{ msg.content }}</div>
           <!-- AI消息操作按钮 -->
           <div v-if="msg.role === 'assistant' && msg.content && extractCodeFromReply(msg.content)" class="ai-message-actions">
-            <el-button size="small" type="primary" @click="on应用代码(msg.content)">
-              应用代码
-            </el-button>
+<!--            <el-button size="small" type="primary" @click="on应用代码(msg.content)">-->
+<!--              应用代码-->
+<!--            </el-button>-->
             <el-button size="small" @click="on复制代码(msg.content)">
               复制代码
             </el-button>
