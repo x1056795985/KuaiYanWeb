@@ -131,6 +131,24 @@ export const  Set批量维护_全部用户增减时间点数 = (data) => {
   })
 }
 
+// 获取批量维护全部用户筛选结果
+export const Get批量维护全部用户筛选结果 = (data) => {
+  return service({
+    url: url+'getBatchAllUserFilterResult',
+    method: 'post',
+    data: data
+  })
+}
+
+// 按筛选结果批量修改全部用户
+export const Set批量维护全部用户数据 = (data) => {
+  return service({
+    url: url+'setBatchAllUserData',
+    method: 'post',
+    data: data
+  })
+}
+
 //  Del批量维护_删除
 export const Del批量维护_删除 = (data) => {
   return service({

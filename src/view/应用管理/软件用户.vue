@@ -113,6 +113,9 @@
                 @click="is批量导入软件用户信息将打开可见 = true">
               批量导入用户
             </li>
+            <li class="工具_更多_li" @click="is批量修改全部用户时间点数=true">
+              维护全部用户
+            </li>
             <li class="工具_更多_li" @click="on批量冻结解冻(1)">批量解冻</li>
             <li class="工具_更多_li" @click="is批量修改用户类型=true">批量改用户类型</li>
             <li class="工具_更多_li" @click="on批量维护积分输入框将打开">批量增减积分</li>
@@ -125,9 +128,6 @@
             </li>
             <li class="工具_更多_li" @click="on批量维护删除(2)" v-if="isAppType卡号2">
               删除{{ (Data.appType === 2 || Data.appType === 4) ? "0点数" : "vip到期" }}且删卡号
-            </li>
-            <li class="工具_更多_li" @click="is批量修改全部用户时间点数=true">
-              批量维护修改全部软件用户
             </li>
             <li class="工具_更多_li" @click="on批量维护删除(3)" v-if="isAppType卡号2">
               删除已删卡号软件用户
