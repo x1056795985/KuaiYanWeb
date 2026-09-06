@@ -59,9 +59,26 @@
               :show-text="false"
             />
             <small v-else-if="任务.status === 'error'" class="cloud-upload-error">{{ 任务.error }}</small>
-            <small v-else-if="任务.status === 'success'" class="cloud-upload-success">上传完成</small>
+            <small v-else-if="任务.status === 'success'" class="cloud-upload-success">
+              上传完成
+              <template v-if="任务.ETag">，ETag: {{ 任务.ETag }}</template>
+              <template v-if="任务.ETag"><el-tooltip v-if="任务.status === 'success' && 任务.ETag" content="复制 ETag" placement="top">
+                <el-button
+                    class="cloud-upload-copy-etag"
+                    circle
+                    text
+                    :icon="DocumentCopy"
+                    aria-label="复制 ETag"
+                    @click="置剪辑版文本(任务.ETag, 'ETag 已复制')"
+                />
+              </el-tooltip></template>
+
+              <template v-else-if="任务.ETag错误">，ETag 获取失败</template>
+              <template v-else>，正在获取 ETag...</template>
+            </small>
             <small v-else>等待上传</small>
           </div>
+
           <el-button
             v-if="任务.status === 'error'"
             link
@@ -98,12 +115,14 @@ import { ElMessageBox, type UploadFile, type UploadRequestOptions } from 'elemen
 import {
   CircleCheckFilled,
   Document,
+  DocumentCopy,
   FolderOpened,
   RefreshRight,
   UploadFilled,
   WarningFilled,
 } from '@element-plus/icons-vue'
-import { GetUpToken } from '@/api/云存储api'
+import { GetETag, GetUpToken } from '@/api/云存储api'
+import { 置剪辑版文本 } from '@/utils/utils'
 
 type 上传状态 = 'waiting' | 'uploading' | 'success' | 'error'
 
@@ -114,6 +133,9 @@ interface 上传任务 {
   percent: number
   status: 上传状态
   error: string
+  path: string
+  ETag: string
+  ETag错误: string
   raw: File
 }
 
@@ -162,6 +184,9 @@ const on确保任务存在 = (文件: File) => {
       percent: 0,
       status: 'waiting',
       error: '',
+      path: '',
+      ETag: '',
+      ETag错误: '',
       raw: 文件,
     }
     上传任务列表.value.push(局_任务)
@@ -181,9 +206,13 @@ const on执行上传 = async (
   局_任务.status = 'uploading'
   局_任务.percent = 0
   局_任务.error = ''
+  局_任务.path = ''
+  局_任务.ETag = ''
+  局_任务.ETag错误 = ''
 
   try {
-    const 局_凭证返回 = await GetUpToken({ Path: 规范路径.value + 文件.name })
+    const 局_文件路径 = 规范路径.value + 文件.name
+    const 局_凭证返回 = await GetUpToken({ Path: 局_文件路径 })
     if (!局_凭证返回 || 局_凭证返回.code !== 10000) {
       throw new Error(局_凭证返回?.msg || '获取上传凭证失败')
     }
@@ -211,11 +240,25 @@ const on执行上传 = async (
 
     局_任务.percent = 100
     局_任务.status = 'success'
+    局_任务.path = 局_文件路径
     回调?.onSuccess({ code: 10000 })
+    void on查询ETag(局_任务)
   } catch (局_错误: any) {
     局_任务.status = 'error'
     局_任务.error = 局_错误?.message || '上传失败，请稍后重试'
     ;(回调?.onError as any)?.(局_错误 instanceof Error ? 局_错误 : new Error(局_任务.error))
+  }
+}
+
+const on查询ETag = async (任务: 上传任务) => {
+  try {
+    const 局_返回 = await GetETag({ path: 任务.path })
+    if (!局_返回 || 局_返回.code !== 10000 || !局_返回.data) {
+      throw new Error(局_返回?.msg || '未获取到 ETag')
+    }
+    任务.ETag = String(局_返回.data)
+  } catch (局_错误: any) {
+    任务.ETag错误 = 局_错误?.message || '获取失败'
   }
 }
 
@@ -465,6 +508,16 @@ onMounted(async () => {
 
 .cloud-upload-success {
   color: var(--cloud-success) !important;
+}
+
+.cloud-upload-copy-etag {
+  flex: 0 0 auto;
+  color: var(--cloud-text-secondary);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--cloud-accent);
+  }
 }
 
 .cloud-upload-footer {

@@ -22,6 +22,14 @@ export const GetUpToken = (data) => {
   })
 }
 
+export const GetETag = (data) => {
+  return service({
+    url: url+'getETag',
+    method: 'post',
+    data: data
+  })
+}
+
 
 
 //  Del批量删除
