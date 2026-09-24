@@ -94,3 +94,49 @@ export const  TestRunJs = (data) => {
     data: data
   })
 }
+
+//==================== 公共函数分类 ====================
+// 分类列表 { } → { list:[{Id,Name,Sort,Note,Count}], 未分类Count }
+export const GetCategoryList = (data) => {
+  return service({
+    url: url+'category/getList',
+    method: 'post',
+    data: data
+  })
+}
+
+// 新建分类 { "Name":"", "Sort":0, "Note":"" }
+export const NewCategory = (data) => {
+  return service({
+    url: url+'category/new',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改分类 { "Id":1, "Name":"", "Sort":0, "Note":"" }
+export const SaveCategoryInfo = (data) => {
+  return service({
+    url: url+'category/saveInfo',
+    method: 'post',
+    data: data
+  })
+}
+
+// 删除分类 { "Id":1 } 其下函数自动移入未分类
+export const DeleteCategory = (data) => {
+  return service({
+    url: url+'category/delete',
+    method: 'post',
+    data: data
+  })
+}
+
+// 批量移动函数到分类 { "Id":[1,2], "CategoryId":1 }  CategoryId=0 移入未分类
+export const SetFunctionCategory = (data) => {
+  return service({
+    url: url+'category/setFunctionCategory',
+    method: 'post',
+    data: data
+  })
+}

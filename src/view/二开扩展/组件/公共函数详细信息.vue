@@ -36,6 +36,10 @@
 
           </el-select>
         </el-form-item>
+        <el-form-item label="归属分类" prop="" style="width:100%">
+          <el-input :model-value="分类链文本(data.CategoryId)" readonly placeholder="未分类"
+                    class="只读编辑框"/>
+        </el-form-item>
         <el-form-item label="备注" prop="Value">
           <el-input v-model="data.Note" placeholder="请输入备注"/>
         </el-form-item>
@@ -109,7 +113,7 @@
 import {onMounted, ref} from 'vue'
 import {ElMessage, FormInstance} from "element-plus";
 import {is移动端} from "@/utils/utils";
-import {GetInfo, New, SaveInfo,TestRunJs} from "@/api/公共函数api";
+import {GetInfo, New, SaveInfo,TestRunJs, GetCategoryList} from "@/api/公共函数api";
 import {GetAppIdNameList} from "@/api/应用列表api";
 import Ai助手 from "./Ai助手.vue";
 
@@ -120,6 +124,10 @@ const Props = defineProps({
     default: 0
   },
   AppId: {
+    type: Number,
+    default: 0
+  },
+  当前筛选分类Id: {
     type: Number,
     default: 0
   },
@@ -136,6 +144,7 @@ const 公共变量初始数据 = {
   "Type": 1,
   "IsVip": 0,
   "Note": "",
+  "CategoryId": 0,
 }
 const 内置函数初始数据 = "aaa测试"
 const Is展示全局云函数 = ref([])
@@ -258,7 +267,7 @@ const 读取详细信息 = async (id: String) => {
       is对话框可见2.value = false
     }
   } else {
-    data.value = 公共变量初始数据
+    data.value = {...公共变量初始数据, CategoryId: Props.当前筛选分类Id > 0 ? Props.当前筛选分类Id : 0}
   }
 }
 
@@ -275,6 +284,29 @@ const 数组AppId_Name = ref([{
   "appId": 10004,
   "appName": ""
 }])
+const 分类列表 = ref<{ Id: number, ParentId: number, Name: string }[]>([])
+
+//分类Id → 分类链文本 如: 顶级分类 → 下属分类 → 当前分类 (只读展示用)
+const 分类链文本 = (分类Id: number): string => {
+  if (分类Id <= 0) return "未分类"
+  const 局_map = new Map<number, { Id: number, ParentId: number, Name: string }>()
+  分类列表.value.forEach(v => 局_map.set(v.Id, v))
+  const 局_链: string[] = []
+  let 局_当前 = 局_map.get(分类Id)
+  let 局_防环 = 0
+  while (局_当前 && 局_防环++ < 20) {
+    局_链.unshift(局_当前.Name)
+    局_当前 = 局_当前.ParentId > 0 ? 局_map.get(局_当前.ParentId) : undefined
+  }
+  return 局_链.length ? 局_链.join(" → ") : "未分类"
+}
+
+const onGetCategoryList = async () => {
+  const res = await GetCategoryList({})
+  if (res.code == 10000) {
+    分类列表.value = (res.data.list || []).map((v: any) => ({Id: v.Id, ParentId: v.ParentId || 0, Name: v.Name}))
+  }
+}
 const onGetAppIdNameList = async () => {
   const res = await GetAppIdNameList()
   数组AppId_Name.value = res.data.array
@@ -301,6 +333,7 @@ const onGetAppIdNameList = async () => {
 onMounted(async () => {
 
   await onGetAppIdNameList()
+  await onGetCategoryList()
   on对话框被打开()
 })
 // 编辑器相关数据==============================
