@@ -186,7 +186,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="状态" prop="status">
+        <el-table-column align="left" label="状态" prop="Status" :formatter="on格式化_状态">
           <template #default="scope">
             <el-switch
                 :active-value="1"
@@ -202,7 +202,7 @@
         </el-table-column>
 
 
-        <el-table-column prop="VipTime" :label="isAppType计点()?'点数':'时间'" width="120">
+        <el-table-column prop="VipTime" :label="isAppType计点()?'点数':'时间'" width="120" :formatter="on格式化_剩余时间">
           <template #default="scope" v-if="!isAppType计点()">
             <div style="display: flex; align-items: center">
               <el-icon>
@@ -243,7 +243,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="RegisterTime" label="使用时间" width="160">
+        <el-table-column prop="UseTime" label="使用时间" width="160" :formatter="on格式化_使用时间">
           <template #default="scope">
             {{ scope.row.UseTime===0?'':时间_时间戳到时间(scope.row.UseTime) }}
           </template>
@@ -295,7 +295,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="MaxOnline" label="最大在线数" width="100"/>
-        <el-table-column prop="EndTime" label="有效期" width="160">
+        <el-table-column prop="EndTime" label="有效期" width="160" :formatter="on格式化_有效期">
           <template #default="scope">
             {{ scope.row.EndTime >= 9999999999 ? "无限制" : 时间_时间戳到时间(scope.row.EndTime) }}
           </template>
@@ -655,6 +655,19 @@ onBeforeUnmount(() => {
 })
 const isAppType计点 = () => {
   return Data.value.AppType === 2 || Data.value.AppType === 4
+}
+//这些列页面用自定义模板显示,element-plus不会调用formatter,导出csv时用它保证和页面显示一致
+const on格式化_状态 = (row: any) => {
+  return row.Status === 1 ? '正常' : '冻结'
+}
+const on格式化_剩余时间 = (row: any) => {
+  return isAppType计点() ? row.VipTime : 时间_计算天时分秒提示(row.VipTime)
+}
+const on格式化_使用时间 = (row: any) => {
+  return row.UseTime === 0 ? '' : 时间_时间戳到时间(row.UseTime)
+}
+const on格式化_有效期 = (row: any) => {
+  return row.EndTime >= 9999999999 ? '无限制' : 时间_时间戳到时间(row.EndTime)
 }
 const on冻结状态被改变 = async (表项索引: number, ID: number, Status: number) => {
   // console.info("on冻结状态被改变索引:"+表项索引+",Id:"+ID,"Status:"+Status)

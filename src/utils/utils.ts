@@ -175,15 +175,16 @@ export const 表格导出csv文本 = (tableRef: any, 默认键名数组: string[
         let i = 0
         for (const column of tableColumns) {
             let 局_键名 = column.property
-            if (默认键名数组[i]) { //优先使用提供的键值,更准确
+            if (默认键名数组 && 默认键名数组[i]) { //优先使用提供的键值,更准确
                 局_键名 = 默认键名数组[i]
             }
-            if (column.label && column.label.includes("时间")) {
-
-                csvColumns.push(`"` + 时间_时间戳到时间(row[局_键名]) + `"`);
-            } else {
-                csvColumns.push(`"${row[局_键名]}"`);
+            let 局_值: any = 局_键名 == null ? "" : row[局_键名] //无property的列(如操作列)导出空,避免undefined
+            if (column.formatter) { //有格式化函数优先使用,导出和表格显示保持一致
+                局_值 = column.formatter(row, column, 局_值, 0)
+            } else if (column.label && column.label.includes("时间")) {
+                局_值 = 局_值 ? 时间_时间戳到时间(局_值) : "" //时间戳0代表未使用,导出空
             }
+            csvColumns.push(`"${局_值 ?? ""}"`);
             i++
         }
         csvColumns.shift()//删除数组第一个元素选择框 因为这个是 空
