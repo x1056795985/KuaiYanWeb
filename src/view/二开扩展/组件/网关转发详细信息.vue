@@ -6,7 +6,7 @@
              @closed="on对话框已关闭">
     <el-form :rules="on表单校验" :model="data" label-width="90px" ref="ruleFormRef">
       <el-form-item label="网关名称" prop="Name">
-        <el-input v-model.trim="data.Name" placeholder="如:短信系统" maxlength="100"/>
+        <el-input v-model.trim="data.Name" placeholder="如:api业务系统" maxlength="100"/>
       </el-form-item>
       <el-form-item label="业务Url" prop="Url">
         <el-input v-model.trim="data.Url" placeholder="http://127.0.0.1:18899" maxlength="255"/>
@@ -146,4 +146,10 @@ const on对话框被打开 = async () => {
   }
 }
 on对话框被打开()
+
+//关闭动画结束后通知父页面销毁本组件,否则第二次打开无反应
+const on对话框已关闭 = () => {
+  is显示.value = false
+  emit('on对话框详细信息关闭', is重新读取.value)
+}
 </script>

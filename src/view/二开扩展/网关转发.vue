@@ -4,7 +4,8 @@
       <el-form :inline="true">
         <el-form-item>
           <el-input class="搜索框" v-model.trim="对象_搜索条件.Keywords"
-                    placeholder="搜索内容" clearable @keyup.enter="on读取列表">
+                    placeholder="搜索内容" clearable @keyup.enter="on读取列表"
+                    style="top:0 ; width: auto;padding: 0;margin: 0">
             <template #prepend>
               <el-select v-model="对象_搜索条件.Type" placeholder="名称" style="width: 100px;">
                 <el-option label="名称" :value="1"/>
@@ -33,7 +34,6 @@
           </template>
         </el-popconfirm>
         <div class="工具栏">
-          <span class="选中统计">已选 {{ 表格被选中列表.length }} / 总 {{ Data.count }}</span>
           <el-tooltip content="刷新" effect="dark" placement="top">
             <el-icon @click="on读取列表">
               <RefreshRight/>
@@ -288,17 +288,6 @@ onBeforeUnmount(() => {
     -webkit-font-smoothing: antialiased;
     cursor: pointer;
   }
-}
-
-.选中统计 {
-  margin: 8px 8px;
-  padding: 4px 8px;
-  background: #e6f7ff;
-  border: 1px solid #91d5ff;
-  border-radius: 4px;
-  color: #1890ff;
-  font-size: 13px;
-  align-self: center;
 }
 
 .el-form-item {
