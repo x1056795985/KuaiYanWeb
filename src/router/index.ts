@@ -155,6 +155,11 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import("@/view/二开扩展/云存储.vue"),
             },
             {
+                path: "二开扩展/网关转发",
+                name: "网关转发",
+                component: () => import("@/view/二开扩展/网关转发.vue"),
+            },
+            {
                 path: "日志管理/登录日志",
                 name: "登录日志",
                 component: () => import("@/view/日志管理/登录日志.vue"),

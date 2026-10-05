@@ -144,78 +144,79 @@
         "children": []
       }
     ]
-  },{
-  "ID": 41,
-  "path": "营销管理",
-  "name": "营销管理",
-  "meta": {
-    "title": "营销管理",
-    "icon": "ShoppingBag",
-    "text": "营销"
   },
-  "children": [
-    {
-      "ID": 41,
-      "path": "营销管理/活动列表",
-      "name": "活动列表",
-      "meta": {
-        "title": "活动列表",
-        "icon": "DocumentRemove"
-      },
-      "children": []
+  {
+    "ID": 41,
+    "path": "营销管理",
+    "name": "营销管理",
+    "meta": {
+      "title": "营销管理",
+      "icon": "ShoppingBag",
+      "text": "营销"
     },
-    {
-      "ID": 53,
-      "path": "营销管理/优惠券管理",
-      "name": "优惠券管理",
-      "meta": {
-        "title": "优惠券管理",
-        "icon": "Ticket"
+    "children": [
+      {
+        "ID": 41,
+        "path": "营销管理/活动列表",
+        "name": "活动列表",
+        "meta": {
+          "title": "活动列表",
+          "icon": "DocumentRemove"
+        },
+        "children": []
       },
-      "children": []
-    },
-    {
-      "ID": 54,
-      "path": "营销管理/用户优惠券",
-      "name": "用户优惠券",
-      "meta": {
-        "title": "用户优惠券",
-        "icon": "UserFilled"
+      {
+        "ID": 53,
+        "path": "营销管理/优惠券管理",
+        "name": "优惠券管理",
+        "meta": {
+          "title": "优惠券管理",
+          "icon": "Ticket"
+        },
+        "children": []
       },
-      "children": []
-    },
-    {
-      "ID": 42,
-      "path": "营销管理/cps佣金订单",
-      "name": "cps佣金订单",
-      "meta": {
-        "title": "cps佣金订单",
-        "icon": "document-checked"
+      {
+        "ID": 54,
+        "path": "营销管理/用户优惠券",
+        "name": "用户优惠券",
+        "meta": {
+          "title": "用户优惠券",
+          "icon": "UserFilled"
+        },
+        "children": []
       },
-      "children": []
-    },
-    {
-      "ID": 43,
-      "path": "营销管理/签到日志",
-      "name": "签到日志",
-      "meta": {
-        "title": "签到日志",
-        "icon": "document-checked"
+      {
+        "ID": 42,
+        "path": "营销管理/cps佣金订单",
+        "name": "cps佣金订单",
+        "meta": {
+          "title": "cps佣金订单",
+          "icon": "document-checked"
+        },
+        "children": []
       },
-      "children": []
-    },
-    {
-      "ID": 44,
-      "path": "营销管理/大转盘日志",
-      "name": "大转盘日志",
-      "meta": {
-        "title": "大转盘日志",
-        "icon": "document-checked"
+      {
+        "ID": 43,
+        "path": "营销管理/签到日志",
+        "name": "签到日志",
+        "meta": {
+          "title": "签到日志",
+          "icon": "document-checked"
+        },
+        "children": []
       },
-      "children": []
-    }
-  ]
-},
+      {
+        "ID": 44,
+        "path": "营销管理/大转盘日志",
+        "name": "大转盘日志",
+        "meta": {
+          "title": "大转盘日志",
+          "icon": "document-checked"
+        },
+        "children": []
+      }
+    ]
+  },
   {
     "ID": 15,
     "path": "财务管理",
@@ -501,6 +502,16 @@
         "meta": {
           "title": "云存储",
           "icon": "Files"
+        },
+        "children": []
+      },
+      {
+        "ID": 56,
+        "path": "二开扩展/网关转发",
+        "name": "网关转发",
+        "meta": {
+          "title": "网关转发",
+          "icon": "Connection"
         },
         "children": []
       }

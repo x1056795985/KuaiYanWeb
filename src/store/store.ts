@@ -23,6 +23,7 @@ interface state全局状态 {
     搜索_卡号列表: object
     搜索_用户云配置: object
     搜索_公共变量: object
+    搜索_网关转发: object
     搜索_公共函数: object
     搜索_任务池: object
     搜索_任务池数据: object
@@ -61,6 +62,7 @@ export const store = createStore<state全局状态>({
                 "搜索_卡类列表",
                 "搜索_卡号列表",
                 "搜索_公共变量",
+                "搜索_网关转发",
                 "搜索_用户云配置",
                 "搜索_公共函数",
                 "搜索_任务池",
@@ -115,6 +117,7 @@ export const store = createStore<state全局状态>({
             搜索_卡类列表: {},
             搜索_卡号列表: {},
             搜索_公共变量: {},
+            搜索_网关转发: {},
             搜索_用户云配置: {},
             搜索_公共函数: {},
             搜索_任务池: {},
@@ -233,6 +236,9 @@ export const store = createStore<state全局状态>({
         },
         set搜索_公共变量(state全局状态: state全局状态, data: object) {
             state全局状态.搜索_公共变量 = data
+        },
+        set搜索_网关转发(state全局状态: state全局状态, data: object) {
+            state全局状态.搜索_网关转发 = data
         },
         set搜索_公共函数(state全局状态: state全局状态, data: object) {
             state全局状态.搜索_公共函数 = data
