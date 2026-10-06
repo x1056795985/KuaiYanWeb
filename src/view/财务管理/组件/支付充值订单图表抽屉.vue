@@ -1,58 +1,74 @@
 <template>
-  <el-drawer v-model="is图表分析抽屉可见2" direction="ltr" @close="on抽屉被关闭" show-close  size="90%">
+  <el-drawer v-model="is图表分析抽屉可见2" direction="ltr" @close="on抽屉被关闭" show-close size="90%">
     <template #header>
-<!--      <h4>set title by slot</h4>-->
+      <span style="font-weight: 600">充值订单数据分析</span>
+      <el-tag size="small" type="success" style="margin-left: 8px">收入统计口径: 成功订单</el-tag>
     </template>
     <template #default>
-      <div style="flex: auto;width: 100%">
-        <Echarts余额充值消费折线/>
-      </div>
-      <el-row>
-        <el-col :span="12">
-          <div style="flex: auto;width: 100%">
-            <Echarts余额消费排行/>
-          </div>
+      <!-- 汇总卡片: 今日/本周/本月充值,同比,客单价,待处理订单 -->
+      <Echarts充值订单统计卡片/>
+
+      <el-row :gutter="12">
+        <el-col :xs="24" :md="14">
+          <el-card shadow="never" style="margin-bottom: 12px">
+            <Echarts充值订单分应用月收入柱状图/>
+          </el-card>
         </el-col>
-        <el-col :span="12">
-          <div style="flex: auto;width: 100%">
-            <Echarts余额增长排行/>
-          </div>
+        <el-col :xs="24" :md="10">
+          <el-card shadow="never" style="margin-bottom: 12px">
+            <Echarts充值订单支付方式占比饼图/>
+          </el-card>
         </el-col>
       </el-row>
 
+      <el-row :gutter="12">
+        <el-col :xs="24" :md="14">
+          <el-card shadow="never" style="margin-bottom: 12px">
+            <Echarts充值订单分应用近7天折线图/>
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :md="10">
+          <el-card shadow="never" style="margin-bottom: 12px">
+            <Echarts充值订单金额区间分布柱状图/>
+          </el-card>
+        </el-col>
+      </el-row>
 
+      <el-row>
+        <el-col :span="24">
+          <el-card shadow="never" style="margin-bottom: 12px">
+            <Echarts充值订单用户充值排行榜/>
+          </el-card>
+        </el-col>
+      </el-row>
     </template>
     <template #footer>
-      <div style="flex: auto">
-
-      </div>
+      <div style="flex: auto"></div>
     </template>
   </el-drawer>
 </template>
 
 <script setup lang='ts'>
-import Echarts余额充值消费折线 from '@/view/控制面板/组件/余额充值消费折线.vue'
-import Echarts余额消费排行 from '@/view/控制面板/组件/余额消费排行柱状图.vue'
-import Echarts余额增长排行 from '@/view/控制面板/组件/余额增长排行柱状图.vue'
-import {onMounted, ref} from "vue";
-
+import Echarts充值订单统计卡片 from '@/view/财务管理/组件/充值订单统计卡片.vue'
+import Echarts充值订单分应用月收入柱状图 from '@/view/财务管理/组件/充值订单分应用月收入柱状图.vue'
+import Echarts充值订单分应用近7天折线图 from '@/view/财务管理/组件/充值订单分应用近7天折线图.vue'
+import Echarts充值订单用户充值排行榜 from '@/view/财务管理/组件/充值订单用户充值排行榜.vue'
+import Echarts充值订单支付方式占比饼图 from '@/view/财务管理/组件/充值订单支付方式占比饼图.vue'
+import Echarts充值订单金额区间分布柱状图 from '@/view/财务管理/组件/充值订单金额区间分布柱状图.vue'
+import {ref} from "vue";
 
 const Props = defineProps({
 })
 const emit = defineEmits(['on图表分析抽屉关闭'])
 
 const is图表分析抽屉可见2 = ref(true)
-onMounted(() => {
-  console.info("图表分析加载完毕了")
-})
 const on抽屉被关闭 = () => {
-  console.info("on对话框被关闭")
   is图表分析抽屉可见2.value = false
   emit('on图表分析抽屉关闭', false)
 }
 
 </script>
 
-<style scoped css="scss">
+<style scoped lang="scss">
 
 </style>

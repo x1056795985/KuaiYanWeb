@@ -53,3 +53,54 @@ export const MakeUpRMBPayOrder = (data) => {
     data: data
   })
 }
+
+// ========== 充值订单图表统计(仅统计成功订单) ==========
+// 顶部汇总卡片: 今日/本周/本月金额及单数,同比昨日/上月,客单价,待处理单数
+export const Get图表充值订单汇总 = () => {
+  return service({
+    url: url+'chartSummary',
+    method: 'post',
+    donNotShowLoading: true,
+  })
+}
+// 分应用本月收入与上月收入对比
+export const Get图表充值订单分应用月收入 = () => {
+  return service({
+    url: url+'chartAppMonthRmb',
+    method: 'post',
+    donNotShowLoading: true,
+  })
+}
+// 分应用近7天每天成功订单金额折线
+export const Get图表充值订单分应用近7天 = () => {
+  return service({
+    url: url+'chartAppWeekDay',
+    method: 'post',
+    donNotShowLoading: true,
+  })
+}
+// 用户充值排行榜TOP10 {Type: 1今日 2本周 3本月} 按应用+用户分组
+export const Get图表充值订单用户排行 = (data) => {
+  return service({
+    url: url+'chartUserRank',
+    method: 'post',
+    donNotShowLoading: true,
+    data: data
+  })
+}
+// 近30天支付方式金额占比
+export const Get图表充值订单支付方式 = () => {
+  return service({
+    url: url+'chartPayType',
+    method: 'post',
+    donNotShowLoading: true,
+  })
+}
+// 近30天充值金额区间分布
+export const Get图表充值订单金额区间 = () => {
+  return service({
+    url: url+'chartRmbRange',
+    method: 'post',
+    donNotShowLoading: true,
+  })
+}
