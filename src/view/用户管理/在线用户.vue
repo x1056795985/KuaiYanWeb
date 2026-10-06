@@ -71,7 +71,7 @@
                 <span>更多功能</span>
               </span>
             </template>
-            <li class="工具_更多_li" @click="is对话框可见_创建令牌=1">新WebApi令牌</li>
+            <li class="工具_更多_li" @click="is对话框可见_创建令牌=true">新WebApi令牌</li>
             <li class="工具_更多_li" @click="on删除已注销">删除已注销</li>
             <li class="工具_更多_li" @click="on批量永不注销">修改永不注销</li>
           </el-popover>
@@ -133,6 +133,9 @@
           <template #default="scope">
             <div>
               {{ scope.row.appName }}
+              <el-tag type="warning" v-if="scope.row.LoginAppid === 10 && scope.row.AppIdEx">
+                {{ MapAppId_Name[scope.row.AppIdEx] || scope.row.appName }}
+              </el-tag>
               <el-tag type="success" v-if="scope.row.AppVer">
                 {{ scope.row.AppVer }}
               </el-tag>
