@@ -44,7 +44,7 @@
 <script setup lang='ts'>
 import {ref, watch} from "vue";
 import {ElMessage, FormInstance} from "element-plus";
-import {NewRMBPayOrder, OutRMBPayOrder} from "@/api/支付充值订单api";
+import {OutRMBPayOrder} from "@/api/支付充值订单api";
 import {is移动端} from "@/utils/utils";
 
 const Props = defineProps({

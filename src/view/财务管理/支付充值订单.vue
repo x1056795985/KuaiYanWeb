@@ -2,6 +2,15 @@
   <div class="最底层div">
     <div class="内容div" style="align-items: center ">
       <el-form :inline="true">
+
+        <el-form-item label="选择应用" prop="">
+          <el-select v-model.number="对象_搜索条件.AppId" clear placeholder="请选择应用" filterable>
+            <el-option :key="0" label="全部" :value="0"/>
+            <el-option v-for="(item,index) in 数组AppId_Name" :key="item.appId"
+                       :label="item.appName+'('+item.appId.toString()+')'" :value="item.appId"/>
+          </el-select>
+        </el-form-item>
+
         <el-form-item prop="Status" label="订单状态">
           <el-select v-model="对象_搜索条件.Status" style="width: 100px;">
             <el-option label="全部" :value="0"/>
@@ -52,9 +61,6 @@
     </div>
     <div class="内容div">
       <div class="gva-btn-list" style="background:#FAFAFAFF">
-        <el-button icon="Plus" type="primary" style="margin: 8px 8px 8px; width: 65px" @click="on对话框详细信息打开(0)">
-          充值
-        </el-button>
         <el-popconfirm title="确定删除勾选日志?" width="200"
                        @confirm="on批量删除(1)" confirm-button-text="确定"
                        cancel-button-text="取消">
@@ -124,6 +130,14 @@
             {{ scope.row.User }}
           </template>
         </el-table-column>
+
+        <el-table-column prop="AppId" label="来源应用" width="150" show-overflow-tooltip="">
+          <template #default="scope">
+            {{ MapAppId_Name[scope.row.AppId] || (scope.row.AppId > 0 ? scope.row.AppId : '未知') }}
+            <el-tag v-if="scope.row.IsWebUser" type="primary" size="small">web</el-tag>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="Status" label="订单状态" width="100">
           <template #default="scope">
             <el-tag
@@ -159,7 +173,23 @@
         </el-table-column>
         <el-table-column prop="Rmb" label="金额" width="90">
           <template #default="scope">
-            <el-tag :type="scope.row.Rmb>0?'success':'danger'">
+            <template v-if="is金额不一致(scope.row)">
+              <div style="margin-bottom: 2px">
+                <el-tooltip content="订单金额" placement="top">
+                  <el-tag :type="scope.row.Rmb>0?'success':'danger'" size="small">
+                    {{ scope.row.Rmb }}
+                  </el-tag>
+                </el-tooltip>
+              </div>
+              <div>
+                <el-tooltip content="实付金额" placement="top">
+                  <el-tag type="warning" size="small">
+                    {{ scope.row.ActualRmb }}
+                  </el-tag>
+                </el-tooltip>
+              </div>
+            </template>
+            <el-tag v-else :type="scope.row.Rmb>0?'success':'danger'">
               {{ scope.row.Rmb }}
             </el-tag>
           </template>
@@ -223,8 +253,6 @@
       </div>
     </div>
   </div>
-  <NewRMBPayOrder v-if="is对话框可见_手动充值"
-                  @on对话框详细信息关闭="on对话框详细信息关闭"></NewRMBPayOrder>
   <ViewOutRMBPayOrder :Is退款订单可见="Is退款订单可见" :退款订单="退款订单"
                       @on对话框退款关闭="on对话框退款关闭"></ViewOutRMBPayOrder>
   <ChartData v-if="is图表分析抽屉可见" @on图表分析抽屉关闭="is图表分析抽屉可见 = false"/>
@@ -233,6 +261,7 @@
 <script lang="ts" setup>
 import {onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {GetLogRMBPayOrderList, Del批量删除LogRMBPayOrder, SetPayOrderNote, MakeUpRMBPayOrder} from "@/api/支付充值订单api.js";
+import {GetAppIdNameList} from "@/api/应用列表api";
 import {
   时间_时间戳到时间,
   时间_取现行时间戳,
@@ -242,7 +271,6 @@ import {
   表格写入列宽数组
 } from "@/utils/utils";
 import {useStore} from "vuex";
-import NewRMBPayOrder from "./组件/余额订单手动充值.vue";
 import ViewOutRMBPayOrder from "./组件/支付充值订单退款.vue";
 
 // 引入中文包
@@ -260,6 +288,12 @@ const 支付状态Map = {
   5: '退款失败',
   6: '退款成功',
   7: '已关闭',
+}
+
+// 实付金额与订单金额不一致时,两个金额都要显示
+const is金额不一致 = (订单: any) => {
+  if (!订单.ActualRmb) return false // 无实付金额(未支付/旧数据)只显示订单金额
+  return Math.round(订单.ActualRmb * 100) !== Math.round(订单.Rmb * 100) // 转分比较避免浮点精度问题
 }
 
 
@@ -368,6 +402,16 @@ const on选择框被选择 = (val: any) => {
   is批量删除禁用.value = 表格被选中列表.value.length == 0
 }
 
+const MapAppId_Name = ref({})
+const 数组AppId_Name = ref([])
+const onGetAppIdNameList = async () => {
+  const res = await GetAppIdNameList()
+  数组AppId_Name.value = res.data.array
+  数组AppId_Name.value.push({appId: 2, appName: "代理平台"}) //代理平台余额充值订单来源
+  MapAppId_Name.value = res.data.map
+  MapAppId_Name.value[2] = "代理平台"
+}
+
 const Data = ref({
   "Count": 0,
   "list": [
@@ -386,6 +430,7 @@ const Store = useStore()
 const 对象_搜索条件 = ref({
   RegisterTime: ["", ""],
   Status: 0,
+  AppId: 0,
   Type: 1,
   Size: 10,
   Page: 1,
@@ -405,6 +450,7 @@ const onReset = () => {
   对象_搜索条件.value = {
     RegisterTime: ["", ""],
     Status: 0,
+    AppId: 0,
     Type: 1,
     Size: 10,
     Page: 1,
@@ -436,10 +482,12 @@ onMounted(async () => {
   onReset()
   if (Store.state.搜索_支付充值订单.Size != 0 && Store.state.搜索_支付充值订单.Size != null) {
     对象_搜索条件.value = Store.state.搜索_支付充值订单
+    if (对象_搜索条件.value.AppId == null) 对象_搜索条件.value.AppId = 0 //兼容旧缓存
     console.log("恢复搜索条件")
     console.log(Store.state.搜索_支付充值订单.Size)
     console.log(Store.state.搜索_支付充值订单)
   }
+  await onGetAppIdNameList()
   await onGetLogRMBPayOrderList()
   on表格列宽初始化()
 })
@@ -495,20 +543,6 @@ const 数组_日志预选日期 = [{
   },
 ]
 
-
-const is对话框可见_手动充值 = ref(false)
-const is对话框id = ref(0)
-const on对话框详细信息打开 = (id: number) => {
-  is对话框可见_手动充值.value = true
-}
-const on对话框详细信息关闭 = (is重新读取: boolean) => {
-  //console.info("父组件收到对话框被关闭了")
-  is对话框可见_手动充值.value = false
-  is对话框id.value = 0
-  if (is重新读取) {
-    onGetLogRMBPayOrderList()
-  }
-}
 
 const Is退款订单可见 = ref(false)
 const 退款订单 = ref({})

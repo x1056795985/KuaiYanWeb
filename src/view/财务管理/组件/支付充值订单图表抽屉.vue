@@ -5,7 +5,7 @@
     </template>
     <template #default>
       <div style="flex: auto;width: 100%">
-        <Echarts在线统计/>
+        <Echarts余额充值消费折线/>
       </div>
       <el-row>
         <el-col :span="12">
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang='ts'>
-import Echarts在线统计 from '@/view/控制面板/组件/余额充值消费折线.vue'
+import Echarts余额充值消费折线 from '@/view/控制面板/组件/余额充值消费折线.vue'
 import Echarts余额消费排行 from '@/view/控制面板/组件/余额消费排行柱状图.vue'
 import Echarts余额增长排行 from '@/view/控制面板/组件/余额增长排行柱状图.vue'
 import {onMounted, ref} from "vue";
