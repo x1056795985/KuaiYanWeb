@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "prebuild": "node build.js"
+    "prebuild": "node build.js && node 生成搜索索引.mjs",
+    "索引": "node 生成搜索索引.mjs"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.1.8",

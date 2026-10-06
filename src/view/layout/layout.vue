@@ -17,7 +17,8 @@
           </div>
 
           <HeaderBar></HeaderBar>
-          <div style="margin-left: auto;">
+          <div style="margin-left: auto; display: flex; align-items: center;">
+            <GlobalSearch></GlobalSearch>
             <Userinfo></Userinfo>
           </div>
 
@@ -46,6 +47,7 @@ import AppMain from "@/view/layout/components/AppMain/AppMain.vue";
 import HeaderBar from "@/view/layout/components/headerBar/headerBar.vue";
 import tabs from "@/view/layout/components/TabBar/TabBar.vue";
 import Userinfo from "@/view/layout/components/用户名下拉菜单/用户名下拉菜单.vue";
+import GlobalSearch from "@/view/layout/components/全局搜索/全局搜索.vue";
 import {triggerGlobalResize} from "@/composables/useTableHeight";
 
 const is折叠 = ref<boolean>(true);
