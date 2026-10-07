@@ -3,7 +3,7 @@
     <el-form v-loading="is加载中" :inline="false" style="min-width: 80px;display: flex;flex-direction: column" label-width="130px" :model="Data"
              :label-position="is移动端()?'top':'right'" ref="ruleFormRef">
       <div class="内容div" :style="{order: Data.余额支付排序}">
-        <el-divider content-position="left">余额支付
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('余额支付排序')" title="上移" @click="on移动排序('余额支付排序', -1)">
               <el-icon>
@@ -16,6 +16,7 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          余额支付
         </el-divider>
         <el-form-item label="开关" prop="余额支付开关">
           <el-radio-group v-model="Data.余额支付开关">
@@ -30,14 +31,7 @@
         </div>
       </div>
       <div class="内容div" :style="{order: Data.支付宝排序}">
-        <el-divider content-position="left">支付宝PC ->
-          <el-link href="https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001000"
-                   target="_blank">电脑网页支付
-          </el-link>
-          <el-text  >-------</el-text>
-          <el-link href="https://www.fnkuaiyan.cn/%E6%8C%87%E5%8D%97/%E5%9C%A8%E7%BA%BF%E6%94%AF%E4%BB%98%E5%AF%B9%E6%8E%A5%E6%95%99%E7%A8%8B.html"
-                   target="_blank">对接教程
-          </el-link>
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('支付宝排序')" title="上移" @click="on移动排序('支付宝排序', -1)">
               <el-icon>
@@ -50,6 +44,14 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          支付宝PC ->
+          <el-link href="https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001000"
+                   target="_blank">电脑网页支付
+          </el-link>
+          <el-text  >-------</el-text>
+          <el-link href="https://www.fnkuaiyan.cn/%E6%8C%87%E5%8D%97/%E5%9C%A8%E7%BA%BF%E6%94%AF%E4%BB%98%E5%AF%B9%E6%8E%A5%E6%95%99%E7%A8%8B.html"
+                   target="_blank">对接教程
+          </el-link>
         </el-divider>
         <el-form-item label="开关" prop="支付宝开关">
           <el-radio-group v-model="Data.支付宝开关">
@@ -104,10 +106,7 @@
 
       </div>
       <div class="内容div" :style="{order: Data.支付宝H5排序}">
-        <el-divider content-position="left">支付宝H5 ->
-          <el-link href="https://b.alipay.com/page/product-mall/product-detail/I1080300001000041949"
-                   target="_blank">手机网站支付
-          </el-link>
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('支付宝H5排序')" title="上移" @click="on移动排序('支付宝H5排序', -1)">
               <el-icon>
@@ -120,6 +119,10 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          支付宝H5 ->
+          <el-link href="https://b.alipay.com/page/product-mall/product-detail/I1080300001000041949"
+                   target="_blank">手机网站支付
+          </el-link>
         </el-divider>
         <el-form-item label="开关" prop="支付宝H5开关">
           <el-radio-group v-model="Data.支付宝H5开关">
@@ -151,11 +154,7 @@
 
       </div>
       <div class="内容div" :style="{order: Data.支付宝当面付排序}">
-        <el-divider content-position="left">支付宝当面付 ->
-          <el-link href="https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001003"
-                   target="_blank">当面付
-          </el-link>
-
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('支付宝当面付排序')" title="上移" @click="on移动排序('支付宝当面付排序', -1)">
               <el-icon>
@@ -168,6 +167,11 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          支付宝当面付 ->
+          <el-link href="https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001003"
+                   target="_blank">当面付
+          </el-link>
+
         </el-divider>
         <el-form-item label="开关" prop="支付宝当面付开关">
           <el-radio-group v-model="Data.支付宝当面付开关">
@@ -199,7 +203,7 @@
       </div>
 
       <div class="内容div" :style="{order: Data.微信支付排序}">
-        <el-divider content-position="left">微信支付
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('微信支付排序')" title="上移" @click="on移动排序('微信支付排序', -1)">
               <el-icon>
@@ -212,6 +216,7 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          微信支付
         </el-divider>
         <el-link href="https://pay.weixin.qq.com/"
                  target="_blank">Native支付
@@ -290,8 +295,7 @@
         </div>
       </div>
       <div class="内容div" :style="{order: Data.小叮当支付排序}">
-        <el-divider content-position="left">小叮当
-          <el-link href="https://www.xddpay.com/" target="_blank">www.xddpay.com</el-link>
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('小叮当支付排序')" title="上移" @click="on移动排序('小叮当支付排序', -1)">
               <el-icon>
@@ -304,6 +308,8 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          小叮当
+          <el-link href="https://www.xddpay.com/" target="_blank">www.xddpay.com</el-link>
         </el-divider>
 
         <el-form-item label="开关" prop="小叮当支付开关">
@@ -335,8 +341,7 @@
         </div>
       </div>
       <div class="内容div" :style="{order: Data.虎皮椒支付排序}">
-        <el-divider content-position="left">虎皮椒
-          <el-link href="https://www.xunhupay.com" target="_blank">www.xunhupay.com</el-link>
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('虎皮椒支付排序')" title="上移" @click="on移动排序('虎皮椒支付排序', -1)">
               <el-icon>
@@ -349,6 +354,8 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          虎皮椒
+          <el-link href="https://www.xunhupay.com" target="_blank">www.xunhupay.com</el-link>
         </el-divider>
         <el-form-item label="开关" prop="虎皮椒支付开关">
           <el-radio-group v-model="Data.虎皮椒支付开关">
@@ -379,11 +386,7 @@
       </div>
 
       <div class="内容div" :style="{order: Data.易支付排序}">
-        <el-divider content-position="left">易支付
-<!--          <el-link href="https://www.xddpay.com/" target="_blank">www.xddpay.com</el-link>-->
-          <el-link href="https://www.fnkuaiyan.cn/%E6%8C%87%E5%8D%97/%E5%9C%A8%E7%BA%BF%E6%94%AF%E4%BB%98%E5%AF%B9%E6%8E%A5%E6%95%99%E7%A8%8B.html#%E8%8E%B7%E5%8F%96-%E5%95%86%E6%88%B7%E8%AF%81%E4%B9%A6%E5%BA%8F%E5%88%97%E5%8F%B7"
-                   target="_blank">对接教程
-          </el-link>
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('易支付排序')" title="上移" @click="on移动排序('易支付排序', -1)">
               <el-icon>
@@ -396,6 +399,11 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          易支付
+<!--          <el-link href="https://www.xddpay.com/" target="_blank">www.xddpay.com</el-link>-->
+          <el-link href="https://www.fnkuaiyan.cn/%E6%8C%87%E5%8D%97/%E5%9C%A8%E7%BA%BF%E6%94%AF%E4%BB%98%E5%AF%B9%E6%8E%A5%E6%95%99%E7%A8%8B.html#%E8%8E%B7%E5%8F%96-%E5%95%86%E6%88%B7%E8%AF%81%E4%B9%A6%E5%BA%8F%E5%88%97%E5%8F%B7"
+                   target="_blank">对接教程
+          </el-link>
         </el-divider>
         <el-form-item label="开关" prop="易支付开关">
           <el-radio-group v-model="Data.易支付开关">
@@ -432,8 +440,7 @@
       </div>
 
       <div class="内容div" :style="{order: Data.易支付2排序}">
-        <el-divider content-position="left">易支付2
-          <!--          <el-link href="https://www.xddpay.com/" target="_blank">www.xddpay.com</el-link>-->
+        <el-divider content-position="left">
           <el-button-group class="排序按钮组">
             <el-button size="small" :disabled="Q是否已到顶部('易支付2排序')" title="上移" @click="on移动排序('易支付2排序', -1)">
               <el-icon>
@@ -446,6 +453,8 @@
               </el-icon>
             </el-button>
           </el-button-group>
+          易支付2
+          <!--          <el-link href="https://www.xddpay.com/" target="_blank">www.xddpay.com</el-link>-->
         </el-divider>
         <el-form-item label="开关" prop="易支付2开关">
           <el-radio-group v-model="Data.易支付2开关">
@@ -695,7 +704,7 @@ ElMessage.success(返回.msg)
 }
 
 .排序按钮组 {
-  margin-left: 8px;
+  margin-right: 8px;
 }
 
 .搜索框 {
