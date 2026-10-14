@@ -142,7 +142,7 @@ export const 置剪辑版文本 = (text: string, 成功提示: string) => {
 }
 //Element-Plus 只能传入这个ui库的表格 并激活下载
 export const 表格导出csv文本并下载 = (tableRef: any, 文件名称: string, 默认键名数组: any): void => {
-    const csvContent = 表格导出csv文本(tableRef, 默认键名数组);
+    const csvContent = "\ufeff" + 表格导出csv文本(tableRef, 默认键名数组); //加UTF-8 BOM,否则Excel双击按ANSI(GBK)解析会乱码
     const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
     const link = document.createElement('a');
     link.setAttribute('href', URL.createObjectURL(blob));

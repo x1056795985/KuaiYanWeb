@@ -106,7 +106,7 @@
               </span>
             </template>
             <li class="工具_更多_li"
-                @click="表格导出csv文本并下载(tableRef, '软件用户列表' + Date().toLocaleString(),['','',isAppType卡号2?'Name':'User','Status'])">
+                @click="表格导出csv文本并下载(tableRef, '软件用户列表' + Date().toLocaleString(),['','',isAppType卡号2?'name':'user','status'])">
               导出到csv
             </li>
             <li class="工具_更多_li"
