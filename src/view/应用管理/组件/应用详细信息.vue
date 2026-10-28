@@ -677,6 +677,28 @@
                     </el-icon>
                   </el-tooltip>
                 </el-form-item>
+                <el-form-item label="实名认证" v-if="data.AppType<=2">
+                  <el-select v-model="dataWebUser.realNameStatus" placeholder="选择实名认证方式" :style="{ width: is移动端() ? '100%' : '280px' }">
+                    <el-option label="不启用" :value="0"/>
+                    <el-option label="非强制启用" :value="1"/>
+                  </el-select>
+                  <el-tooltip  v-if="!is移动端()"   content="不启用:用户中心不显示实名认证信息,该应用调用实名认证接口直接报错应用未启用实名;非强制启用:用户中心正常显示实名认证功能,用户可自愿实名(强制启用为预留选项,暂未开放)">
+                    <el-icon size="24" color="#73C0E7FF"  >
+                      <QuestionFilled/>
+                    </el-icon>
+                  </el-tooltip>
+                </el-form-item>
+                <el-form-item label="实名奖励" v-if="data.AppType<=2">
+                  <el-popover placement="right" trigger="hover"
+                              content="用户实名认证成功后自动直充该卡类奖励(不生成卡号,直接到账),仅实名认证启用时生效,可参考归属代理送卡">
+                    <template #reference>
+                      <el-select v-model="dataWebUser.realNameGiftKaClassId" placeholder="选择卡类" :style="{ width: is移动端() ? '100%' : '280px' }">
+                        <el-option key="0" label="无赠送" :value="0"/>
+                        <el-option v-for="(值,index) in 对象_卡类型" :key="index" :label="对象_卡类型[index]" :value="Number(index)"/>
+                      </el-select>
+                    </template>
+                  </el-popover>
+                </el-form-item>
               </el-form>
             </el-tab-pane>
           </el-tabs>
@@ -776,6 +798,8 @@ const dataWebUser = ref({
   captchaSendSms: 1,
   webUserDomain: "",
   agentOnlyOrder: 2,
+  realNameStatus: 0,
+  realNameGiftKaClassId: 0,
 })
 
 

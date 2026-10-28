@@ -56,6 +56,15 @@
         </template>
         <SetAiInfo></SetAiInfo>
       </el-tab-pane>
+      <el-tab-pane label="实名接口配置" name="实名接口配置">
+        <template #title>
+          <el-icon size="18" color="#73767a">
+            <Postcard/>
+          </el-icon>
+          实名接口配置
+        </template>
+        <SetRealNameInfo></SetRealNameInfo>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -69,6 +78,7 @@ import SetSmsInfo from "@/view/系统管理/组件/短信平台配置.vue";
 import SetCaptcha2Info from "@/view/系统管理/组件/行为验证码平台配置.vue";
 import oss from "@/view/系统管理/组件/云存储配置.vue";
 import SetAiInfo from "@/view/系统管理/组件/AI配置.vue";
+import SetRealNameInfo from "@/view/系统管理/组件/实名接口配置.vue";
 
 
 const route = useRoute()

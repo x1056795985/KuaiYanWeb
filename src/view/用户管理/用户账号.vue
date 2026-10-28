@@ -135,10 +135,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="rmb" label="余额" width="140"/>
-        <el-table-column prop="realNameAttestation" label="实名认证" width="140">
+        <el-table-column prop="realNameAttestation" label="实名认证" width="150">
           <template #default="scope">
-            <el-tag :type="scope.row.realNameAttestation!==''?'primary':'danger'">
-              {{ scope.row.realNameAttestation === '' ? '未实名' : '已实名' }}
+            <el-tag v-if="scope.row.realNameAttestation === ''" type="danger">
+              未实名
+            </el-tag>
+            <el-tag v-else type="primary" :title="scope.row.realNameAttestation">
+              {{ (scope.row.realNameAttestation || '').split('|')[0] }}
             </el-tag>
           </template>
         </el-table-column>

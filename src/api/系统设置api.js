@@ -207,3 +207,19 @@ export const  GetUserMsgConfig = (data) => {
         data: data
     })
 }
+
+export const  GetInfoRealName = (data) => {
+    return service({
+        url:  url+'getInfoRealName',
+        method: 'post',
+        data: data
+    })
+}
+
+export const  SaveInfoRealName = (data) => {
+    return service({
+        url:  url+'saveInfoRealName',
+        method: 'post',
+        data: data
+    })
+}
