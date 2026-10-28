@@ -49,3 +49,13 @@ export const NewWebApiToken = (data) => {
     data: data
   })
 }
+
+//  修改WebApi令牌绑定权限
+//{ "Id": 1, "Key": "(接口)(接口)[公共函数]" }
+export const SetWebApiTokenKey = (data) => {
+  return service({
+    url: url+'setWebApiTokenKey',
+    method: 'post',
+    data: data
+  })
+}

@@ -146,7 +146,14 @@
           </template>
         </el-table-column>
         <el-table-column prop="Tab" label="动态标记" width="140" show-overflow-tooltip=""/>
-        <el-table-column prop="Key" label="绑定信息" width="140" show-overflow-tooltip=""/>
+        <el-table-column prop="Key" label="绑定信息" width="140" show-overflow-tooltip="">
+          <template #default="scope">
+            <el-icon v-if="scope.row.LoginAppid === 3 && scope.row.Status === 1" class="修改权限按钮" @click="on修改权限(scope.row)">
+              <EditPen/>
+            </el-icon>
+            {{ scope.row.Key }}
+          </template>
+        </el-table-column>
         <el-table-column prop="note" label="软件用户备注" width="140" show-overflow-tooltip=""/>
         <el-table-column label="在线ip" width="140" show-overflow-tooltip="">
           <template #default="scope">
@@ -203,6 +210,8 @@
     </div>
   </div>
   <vueNewWebApiToken :is对话框可见_创建令牌="is对话框可见_创建令牌" @on对话框详细信息关闭="on对话框详细信息关闭"/>
+  <vueEditWebApiToken :is对话框可见_修改权限="is对话框可见_修改权限" :令牌信息="令牌_修改权限"
+                      @on修改权限对话框关闭="on修改权限对话框关闭"/>
   <ChartData v-if="is图表分析抽屉可见" @on图表分析抽屉关闭="on图表分析抽屉关闭"/>
 </template>
 
@@ -223,6 +232,7 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import {ElMessage, ElMessageBox, FormInstance} from 'element-plus'
 import {GetAppIdNameList} from "@/api/应用列表api";
 import vueNewWebApiToken from "@/view/用户管理/组件/创建WebApi令牌.vue";
+import vueEditWebApiToken from "@/view/用户管理/组件/修改WebApi令牌权限.vue";
 import ChartData from "@/view/用户管理/组件/在线用户图表抽屉.vue";
 
 const on单个注销 = async (id: number) => {
@@ -337,6 +347,22 @@ const is对话框可见_创建令牌 = ref(false)
 const on对话框详细信息关闭 = (is重新读取: boolean) => {
   //console.info("父组件收到对话框被关闭了")
   is对话框可见_创建令牌.value = false
+  if (is重新读取) {
+    on读取列表()
+  }
+}
+
+//修改WebApi令牌权限对话框
+const is对话框可见_修改权限 = ref(false)
+const 令牌_修改权限 = ref({})
+const on修改权限 = (row: any) => {
+  console.log('修改令牌权限')
+  console.log(row)
+  令牌_修改权限.value = row
+  is对话框可见_修改权限.value = true
+}
+const on修改权限对话框关闭 = (is重新读取: boolean) => {
+  is对话框可见_修改权限.value = false
   if (is重新读取) {
     on读取列表()
   }
@@ -587,6 +613,17 @@ onBeforeUnmount(() => {
   &:hover {
     background: #889aa4; //改变背景颜色
     cursor: pointer; //改变鼠标样式为手型
+  }
+}
+
+.修改权限按钮 {
+  margin-right: 4px;
+  cursor: pointer;
+  vertical-align: middle;
+  color: #409eff;
+
+  &:hover {
+    color: #66b1ff;
   }
 }
 
