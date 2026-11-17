@@ -9,6 +9,14 @@
             <el-option key="2" label="冻结" :value="2"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="代理级别" prop="Role" style="width:130px">
+          <el-select v-model="对象_搜索条件.Role" clear placeholder="全部">
+            <el-option key="0" label="全部" :value="0"/>
+            <el-option key="1" label="一级" :value="1"/>
+            <el-option key="2" label="二级" :value="2"/>
+            <el-option key="3" label="三级" :value="3"/>
+          </el-select>
+        </el-form-item>
         <!--        <el-form-item label="角色" prop="Role" style="width:140px">
                   <el-select v-model="对象_搜索条件.Role" clear placeholder="全部">
                     <el-option key="0" label="全部" :value="0"/>
